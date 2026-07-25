@@ -11,10 +11,10 @@
 - Responsive professional dashboard with mock statistics, charts, orders, expenses, and activity
 - Database-backed menu and category management with validation, role-based writes, filtering, sorting, responsive views, and safe seed data
 - Touch-friendly POS billing with a persisted cart, held orders, validated restaurant pricing, and atomic checkout
+- Database-backed order management with search, filters, pagination, invoice details, role-protected status changes, and cancellation auditing
 
 ## Deferred
 
-- Order management
 - Customer management
 - Reports and expenses
 - Staff and restaurant settings

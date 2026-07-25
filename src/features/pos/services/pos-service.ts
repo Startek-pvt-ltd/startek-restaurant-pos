@@ -62,7 +62,7 @@ export async function getPosData() {
   };
 }
 
-function createOrderNumber() {
+function createOrderPrefix() {
   const now = new Date();
   const date = new Intl.DateTimeFormat("en-CA", {
     timeZone: "Asia/Colombo",
@@ -72,10 +72,26 @@ function createOrderNumber() {
   })
     .format(now)
     .replaceAll("-", "");
-  const suffix = `${now.getTime()}`.slice(-6);
-  const random = Math.floor(Math.random() * 100).toString().padStart(2, "0");
+  return `RKH-${date}-`;
+}
 
-  return `RKH-${date}-${suffix}${random}`;
+async function createOrderNumber(tx: Prisma.TransactionClient) {
+  const prefix = createOrderPrefix();
+  const rows = await tx.$queryRaw<Array<{ nextSequence: number }>>(Prisma.sql`
+    WITH invoice_lock AS MATERIALIZED (
+      SELECT pg_advisory_xact_lock(hashtext(${prefix}))
+    )
+    SELECT COALESCE(MAX(CAST(RIGHT(orders."orderNumber", 4) AS INTEGER)), 0) + 1 AS "nextSequence"
+    FROM invoice_lock
+    LEFT JOIN "Order" AS orders
+      ON orders."orderNumber" ~ ${`^${prefix}[0-9]{4}$`}
+  `);
+  const nextSequence = Number(rows[0]?.nextSequence ?? 1);
+  if (!Number.isSafeInteger(nextSequence) || nextSequence < 1 || nextSequence > 9999) {
+    throw new Error("ORDER_NUMBER_FAILED");
+  }
+
+  return `${prefix}${nextSequence.toString().padStart(4, "0")}`;
 }
 
 function isPrismaCode(error: unknown, code: string) {
@@ -85,7 +101,7 @@ function isPrismaCode(error: unknown, code: string) {
 }
 
 export async function createCompletedOrder(cashierId: string, input: CheckoutInput) {
-  for (let attempt = 0; attempt < 3; attempt += 1) {
+  for (let attempt = 0; attempt < 5; attempt += 1) {
     try {
       return await prisma.$transaction(
         async (tx) => {
@@ -101,21 +117,19 @@ export async function createCompletedOrder(cashierId: string, input: CheckoutInp
           const uniqueIds = [...new Set(input.items.map((item) => item.menuItemId))];
           if (uniqueIds.length !== input.items.length) throw new Error("DUPLICATE_CART_ITEM");
 
-          const [menuItems, restaurant] = await Promise.all([
-            tx.menuItem.findMany({
-              where: { id: { in: uniqueIds } },
-              select: {
-                id: true,
-                price: true,
-                available: true,
-                category: { select: { active: true } },
-              },
-            }),
-            tx.restaurant.findFirst({
-              select: { taxPercentage: true, serviceCharge: true },
-              orderBy: { createdAt: "asc" },
-            }),
-          ]);
+          const menuItems = await tx.menuItem.findMany({
+            where: { id: { in: uniqueIds } },
+            select: {
+              id: true,
+              price: true,
+              available: true,
+              category: { select: { active: true } },
+            },
+          });
+          const restaurant = await tx.restaurant.findFirst({
+            select: { taxPercentage: true, serviceCharge: true },
+            orderBy: { createdAt: "asc" },
+          });
 
           if (!restaurant) throw new Error("SETTINGS_NOT_FOUND");
           if (menuItems.length !== uniqueIds.length) throw new Error("MENU_ITEM_NOT_FOUND");
@@ -153,7 +167,7 @@ export async function createCompletedOrder(cashierId: string, input: CheckoutInp
             throw new Error("INSUFFICIENT_PAYMENT");
           }
 
-          const orderNumber = createOrderNumber();
+          const orderNumber = await createOrderNumber(tx);
           const order = await tx.order.create({
             data: {
               orderNumber,
@@ -203,11 +217,12 @@ export async function createCompletedOrder(cashierId: string, input: CheckoutInp
         { isolationLevel: Prisma.TransactionIsolationLevel.Serializable },
       );
     } catch (error) {
-      if (isPrismaCode(error, "P2002") && attempt < 2) continue;
+      if ((isPrismaCode(error, "P2002") || isPrismaCode(error, "P2034")) && attempt < 4) {
+        continue;
+      }
       throw error;
     }
   }
 
   throw new Error("ORDER_NUMBER_FAILED");
 }
-

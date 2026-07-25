@@ -20,6 +20,14 @@ The schema covers restaurant configuration, users, menu categories and items, ta
 - `Payment.receivedAmount` and `Payment.changeAmount` preserve cash tender and change while card and QR payments leave them null.
 - Billing writes use a serializable transaction so partial orders or payments are never stored.
 
+## Order management and cancellation
+
+- `Order.cancellationReason`, `Order.cancelledAt`, and `Order.cancelledById` form a nullable cancellation audit trail and preserve all existing order history.
+- `cancelledById` references `User` with `ON DELETE SET NULL`; the textual reason and timestamp remain if the user is later removed.
+- Cancellation and pending-order completion update the order and create an `ActivityLog` inside the same database transaction.
+- Invoice numbers use `RKH-YYYYMMDD-NNNN`. Checkout takes a PostgreSQL transaction-level advisory lock for the Colombo calendar-date prefix, reads the next four-digit sequence, and relies on the unique `Order.orderNumber` constraint as a final safeguard.
+- Order list queries use indexed order date/status fields, relation filters for customer and payment data, and database `skip`/`take` pagination.
+
 ## Commands
 
 - `npm run prisma:generate` regenerates Prisma Client after schema changes.

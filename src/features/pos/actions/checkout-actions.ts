@@ -57,4 +57,3 @@ export async function completeOrderAction(input: unknown): Promise<CheckoutResul
     return checkoutError(error);
   }
 }
-

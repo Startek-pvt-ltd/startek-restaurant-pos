@@ -23,3 +23,12 @@ TASK-006 uses the authenticated `completeOrderAction` Server Action instead of a
 The server does not trust client prices or calculated totals. It reloads current menu prices, availability, the cashier account, and restaurant tax/service settings before calculating and writing the order. The order, line items, paid payment, cash tender/change, and activity log are committed in one serializable PostgreSQL transaction.
 
 Allowed roles are `SUPER_ADMIN`, `OWNER`, `MANAGER`, and `CASHIER`. `KITCHEN` cannot access or submit POS billing.
+
+## Order operations
+
+TASK-007 uses authenticated Server Actions and server-rendered Prisma queries; it does not add a public business API.
+
+- `completeOrderStatusAction` accepts only a validated order UUID and transitions a pending order to completed.
+- `cancelOrderAction` accepts a validated UUID and cancellation reason, requires `SUPER_ADMIN`, `OWNER`, or `MANAGER`, preserves the order, and writes its audit metadata.
+- Both actions authenticate and authorize independently of the rendered page, return constrained user-safe results, update `ActivityLog`, and revalidate the list and detail routes.
+- Order list query parameters are treated as untrusted input and parsed with Zod before Prisma filters are constructed.

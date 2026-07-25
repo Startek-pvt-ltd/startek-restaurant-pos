@@ -1681,6 +1681,9 @@ export const OrderScalarFieldEnum = {
   orderType: 'orderType',
   status: 'status',
   notes: 'notes',
+  cancellationReason: 'cancellationReason',
+  cancelledAt: 'cancelledAt',
+  cancelledById: 'cancelledById',
   subtotal: 'subtotal',
   discount: 'discount',
   tax: 'tax',
@@ -1938,14 +1941,14 @@ export type ListEnumTableStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$
  * Reference to a field of type 'OrderType'
  */
 export type EnumOrderTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OrderType'>
-
+    
 
 
 /**
  * Reference to a field of type 'OrderType[]'
  */
 export type ListEnumOrderTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OrderType[]'>
-
+    
 
 
 /**
@@ -2259,3 +2262,4 @@ export type PrismaAction =
  * `PrismaClient` proxy available in interactive transactions.
  */
 export type TransactionClient = Omit<DefaultPrismaClient, runtime.ITXClientDenyList>
+

@@ -32,6 +32,14 @@ The product does not include table management, a kitchen display system, invento
 - Checkout re-reads product prices and availability, recalculates totals on the server, and atomically creates the completed order, items, payment, and activity entry.
 - Receipt printing is intentionally a placeholder pending printer integration.
 
+## Order management
+
+- `/orders` provides database-backed invoice/customer search, date and status filters, newest/oldest sorting, daily statistics, and pagination.
+- `/orders/[id]` displays the complete restaurant invoice, price snapshots, customer, cashier, payment, notes, and cancellation audit information.
+- Super admins, owners, and managers can cancel non-cancelled orders with a required reason. Cashiers can view, create, complete pending orders, and use the reprint placeholder, but cannot cancel.
+- Cancellation is a status transition rather than deletion, and both completion and cancellation are recorded in `ActivityLog`.
+- POS invoices use the server-generated `RKH-YYYYMMDD-0001` format with transaction-level concurrency protection.
+
 ## Authentication
 
 - Active users can authenticate with either username or email and a bcrypt-protected password.
