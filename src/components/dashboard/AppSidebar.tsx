@@ -6,6 +6,7 @@ import {
   ClipboardList,
   ContactRound,
   LayoutDashboard,
+  Layers3,
   LogOut,
   PanelLeftClose,
   ReceiptText,
@@ -26,6 +27,7 @@ const navigation = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { label: "POS Billing", href: "/pos", icon: ReceiptText },
   { label: "Menu Management", href: "/menu", icon: UtensilsCrossed },
+  { label: "Categories", href: "/menu/categories", icon: Layers3 },
   { label: "Orders", href: "/orders", icon: ClipboardList },
   { label: "Customers", href: "/customers", icon: UsersRound },
   { label: "Reports", href: "/reports", icon: ChartNoAxesCombined },
@@ -90,7 +92,9 @@ export function AppSidebar({ isOpen, onClose }: AppSidebarProps) {
           <p className="mb-3 px-3 text-[0.65rem] font-bold uppercase tracking-[0.2em] text-white/35">Workspace</p>
           <ul className="space-y-1">
             {navigation.map((item) => {
-              const active = pathname === item.href;
+              const active =
+                pathname === item.href ||
+                (item.href !== "/menu" && pathname.startsWith(`${item.href}/`));
               const Icon = item.icon;
 
               return (

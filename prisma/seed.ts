@@ -56,7 +56,7 @@ async function main() {
     },
   });
 
-  await prisma.$transaction(
+  const categories = await prisma.$transaction(
     categoryNames.map((name, index) =>
       prisma.category.upsert({
         where: { name },
@@ -65,6 +65,35 @@ async function main() {
       }),
     ),
   );
+
+  const menuItemCount = await prisma.menuItem.count();
+  let seededMenuItemCount = 0;
+
+  if (menuItemCount === 0) {
+    const categoryIds = new Map(categories.map((category) => [category.name, category.id]));
+    const samples = [
+      { category: "Kottu", name: "Chicken Kottu", price: 1_250, preparationTime: 18 },
+      { category: "Kottu", name: "Cheese Kottu", price: 1_400, preparationTime: 20 },
+      { category: "Kottu", name: "Egg Kottu", price: 950, preparationTime: 15 },
+      { category: "Fried Rice", name: "Chicken Fried Rice", price: 1_150, preparationTime: 16 },
+      { category: "Fried Rice", name: "Mixed Fried Rice", price: 1_450, preparationTime: 18 },
+      { category: "Noodles", name: "Chicken Noodles", price: 1_100, preparationTime: 16 },
+      { category: "Noodles", name: "Seafood Noodles", price: 1_500, preparationTime: 20 },
+      { category: "Beverages", name: "Coca-Cola", price: 250, preparationTime: 0 },
+      { category: "Beverages", name: "Sprite", price: 250, preparationTime: 0 },
+      { category: "Beverages", name: "Bottled Water", price: 150, preparationTime: 0 },
+    ];
+
+    const result = await prisma.menuItem.createMany({
+      data: samples.map(({ category, ...item }) => {
+        const categoryId = categoryIds.get(category);
+        if (!categoryId) throw new Error(`Seed category not found: ${category}`);
+
+        return { ...item, categoryId };
+      }),
+    });
+    seededMenuItemCount = result.count;
+  }
 
   await prisma.$transaction(
     Array.from({ length: 20 }, (_, index) => {
@@ -81,6 +110,11 @@ async function main() {
   console.log("Seeded restaurant: Rice & Kottu Hut");
   console.log("Seeded super admin: Kevin Menuja (admin)");
   console.log(`Seeded categories: ${categoryNames.length}`);
+  console.log(
+    seededMenuItemCount > 0
+      ? `Seeded sample menu items: ${seededMenuItemCount}`
+      : `Sample menu items skipped: ${menuItemCount} existing item(s) preserved`,
+  );
   console.log("Seeded tables: 20");
 }
 

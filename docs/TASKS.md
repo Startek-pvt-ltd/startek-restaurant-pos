@@ -9,11 +9,11 @@
 - Production database schema, migration, and seed data
 - Auth.js credentials authentication and role-based access control
 - Responsive professional dashboard with mock statistics, charts, orders, expenses, and activity
+- Database-backed menu and category management with validation, role-based writes, filtering, sorting, responsive views, and safe seed data
 
 ## Deferred
 
 - POS billing workflows and calculations
-- Menu management
 - Order management
 - Customer management
 - Reports and expenses

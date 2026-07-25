@@ -15,6 +15,14 @@ The product does not include table management, a kitchen display system, invento
 - No sales calculations, business APIs, or dashboard database queries are implemented in TASK-004.
 - Navigation supports a fixed desktop sidebar and a drawer on tablet and mobile screens.
 
+## Menu and category management
+
+- `/menu` provides database-backed menu item search, category and availability filters, sorting, card and table layouts, and LKR price formatting.
+- `/menu/categories` provides category search, display-order sorting, item counts, status controls, and protected create, update, and delete workflows.
+- Super admins, owners, and managers can manage menu data. Cashiers receive a read-only catalogue, and all mutation permissions are rechecked on the server.
+- Item images may use an `http(s)` URL or a local `/menu-items/...` path. Missing images use the built-in food placeholder.
+- Menu operations use validated Server Actions and Prisma services; no business API route is required.
+
 ## Authentication
 
 - Active users can authenticate with either username or email and a bcrypt-protected password.

@@ -68,8 +68,8 @@ const stats = [
 ];
 
 const quickActions = [
-  { label: "New Order", description: "Start POS billing", icon: Plus, emphasized: true },
-  { label: "Add Menu Item", description: "Create a new dish", icon: ShoppingBag },
+  { label: "New Order", description: "Start POS billing", icon: Plus, emphasized: true, href: "/pos" },
+  { label: "Add Menu Item", description: "Create a new dish", icon: ShoppingBag, href: "/menu?action=new" },
   { label: "Add Customer", description: "Register a customer", icon: UserPlus },
   { label: "Add Expense", description: "Record a cost", icon: ReceiptText },
   { label: "View Reports", description: "Open sales reports", icon: FileChartColumn },

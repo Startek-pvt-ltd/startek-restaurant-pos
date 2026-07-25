@@ -28,10 +28,10 @@ Status: Complete
 
 ---
 
-## Milestone 5
-Restaurant Settings
+## Milestone 5 ✅
+Menu and Category Management
 
-Status: Pending
+Status: Complete
 
 ---
 

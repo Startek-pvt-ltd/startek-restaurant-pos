@@ -1,6 +1,7 @@
 "use client";
 
 import { Bell, Menu, Search } from "lucide-react";
+import { usePathname } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
 interface TopbarProps {
@@ -12,7 +13,13 @@ interface TopbarProps {
 }
 
 export function Topbar({ onMenuClick, user }: TopbarProps) {
+  const pathname = usePathname();
   const [now, setNow] = useState<Date | null>(null);
+  const pageMeta = pathname === "/menu/categories"
+    ? { title: "Categories", description: "Menu organization" }
+    : pathname.startsWith("/menu")
+      ? { title: "Menu Management", description: "Items, pricing and availability" }
+      : { title: "Dashboard", description: "Business overview" };
   const initials = useMemo(
     () =>
       user.fullName
@@ -44,8 +51,8 @@ export function Topbar({ onMenuClick, user }: TopbarProps) {
       </button>
 
       <div className="min-w-0">
-        <p className="truncate text-base font-bold text-foreground sm:text-lg">Dashboard</p>
-        <p className="hidden text-xs text-muted-foreground sm:block">Business overview</p>
+        <p className="truncate text-base font-bold text-foreground sm:text-lg">{pageMeta.title}</p>
+        <p className="hidden text-xs text-muted-foreground sm:block">{pageMeta.description}</p>
       </div>
 
       <div className="hidden border-l border-border pl-4 text-sm xl:block">
@@ -60,14 +67,14 @@ export function Topbar({ onMenuClick, user }: TopbarProps) {
       </div>
 
       <label className="relative ml-auto hidden w-full max-w-sm md:block">
-        <span className="sr-only">Search dashboard</span>
+        <span className="sr-only">Search current workspace</span>
         <Search
           aria-hidden="true"
           className="pointer-events-none absolute left-3.5 top-1/2 size-4.5 -translate-y-1/2 text-muted-foreground"
         />
         <input
           className="h-11 w-full rounded-xl border border-border bg-background/70 pl-10 pr-4 text-sm text-foreground outline-none transition placeholder:text-muted-foreground/75 focus:border-primary focus:bg-white focus:ring-4 focus:ring-primary/10"
-          placeholder="Search orders, customers..."
+          placeholder="Search workspace..."
           type="search"
         />
       </label>
