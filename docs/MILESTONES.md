@@ -17,7 +17,7 @@ Status: Complete
 ## Milestone 3
 Authentication
 
-Status: In Progress
+Status: Complete
 
 ---
 
