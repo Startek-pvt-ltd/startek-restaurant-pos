@@ -10,16 +10,6 @@ import {
   YAxis,
 } from "recharts";
 
-const weeklySales = [
-  { day: "Mon", sales: 38500 },
-  { day: "Tue", sales: 42750 },
-  { day: "Wed", sales: 36100 },
-  { day: "Thu", sales: 46200 },
-  { day: "Fri", sales: 53150 },
-  { day: "Sat", sales: 61800 },
-  { day: "Sun", sales: 48500 },
-];
-
 const tooltipStyle = {
   border: "1px solid #f0dfbd",
   borderRadius: "12px",
@@ -27,13 +17,14 @@ const tooltipStyle = {
   fontSize: "12px",
 };
 
-export function SalesChart() {
+export function SalesChart({ data }: { data: Array<{ label: string; value: string }> }) {
+  const weeklySales = data.map((item) => ({ day: item.label, sales: Number(item.value) }));
   return (
     <article className="dashboard-card dashboard-fade-in rounded-2xl border border-border/80 bg-card p-5 sm:p-6">
       <div className="mb-5 flex items-start justify-between gap-4">
         <div>
           <h2 className="text-base font-bold text-foreground">Weekly Sales Overview</h2>
-          <p className="mt-1 text-xs text-muted-foreground">Mock daily gross sales in Sri Lankan rupees</p>
+          <p className="mt-1 text-xs text-muted-foreground">Completed daily sales from PostgreSQL</p>
         </div>
         <span className="rounded-lg bg-muted px-2.5 py-1 text-[0.65rem] font-bold text-muted-foreground">THIS WEEK</span>
       </div>

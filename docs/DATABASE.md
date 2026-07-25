@@ -19,6 +19,17 @@ PostgreSQL is accessed through Prisma ORM 7 and the PostgreSQL driver adapter. `
 - Foreign keys restrict deletion of users/menu items needed by history; child order items/payments cascade only with an order, although runtime code never deletes orders.
 - Expense money uses `Decimal(12,2)`. `expenseDate` is a PostgreSQL `DATE`; `updatedAt` supports optimistic concurrency checks. Expense create/update/delete and the corresponding activity entry share a database transaction.
 
+## Report query strategy
+
+- Completed-order Prisma aggregates calculate subtotals, discounts, tax, service charges, grand totals, counts, and averages using database decimals.
+- Cancellation counts use separate `CANCELLED` predicates. Cancelled orders never enter sales, item, payment, or cashier revenue.
+- Menu performance groups `OrderItem` snapshots by `menuItemId`; current menu prices are never substituted for historical `unitPrice`/`totalPrice`.
+- Payment revenue uses paid payment `amount`; `receivedAmount` and `changeAmount` remain tender-only metrics.
+- Independent aggregates run in parallel, selected fields avoid oversized records, grouped queries avoid N+1 reads, and detail tables use pagination.
+- Order timestamps use half-open Colombo boundaries (`start <= createdAt < day-after-end`). Expense `DATE` values use inclusive start/end dates.
+
+Migration `20260726113000_add_report_query_indexes` adds `Order(status, createdAt)`, `Payment(paymentMethod, orderId)`, and `Expense(category, expenseDate)` composite indexes. Existing unique/single-column indexes already cover invoice, cashier, order type, item, and remaining report filters.
+
 ## Expense migration
 
 Migration `20260726093000_add_expenses_management` adds `expenseDate`, optional `referenceNumber`, `updatedAt`, and an expense-date index without deleting rows. Existing rows are backfilled from their Colombo-local `createdAt` date. Legacy enum values are translated as `UTILITIES → ELECTRICITY`, `PURCHASE → INGREDIENTS`, and `REPAIR → MAINTENANCE`; unchanged categories retain their original value.

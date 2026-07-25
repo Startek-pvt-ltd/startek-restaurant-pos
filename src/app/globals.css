@@ -104,14 +104,81 @@
   }
 }
 
-@page {
+@page receipt {
   size: 80mm auto;
   margin: 0;
 }
 
 .thermal-print-page {
+  page: receipt;
   color: #000;
   font-family: "Courier New", Courier, monospace;
+}
+
+@page report {
+  size: A4 landscape;
+  margin: 12mm;
+}
+
+.report-page {
+  page: report;
+}
+
+@media print {
+  html:has(.report-page),
+  body:has(.report-page) {
+    width: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #fff !important;
+    color: #000 !important;
+  }
+
+  body:has(.report-page) .report-page {
+    width: auto;
+    margin: 0;
+    color: #000;
+    font-family: Arial, sans-serif;
+    font-size: 9pt;
+  }
+
+  .report-print-header,
+  .report-print-footer {
+    display: block !important;
+  }
+
+  .report-print-header {
+    margin-bottom: 8mm;
+    border-bottom: 1px solid #000;
+    padding-bottom: 4mm;
+    text-align: center;
+  }
+
+  .report-print-header h1 { font-size: 18pt; font-weight: 800; }
+  .report-print-header h2 { margin-top: 3mm; font-size: 14pt; font-weight: 800; }
+  .report-print-header p, .report-print-footer { margin-top: 1mm; font-size: 8pt; }
+  .report-print-footer { margin-top: 6mm; border-top: 1px solid #000; padding-top: 3mm; text-align: center; }
+
+  .report-chart,
+  .print-date-range {
+    display: none !important;
+  }
+
+  .report-page article,
+  .report-table tr {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .report-table {
+    overflow: visible !important;
+    border: 1px solid #000 !important;
+  }
+
+  .report-table > div { overflow: visible !important; }
+  .report-table table { min-width: 0 !important; width: 100% !important; font-size: 7.5pt; }
+  .report-table thead { background: #fff !important; color: #000 !important; border-bottom: 2px solid #000; }
+  .report-table th, .report-table td { padding: 2mm !important; border-bottom: 1px solid #bbb; color: #000 !important; white-space: normal !important; }
 }
 
 .receipt-copies {

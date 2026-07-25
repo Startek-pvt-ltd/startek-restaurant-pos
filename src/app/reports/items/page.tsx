@@ -1,0 +1,20 @@
+import { CircleDollarSign, PackageSearch, ShoppingBasket } from "lucide-react";
+
+import { ExportActions } from "@/components/reports/ExportActions";
+import { ReportBarChart } from "@/components/reports/ReportChart";
+import { ReportFilters } from "@/components/reports/ReportFilters";
+import { ReportHeader } from "@/components/reports/ReportHeader";
+import { ReportPagination, reportQuery } from "@/components/reports/ReportPagination";
+import { ReportPrintHeader } from "@/components/reports/ReportPrintHeader";
+import { ReportStatCard } from "@/components/reports/ReportStatCard";
+import { ReportTable } from "@/components/reports/ReportTable";
+import { getItemReport } from "@/features/reports/services/item-report-service";
+import { formatReportMoney } from "@/features/reports/utils/report-formatters";
+import { reportPageContext, type ReportSearchParams } from "@/features/reports/utils/report-page-context";
+
+export default async function ItemReportPage({ searchParams }: { searchParams: ReportSearchParams }) {
+  const context = await reportPageContext(searchParams);
+  const report = await getItemReport(context.filters, context.range);
+  const rows = report.records.map((row) => [row.name, row.category, row.quantity, formatReportMoney(row.revenue), formatReportMoney(row.averagePrice), `${row.percentage}%`]);
+  return <><ReportPrintHeader range={context.range.label} title="Menu Performance Report" /><ReportHeader description="Historical quantities and revenue calculated from completed OrderItem price snapshots." rangeLabel={context.range.label} title="Menu Performance" /><div className="flex justify-end"><ExportActions query={reportQuery(context.filters)} report="items" /></div><ReportFilters error={context.error} filters={context.filters} flags={{ cashier: true, orderType: true, paymentMethod: true, category: true, menuItem: true }} options={context.options} route="/reports/items" /><section className="grid gap-3 sm:grid-cols-3"><ReportStatCard detail="Completed OrderItem quantities" icon={ShoppingBasket} title="Quantity Sold" value={String(report.totalQuantity)} /><ReportStatCard detail="Historical line totals" icon={CircleDollarSign} title="Item Revenue" value={formatReportMoney(report.totalRevenue)} /><ReportStatCard detail="Configured items without completed sales" icon={PackageSearch} title="No-Sale Items" value={String(report.noSales.length)} /></section><section className="grid gap-5 xl:grid-cols-2"><ReportBarChart data={report.top} description="Top ten items by completed quantity" title="Top 10 Items" valueType="count" /><ReportBarChart data={report.categories} description="Completed OrderItem revenue by menu category" title="Sales by Category" /></section><ReportTable caption="Menu item performance" headers={["Menu Item", "Category", "Quantity Sold", "Revenue", "Average Selling Price", "% of Item Sales"]} rows={rows} /><ReportPagination filters={context.filters} page={report.page} route="/reports/items" total={report.total} totalPages={report.totalPages} /><section className="grid gap-5 xl:grid-cols-2"><div className="rounded-2xl border border-border bg-card p-5"><h2 className="font-black text-secondary">Least-selling items</h2>{report.least.length ? <ol className="mt-3 space-y-2">{report.least.map((item) => <li className="flex justify-between rounded-xl bg-muted/55 px-3 py-2 text-sm font-semibold" key={item.name}><span>{item.name}</span><span>{item.value} sold</span></li>)}</ol> : <p className="mt-3 text-sm text-muted-foreground">No completed item sales.</p>}</div><div className="rounded-2xl border border-border bg-card p-5"><h2 className="font-black text-secondary">Items with no sales</h2>{report.noSales.length ? <ul className="mt-3 space-y-2 text-sm">{report.noSales.map((item) => <li className="rounded-xl bg-muted/55 px-3 py-2 font-semibold text-secondary" key={item.id}>{item.name} <span className="text-xs text-muted-foreground">· {item.category}</span></li>)}</ul> : <p className="mt-3 text-sm text-muted-foreground">Every configured item has a completed sale in this period.</p>}</div></section></>;
+}

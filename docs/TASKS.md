@@ -12,10 +12,10 @@
 - TASK-008 — 80 mm Xprinter XP-80T browser receipt printing
 - TASK-009 — Scope cleanup, audit, bug fixes, manual QA, and stabilization documentation
 - TASK-010 — PostgreSQL-backed expenses management, role enforcement, audit logging, filtering, totals, and responsive workflows
+- TASK-011 — Real-data reports, financial formulas, charts, URL filters, CSV/Excel exports, A4 printing, and report RBAC
 
 ## Placeholder routes only
 
-- Reports
 - Staff
 
 These routes contain no business calculations, exports, data-entry workflows, or new APIs.

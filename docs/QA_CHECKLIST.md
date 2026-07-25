@@ -111,3 +111,25 @@ Executed on 2026-07-26 in the local `feature/expenses` workspace.
 - [x] Production build exposed `/expenses` as a dynamic server-rendered route
 - [ ] In-app viewport interaction could not be completed because the browser tab did not attach to the local test session; responsive behavior was source/build verified
 - [ ] Physical printer output, reporting exports, P&L, payroll, and receipt-image storage are outside TASK-010
+
+## TASK-011 Reports and Analytics
+
+Executed on 2026-07-26 in the local `feature/reports` workspace.
+
+- [x] Financial fixture covered Dine-In cash, Takeaway card, Delivery QR, completed/cancelled, discounted/zero-discount, two menu categories, two cashiers, two expense categories, and exact range boundaries
+- [x] Database-backed suite passed 19 formula, exclusion, filter, pagination, item snapshot, cashier, expense, CSV, and Excel assertions
+- [x] Gross sales `680.00`, discounts `30.00`, tax `57.00`, service charge `15.00`, net sales `722.00`, expenses `125.00`, and estimated net revenue `597.00` reconciled exactly
+- [x] Cancelled `999.00` order remained visible but was excluded from sales, item, payment, and cashier completed revenue
+- [x] Historical OrderItem price and quantity calculations passed
+- [x] Cash payment revenue, received amount, and change were separated correctly
+- [x] Custom Colombo date boundaries and reversed-range rejection passed
+- [x] Sales pagination returned 10 then 2 records; order-type filtering passed
+- [x] CSV contained all 12 filtered rows
+- [x] Excel opened in an independent workbook reader, exposed typed values/LKR formatting, had no formula errors, passed ZIP integrity, and passed a visual render after column-width repair
+- [x] Temporary orders, payments, items, expenses, users, exports, and verification artifacts were removed
+- [x] Three report composite indexes applied without modifying financial records
+- [x] All six report pages loaded in the production server with no browser console warnings/errors and no page-level horizontal overflow at 390 px, 1024 px, or the default desktop viewport
+- [x] URL-backed custom dates, order type, payment method, status, sort, and page-size filters persisted in the rendered controls
+- [x] Authenticated CSV and Excel downloads returned HTTP 200; Excel passed ZIP integrity and MIME checks; invalid custom export ranges returned HTTP 400
+- [x] Unauthenticated report access redirected to login; an authenticated temporary CASHIER redirected to `/dashboard?error=forbidden` for both report pages and exports, then was removed with its login activity
+- [ ] Direct PDF generation is intentionally not included; the tested A4 print stylesheet uses the browser's Print / Save PDF workflow

@@ -210,6 +210,7 @@ model Order {
   @@index([orderType])
   @@index([status])
   @@index([createdAt])
+  @@index([status, createdAt])
 }
 
 model OrderItem {
@@ -240,6 +241,7 @@ model Payment {
   order          Order         @relation(fields: [orderId], references: [id], onDelete: Cascade)
 
   @@index([orderId])
+  @@index([paymentMethod, orderId])
   @@index([paymentStatus])
   @@index([reference])
 }
@@ -308,6 +310,7 @@ model Expense {
 
   @@index([createdBy])
   @@index([category])
+  @@index([category, expenseDate])
   @@index([expenseDate])
   @@index([createdAt])
 }

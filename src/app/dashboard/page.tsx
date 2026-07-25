@@ -21,51 +21,8 @@ import { SalesChart } from "@/components/dashboard/SalesChart";
 import { StatCard } from "@/components/dashboard/StatCard";
 import { WelcomeSection } from "@/components/dashboard/WelcomeSection";
 import { requireAuth } from "@/lib/auth-utils";
-
-const stats = [
-  {
-    title: "Today's Sales",
-    value: "Rs. 48,500.00",
-    detail: "+12.5% from yesterday",
-    tone: "gold" as const,
-    icon: CircleDollarSign,
-  },
-  {
-    title: "Today's Orders",
-    value: "86",
-    detail: "14 orders this hour",
-    tone: "orange" as const,
-    icon: ShoppingBag,
-  },
-  {
-    title: "Monthly Revenue",
-    value: "Rs. 1,284,750.00",
-    detail: "+8.2% from last month",
-    tone: "brown" as const,
-    icon: WalletCards,
-  },
-  {
-    title: "Average Order Value",
-    value: "Rs. 563.95",
-    detail: "+4.1% from yesterday",
-    tone: "success" as const,
-    icon: TrendingUp,
-  },
-  {
-    title: "Total Expenses",
-    value: "Rs. 186,420.00",
-    detail: "Current month total",
-    tone: "danger" as const,
-    icon: ReceiptText,
-  },
-  {
-    title: "Net Sales",
-    value: "Rs. 1,098,330.00",
-    detail: "+9.4% monthly growth",
-    tone: "success" as const,
-    icon: BadgeDollarSign,
-  },
-];
+import { getDashboardAnalytics } from "@/features/reports/services/dashboard-analytics-service";
+import { formatReportMoney } from "@/features/reports/utils/report-formatters";
 
 const quickActions = [
   { label: "New Order", description: "Start POS billing", icon: Plus, emphasized: true, href: "/pos" },
@@ -76,7 +33,7 @@ const quickActions = [
 ];
 
 export default async function DashboardPage() {
-  const session = await requireAuth();
+  const [session, analytics] = await Promise.all([requireAuth(), getDashboardAnalytics()]);
   const fullName = session.user.name ?? session.user.username;
   const currentHour = Number(
     new Intl.DateTimeFormat("en-GB", {
@@ -86,6 +43,14 @@ export default async function DashboardPage() {
     }).format(new Date()),
   );
   const greeting = currentHour < 12 ? "Good morning" : currentHour < 17 ? "Good afternoon" : "Good evening";
+  const stats = [
+    { title: "Today's Sales", value: formatReportMoney(analytics.todaySales), detail: "Completed sales today", tone: "gold" as const, icon: CircleDollarSign },
+    { title: "Today's Orders", value: String(analytics.todayOrders), detail: "All orders created today", tone: "orange" as const, icon: ShoppingBag },
+    { title: "Monthly Revenue", value: formatReportMoney(analytics.monthRevenue), detail: "Completed sales this month", tone: "brown" as const, icon: WalletCards },
+    { title: "Average Order Value", value: formatReportMoney(analytics.averageOrder), detail: "Completed monthly average", tone: "success" as const, icon: TrendingUp },
+    { title: "Total Expenses", value: formatReportMoney(analytics.monthExpenses), detail: "Recorded this month", tone: "danger" as const, icon: ReceiptText },
+    { title: "Estimated Net Revenue", value: formatReportMoney(analytics.netRevenue), detail: "Monthly sales minus expenses", tone: "success" as const, icon: BadgeDollarSign },
+  ];
 
   return (
     <DashboardShell user={{ fullName, role: session.user.role }}>
@@ -105,8 +70,8 @@ export default async function DashboardPage() {
         </section>
 
         <section aria-label="Sales charts" className="grid items-stretch gap-5 xl:grid-cols-[minmax(0,1.55fr)_minmax(320px,0.75fr)]">
-          <SalesChart />
-          <PaymentChart />
+          <SalesChart data={analytics.weeklySales} />
+          <PaymentChart data={analytics.payments} />
         </section>
 
         <RecentOrders />

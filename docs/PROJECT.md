@@ -42,6 +42,14 @@ The following are excluded: Customer Management, Table Management, Kitchen Displ
 - `/orders/[id]` displays the invoice snapshot, cashier, order type, items, totals, payment, notes, and cancellation audit.
 - Orders are never physically deleted. Completion and authorized cancellation are transactional and audited.
 
+### Reports and Analytics
+
+- `/reports` and its Sales, Menu Items, Payments, Cashiers, and Expenses sections use live PostgreSQL data only.
+- URL-backed presets/custom ranges use `Asia/Colombo`; cancelled orders remain visible in cancellation metrics and are excluded from every revenue calculation.
+- CSV and `.xlsx` exports contain the complete filtered dataset, restaurant identity, selected range, generated timestamp, and totals. A4 browser printing also supports the operating system’s Save as PDF workflow.
+- Super admins, owners, and managers may view, export, and print. Cashiers are rejected by both report pages and export handlers.
+- Estimated Net Revenue means completed grand totals minus recorded expenses; it is not accounting profit.
+
 ### Expenses
 
 - `/expenses` provides PostgreSQL-backed create, view, edit, and owner-level delete workflows.
@@ -58,7 +66,7 @@ The following are excluded: Customer Management, Table Management, Kitchen Displ
 
 ### Placeholders
 
-`/reports` and `/staff` remain protected, responsive placeholders only. No reporting exports, profit-and-loss calculations, or staff-management business logic is part of TASK-010.
+`/staff` remains a protected, responsive placeholder only. Payroll, forecasting, full accounting, tax-return calculations, and excluded operational modules are not part of TASK-011.
 
 ## Stakeholders
 

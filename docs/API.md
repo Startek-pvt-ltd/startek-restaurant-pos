@@ -4,7 +4,7 @@
 
 Auth.js exposes its standard GET/POST handlers at `/api/auth/[...nextauth]` for credentials sign-in, session handling, CSRF protection, and sign-out. Use Auth.js clients rather than sending unvalidated application payloads directly.
 
-There are no public business API routes. TASK-010 uses Server Actions and does not implement report exports or new route handlers.
+There are no unauthenticated public business APIs. Existing mutations use Server Actions; TASK-011 adds authenticated, read-only report export handlers.
 
 ## Authorization contract
 
@@ -36,6 +36,14 @@ The service reloads the active cashier, menu prices/availability/category status
 - `updateExpenseAction` repeats validation and authorization, uses the last-seen `updatedAt` value to reject concurrent edits, and records `EXPENSE_UPDATED`.
 - `deleteExpenseAction` permits only active `SUPER_ADMIN` or `OWNER` accounts, checks the last-seen version, and records `EXPENSE_DELETED` before physically deleting within the same transaction.
 - Action responses contain only constrained success/field/user-safe error messages. Prisma records and database internals are not returned to the browser.
+
+## Report export handler
+
+`GET /reports/export/[report]` accepts a validated report name, `format=csv|xlsx`, and the same URL filters as the report UI. It rechecks `SUPER_ADMIN`, `OWNER`, or `MANAGER` access before querying.
+
+Supported report names are `overview`, `sales`, `items`, `payments`, `cashiers`, and `expenses`. Responses are private/non-cacheable attachments with safe filenames. Invalid filters return `400`, unknown reports return `404`, and unexpected export failures return a generic `500` without exposing Prisma/PostgreSQL details.
+
+CSV uses UTF-8 with safe escaping. Excel is a genuine SpreadsheetML `.xlsx` package with typed numeric cells, LKR formats, calculated column widths, frozen headers, filters, metadata, and totals. Direct PDF generation is intentionally omitted; the A4 print layout uses the operating-system Print/Save as PDF dialog.
 
 ## Printer settings and receipts
 
