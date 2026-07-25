@@ -28,6 +28,10 @@ The schema covers restaurant configuration, users, menu categories and items, ta
 - Invoice numbers use `RKH-YYYYMMDD-NNNN`. Checkout takes a PostgreSQL transaction-level advisory lock for the Colombo calendar-date prefix, reads the next four-digit sequence, and relies on the unique `Order.orderNumber` constraint as a final safeguard.
 - Order list queries use indexed order date/status fields, relation filters for customer and payment data, and database `skip`/`take` pagination.
 
+## Printer settings
+
+`SystemSetting` stores the Xprinter XP-80T display name, 80 mm paper width, separate auto-preview/auto-print preferences, logo and optional-line visibility, one-to-three copies, thank-you text, developer credit, and a disabled cash-drawer placeholder. Printer changes are validated, role-protected, and written with an `ActivityLog` entry. No operating-system printer credentials are stored.
+
 ## Commands
 
 - `npm run prisma:generate` regenerates Prisma Client after schema changes.

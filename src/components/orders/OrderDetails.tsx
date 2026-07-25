@@ -26,7 +26,7 @@ export function OrderDetails({ canCancel, order }: { canCancel: boolean; order: 
           <div className="mt-3 flex flex-wrap items-center gap-3"><h1 className="text-2xl font-black tracking-tight text-secondary sm:text-3xl">{order.orderNumber}</h1><OrderStatusBadge value={order.status} /></div>
           <p className="mt-1 text-sm text-muted-foreground">Created {formattedDate}</p>
         </div>
-        <OrderActionControls canCancel={canCancel} orderId={order.id} orderNumber={order.orderNumber} showView={false} status={order.status} />
+        <div className="flex flex-wrap items-center gap-2"><Link className="flex h-10 items-center gap-2 rounded-xl bg-secondary px-4 text-xs font-black text-white transition hover:bg-secondary/90 focus-visible:ring-2 focus-visible:ring-primary" href={`/orders/${order.id}/receipt`}><ReceiptText aria-hidden="true" className="size-4" />View Receipt</Link><OrderActionControls canCancel={canCancel} orderId={order.id} orderNumber={order.orderNumber} showView={false} status={order.status} /></div>
       </header>
 
       {order.status === "CANCELLED" && (

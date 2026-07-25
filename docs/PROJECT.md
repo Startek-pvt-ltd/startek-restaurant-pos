@@ -40,6 +40,14 @@ The product does not include table management, a kitchen display system, invento
 - Cancellation is a status transition rather than deletion, and both completion and cancellation are recorded in `ActivityLog`.
 - POS invoices use the server-generated `RKH-YYYYMMDD-0001` format with transaction-level concurrency protection.
 
+## Thermal receipt printing
+
+- Order receipts are formatted for the Xprinter XP-80T using 80 mm paper and an approximately 72 mm printable content width.
+- `/orders/[id]/receipt` provides authenticated preview, manual reprint, and browser/system print-dialog support.
+- `/settings/receipt` persists the printer display name, paper width, separate preview/print automation, logo visibility, one-to-three copies, optional customer/tax/service lines, and custom footer copy.
+- Successful checkout commits the order first, then opens the saved receipt preview. Refreshing the receipt never repeats checkout.
+- The operating system remains responsible for selecting the installed Xprinter XP-80T. Direct USB, network printing, and cash-drawer commands are not implemented.
+
 ## Authentication
 
 - Active users can authenticate with either username or email and a bcrypt-protected password.

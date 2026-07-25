@@ -1,5 +1,14 @@
 # UI Guide
 
+## Thermal receipt
+
+- Target paper: 80 mm; printable receipt width: 72 mm.
+- Receipt output is monochrome, monospace, and free of background colors or dashboard chrome.
+- Receipt sections and item rows avoid internal page breaks.
+- Users select `Xprinter XP-80T` and `80 mm` paper in the operating system print dialog.
+- Monetary columns use tabular numerals, long item names wrap, and Cash-only tender/change fields are omitted for Card and QR payments.
+- The preview toolbar returns to both order details and POS; all toolbar and dashboard elements are excluded from print output.
+
 ## Brand palette
 
 - Primary gold: `#F4B400`

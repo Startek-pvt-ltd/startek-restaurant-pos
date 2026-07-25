@@ -32,3 +32,7 @@ TASK-007 uses authenticated Server Actions and server-rendered Prisma queries; i
 - `cancelOrderAction` accepts a validated UUID and cancellation reason, requires `SUPER_ADMIN`, `OWNER`, or `MANAGER`, preserves the order, and writes its audit metadata.
 - Both actions authenticate and authorize independently of the rendered page, return constrained user-safe results, update `ActivityLog`, and revalidate the list and detail routes.
 - Order list query parameters are treated as untrusted input and parsed with Zod before Prisma filters are constructed.
+
+## Printer settings and receipts
+
+Receipt printing does not expose a printer API. The authenticated `/orders/[id]/receipt` page renders stored order/payment snapshots and invokes the browser/system print dialog. `updatePrinterSettingsAction` validates Xprinter display, fixed 80 mm paper, separate preview/print automation, conditional receipt content, custom footer copy, and one-to-three copies. Only `SUPER_ADMIN`, `OWNER`, or `MANAGER` may update these preferences.

@@ -22,6 +22,12 @@ export type RestaurantBillingSettings = {
   currency: string;
   taxPercentage: number;
   serviceChargePercentage: number;
+  printerName: string;
+  printerPaperWidth: number;
+  autoOpenReceiptAfterCheckout: boolean;
+  autoPrintAfterCheckout: boolean;
+  printLogo: boolean;
+  receiptCopies: number;
 };
 
 export type CartLine = PosProduct & {
@@ -42,9 +48,9 @@ export type CheckoutResult =
   | {
       success: true;
       message: string;
+      orderId: string;
       orderNumber: string;
       grandTotal: number;
       balance: number;
     }
   | { success: false; message: string };
-

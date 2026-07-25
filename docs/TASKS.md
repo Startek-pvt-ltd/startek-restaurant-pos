@@ -12,6 +12,7 @@
 - Database-backed menu and category management with validation, role-based writes, filtering, sorting, responsive views, and safe seed data
 - Touch-friendly POS billing with a persisted cart, held orders, validated restaurant pricing, and atomic checkout
 - Database-backed order management with search, filters, pagination, invoice details, role-protected status changes, and cancellation auditing
+- Xprinter XP-80T receipt preview, 80 mm browser printing, reprinting, configurable receipt content, and post-checkout integration
 
 ## Deferred
 

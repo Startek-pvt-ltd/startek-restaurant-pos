@@ -2,6 +2,7 @@ import "server-only";
 
 import { Prisma, type UserRole } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
+import { getPrinterSettings } from "@/features/settings/services/printer-settings-service";
 
 import { calculateBalance, calculateTotals, toCents } from "../lib/calculate-totals";
 import type { CheckoutInput } from "../types";
@@ -9,7 +10,7 @@ import type { CheckoutInput } from "../types";
 const POS_ROLES: readonly UserRole[] = ["SUPER_ADMIN", "OWNER", "MANAGER", "CASHIER"];
 
 export async function getPosData() {
-  const [categories, products, restaurant] = await Promise.all([
+  const [categories, products, restaurant, printer] = await Promise.all([
     prisma.category.findMany({
       where: { active: true },
       select: {
@@ -40,6 +41,7 @@ export async function getPosData() {
       },
       orderBy: { createdAt: "asc" },
     }),
+    getPrinterSettings(),
   ]);
 
   if (!restaurant) throw new Error("Restaurant billing settings are not configured.");
@@ -58,6 +60,12 @@ export async function getPosData() {
       currency: restaurant.currency,
       taxPercentage: Number(restaurant.taxPercentage),
       serviceChargePercentage: Number(restaurant.serviceCharge),
+      printerName: printer.printerName,
+      printerPaperWidth: printer.paperWidth,
+      autoOpenReceiptAfterCheckout: printer.autoOpenReceiptAfterCheckout,
+      autoPrintAfterCheckout: printer.autoPrintAfterCheckout,
+      printLogo: printer.printLogo,
+      receiptCopies: printer.receiptCopies,
     },
   };
 }
@@ -198,7 +206,7 @@ export async function createCompletedOrder(cashierId: string, input: CheckoutInp
                 },
               },
             },
-            select: { orderNumber: true },
+            select: { id: true, orderNumber: true },
           });
 
           await tx.activityLog.create({
@@ -209,6 +217,7 @@ export async function createCompletedOrder(cashierId: string, input: CheckoutInp
           });
 
           return {
+            orderId: order.id,
             orderNumber: order.orderNumber,
             grandTotal: totals.grandTotal,
             balance,

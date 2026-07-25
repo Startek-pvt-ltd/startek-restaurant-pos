@@ -29,7 +29,7 @@ interface PosBillingScreenProps {
 export function PosBillingScreen({ categories, products, settings }: PosBillingScreenProps) {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [search, setSearch] = useState("");
-  const [lastOrder, setLastOrder] = useState<{ orderNumber: string; grandTotal: number } | null>(null);
+  const [lastOrder, setLastOrder] = useState<{ id: string; orderNumber: string; grandTotal: number } | null>(null);
   const [pending, startTransition] = useTransition();
 
   const hydrated = usePosStore((state) => state.hydrated);
@@ -123,8 +123,12 @@ export function PosBillingScreen({ categories, products, settings }: PosBillingS
         return;
       }
 
-      setLastOrder({ orderNumber: result.orderNumber, grandTotal: result.grandTotal });
+      setLastOrder({ id: result.orderId, orderNumber: result.orderNumber, grandTotal: result.grandTotal });
       clearCart();
+      if (settings.autoOpenReceiptAfterCheckout || settings.autoPrintAfterCheckout) {
+        window.location.assign(`/orders/${result.orderId}/receipt${settings.autoPrintAfterCheckout ? "?auto=1" : ""}`);
+        return;
+      }
       toast.success(result.message, {
         description: result.balance > 0 ? `Return ${formatMoney(result.balance, settings.currency)} to the customer.` : undefined,
       });
@@ -163,7 +167,7 @@ export function PosBillingScreen({ categories, products, settings }: PosBillingS
             <CartSummary currency={settings.currency} discount={totals.discount} grandTotal={totals.grandTotal} serviceCharge={totals.serviceCharge} serviceChargePercentage={settings.serviceChargePercentage} subtotal={totals.subtotal} tax={totals.tax} taxPercentage={settings.taxPercentage} />
             <PaymentPanel amountReceived={amountReceived} currency={settings.currency} grandTotal={totals.grandTotal} method={paymentMethod} onAmountChange={setAmountReceived} onMethodChange={setPaymentMethod} />
             {checkoutIssue && <p className="rounded-xl bg-amber-50 px-3 py-2 text-xs font-bold text-amber-800" role="status">{checkoutIssue}</p>}
-            <CheckoutFooter canComplete={canComplete} cartEmpty={items.length === 0} hasHeldOrder={Boolean(heldOrder)} onClear={() => { if (window.confirm("Clear every item from the current cart?")) { clearCart(); toast.success("Cart cleared."); } }} onComplete={handleComplete} onHold={() => { holdOrder(); toast.success("Order held on this device."); }} onPrint={() => toast.info("Receipt printing will be added with printer integration.")} onResume={() => { resumeOrder(); toast.success("Held order resumed."); }} pending={pending} />
+            <CheckoutFooter canComplete={canComplete} canPrint={Boolean(lastOrder)} cartEmpty={items.length === 0} hasHeldOrder={Boolean(heldOrder)} onClear={() => { if (window.confirm("Clear every item from the current cart?")) { clearCart(); toast.success("Cart cleared."); } }} onComplete={handleComplete} onHold={() => { holdOrder(); toast.success("Order held on this device."); }} onPrint={() => { if (lastOrder) window.open(`/orders/${lastOrder.id}/receipt`, "_blank", "noopener,noreferrer"); }} onResume={() => { resumeOrder(); toast.success("Held order resumed."); }} pending={pending} />
           </div>
         </aside>
       </div>

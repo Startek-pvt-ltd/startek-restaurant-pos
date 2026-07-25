@@ -20,8 +20,20 @@ export type SystemSettingModel = runtime.Types.Result.DefaultSelection<Prisma.$S
 
 export type AggregateSystemSetting = {
   _count: SystemSettingCountAggregateOutputType | null
+  _avg: SystemSettingAvgAggregateOutputType | null
+  _sum: SystemSettingSumAggregateOutputType | null
   _min: SystemSettingMinAggregateOutputType | null
   _max: SystemSettingMaxAggregateOutputType | null
+}
+
+export type SystemSettingAvgAggregateOutputType = {
+  printerPaperWidth: number | null
+  receiptCopies: number | null
+}
+
+export type SystemSettingSumAggregateOutputType = {
+  printerPaperWidth: number | null
+  receiptCopies: number | null
 }
 
 export type SystemSettingMinAggregateOutputType = {
@@ -32,6 +44,18 @@ export type SystemSettingMinAggregateOutputType = {
   currency: string | null
   timezone: string | null
   language: string | null
+  printerName: string | null
+  printerPaperWidth: number | null
+  autoOpenReceiptAfterCheckout: boolean | null
+  autoPrintAfterCheckout: boolean | null
+  printLogo: boolean | null
+  receiptCopies: number | null
+  receiptShowCustomerInfo: boolean | null
+  receiptShowTax: boolean | null
+  receiptShowServiceCharge: boolean | null
+  receiptThankYouMessage: string | null
+  receiptDeveloperCredit: string | null
+  openCashDrawer: boolean | null
 }
 
 export type SystemSettingMaxAggregateOutputType = {
@@ -42,6 +66,18 @@ export type SystemSettingMaxAggregateOutputType = {
   currency: string | null
   timezone: string | null
   language: string | null
+  printerName: string | null
+  printerPaperWidth: number | null
+  autoOpenReceiptAfterCheckout: boolean | null
+  autoPrintAfterCheckout: boolean | null
+  printLogo: boolean | null
+  receiptCopies: number | null
+  receiptShowCustomerInfo: boolean | null
+  receiptShowTax: boolean | null
+  receiptShowServiceCharge: boolean | null
+  receiptThankYouMessage: string | null
+  receiptDeveloperCredit: string | null
+  openCashDrawer: boolean | null
 }
 
 export type SystemSettingCountAggregateOutputType = {
@@ -52,9 +88,31 @@ export type SystemSettingCountAggregateOutputType = {
   currency: number
   timezone: number
   language: number
+  printerName: number
+  printerPaperWidth: number
+  autoOpenReceiptAfterCheckout: number
+  autoPrintAfterCheckout: number
+  printLogo: number
+  receiptCopies: number
+  receiptShowCustomerInfo: number
+  receiptShowTax: number
+  receiptShowServiceCharge: number
+  receiptThankYouMessage: number
+  receiptDeveloperCredit: number
+  openCashDrawer: number
   _all: number
 }
 
+
+export type SystemSettingAvgAggregateInputType = {
+  printerPaperWidth?: true
+  receiptCopies?: true
+}
+
+export type SystemSettingSumAggregateInputType = {
+  printerPaperWidth?: true
+  receiptCopies?: true
+}
 
 export type SystemSettingMinAggregateInputType = {
   id?: true
@@ -64,6 +122,18 @@ export type SystemSettingMinAggregateInputType = {
   currency?: true
   timezone?: true
   language?: true
+  printerName?: true
+  printerPaperWidth?: true
+  autoOpenReceiptAfterCheckout?: true
+  autoPrintAfterCheckout?: true
+  printLogo?: true
+  receiptCopies?: true
+  receiptShowCustomerInfo?: true
+  receiptShowTax?: true
+  receiptShowServiceCharge?: true
+  receiptThankYouMessage?: true
+  receiptDeveloperCredit?: true
+  openCashDrawer?: true
 }
 
 export type SystemSettingMaxAggregateInputType = {
@@ -74,6 +144,18 @@ export type SystemSettingMaxAggregateInputType = {
   currency?: true
   timezone?: true
   language?: true
+  printerName?: true
+  printerPaperWidth?: true
+  autoOpenReceiptAfterCheckout?: true
+  autoPrintAfterCheckout?: true
+  printLogo?: true
+  receiptCopies?: true
+  receiptShowCustomerInfo?: true
+  receiptShowTax?: true
+  receiptShowServiceCharge?: true
+  receiptThankYouMessage?: true
+  receiptDeveloperCredit?: true
+  openCashDrawer?: true
 }
 
 export type SystemSettingCountAggregateInputType = {
@@ -84,6 +166,18 @@ export type SystemSettingCountAggregateInputType = {
   currency?: true
   timezone?: true
   language?: true
+  printerName?: true
+  printerPaperWidth?: true
+  autoOpenReceiptAfterCheckout?: true
+  autoPrintAfterCheckout?: true
+  printLogo?: true
+  receiptCopies?: true
+  receiptShowCustomerInfo?: true
+  receiptShowTax?: true
+  receiptShowServiceCharge?: true
+  receiptThankYouMessage?: true
+  receiptDeveloperCredit?: true
+  openCashDrawer?: true
   _all?: true
 }
 
@@ -124,6 +218,18 @@ export type SystemSettingAggregateArgs<ExtArgs extends runtime.Types.Extensions.
   _count?: true | SystemSettingCountAggregateInputType
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   *
+   * Select which fields to average
+  **/
+  _avg?: SystemSettingAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   *
+   * Select which fields to sum
+  **/
+  _sum?: SystemSettingSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
    * Select which fields to find the minimum value
   **/
@@ -155,6 +261,8 @@ export type SystemSettingGroupByArgs<ExtArgs extends runtime.Types.Extensions.In
   take?: number
   skip?: number
   _count?: SystemSettingCountAggregateInputType | true
+  _avg?: SystemSettingAvgAggregateInputType
+  _sum?: SystemSettingSumAggregateInputType
   _min?: SystemSettingMinAggregateInputType
   _max?: SystemSettingMaxAggregateInputType
 }
@@ -167,7 +275,21 @@ export type SystemSettingGroupByOutputType = {
   currency: string
   timezone: string
   language: string
+  printerName: string
+  printerPaperWidth: number
+  autoOpenReceiptAfterCheckout: boolean
+  autoPrintAfterCheckout: boolean
+  printLogo: boolean
+  receiptCopies: number
+  receiptShowCustomerInfo: boolean
+  receiptShowTax: boolean
+  receiptShowServiceCharge: boolean
+  receiptThankYouMessage: string
+  receiptDeveloperCredit: string
+  openCashDrawer: boolean
   _count: SystemSettingCountAggregateOutputType | null
+  _avg: SystemSettingAvgAggregateOutputType | null
+  _sum: SystemSettingSumAggregateOutputType | null
   _min: SystemSettingMinAggregateOutputType | null
   _max: SystemSettingMaxAggregateOutputType | null
 }
@@ -198,6 +320,18 @@ export type SystemSettingWhereInput = {
   currency?: Prisma.StringFilter<"SystemSetting"> | string
   timezone?: Prisma.StringFilter<"SystemSetting"> | string
   language?: Prisma.StringFilter<"SystemSetting"> | string
+  printerName?: Prisma.StringFilter<"SystemSetting"> | string
+  printerPaperWidth?: Prisma.IntFilter<"SystemSetting"> | number
+  autoOpenReceiptAfterCheckout?: Prisma.BoolFilter<"SystemSetting"> | boolean
+  autoPrintAfterCheckout?: Prisma.BoolFilter<"SystemSetting"> | boolean
+  printLogo?: Prisma.BoolFilter<"SystemSetting"> | boolean
+  receiptCopies?: Prisma.IntFilter<"SystemSetting"> | number
+  receiptShowCustomerInfo?: Prisma.BoolFilter<"SystemSetting"> | boolean
+  receiptShowTax?: Prisma.BoolFilter<"SystemSetting"> | boolean
+  receiptShowServiceCharge?: Prisma.BoolFilter<"SystemSetting"> | boolean
+  receiptThankYouMessage?: Prisma.StringFilter<"SystemSetting"> | string
+  receiptDeveloperCredit?: Prisma.StringFilter<"SystemSetting"> | string
+  openCashDrawer?: Prisma.BoolFilter<"SystemSetting"> | boolean
 }
 
 export type SystemSettingOrderByWithRelationInput = {
@@ -208,6 +342,18 @@ export type SystemSettingOrderByWithRelationInput = {
   currency?: Prisma.SortOrder
   timezone?: Prisma.SortOrder
   language?: Prisma.SortOrder
+  printerName?: Prisma.SortOrder
+  printerPaperWidth?: Prisma.SortOrder
+  autoOpenReceiptAfterCheckout?: Prisma.SortOrder
+  autoPrintAfterCheckout?: Prisma.SortOrder
+  printLogo?: Prisma.SortOrder
+  receiptCopies?: Prisma.SortOrder
+  receiptShowCustomerInfo?: Prisma.SortOrder
+  receiptShowTax?: Prisma.SortOrder
+  receiptShowServiceCharge?: Prisma.SortOrder
+  receiptThankYouMessage?: Prisma.SortOrder
+  receiptDeveloperCredit?: Prisma.SortOrder
+  openCashDrawer?: Prisma.SortOrder
 }
 
 export type SystemSettingWhereUniqueInput = Prisma.AtLeast<{
@@ -221,6 +367,18 @@ export type SystemSettingWhereUniqueInput = Prisma.AtLeast<{
   currency?: Prisma.StringFilter<"SystemSetting"> | string
   timezone?: Prisma.StringFilter<"SystemSetting"> | string
   language?: Prisma.StringFilter<"SystemSetting"> | string
+  printerName?: Prisma.StringFilter<"SystemSetting"> | string
+  printerPaperWidth?: Prisma.IntFilter<"SystemSetting"> | number
+  autoOpenReceiptAfterCheckout?: Prisma.BoolFilter<"SystemSetting"> | boolean
+  autoPrintAfterCheckout?: Prisma.BoolFilter<"SystemSetting"> | boolean
+  printLogo?: Prisma.BoolFilter<"SystemSetting"> | boolean
+  receiptCopies?: Prisma.IntFilter<"SystemSetting"> | number
+  receiptShowCustomerInfo?: Prisma.BoolFilter<"SystemSetting"> | boolean
+  receiptShowTax?: Prisma.BoolFilter<"SystemSetting"> | boolean
+  receiptShowServiceCharge?: Prisma.BoolFilter<"SystemSetting"> | boolean
+  receiptThankYouMessage?: Prisma.StringFilter<"SystemSetting"> | string
+  receiptDeveloperCredit?: Prisma.StringFilter<"SystemSetting"> | string
+  openCashDrawer?: Prisma.BoolFilter<"SystemSetting"> | boolean
 }, "id">
 
 export type SystemSettingOrderByWithAggregationInput = {
@@ -231,9 +389,23 @@ export type SystemSettingOrderByWithAggregationInput = {
   currency?: Prisma.SortOrder
   timezone?: Prisma.SortOrder
   language?: Prisma.SortOrder
+  printerName?: Prisma.SortOrder
+  printerPaperWidth?: Prisma.SortOrder
+  autoOpenReceiptAfterCheckout?: Prisma.SortOrder
+  autoPrintAfterCheckout?: Prisma.SortOrder
+  printLogo?: Prisma.SortOrder
+  receiptCopies?: Prisma.SortOrder
+  receiptShowCustomerInfo?: Prisma.SortOrder
+  receiptShowTax?: Prisma.SortOrder
+  receiptShowServiceCharge?: Prisma.SortOrder
+  receiptThankYouMessage?: Prisma.SortOrder
+  receiptDeveloperCredit?: Prisma.SortOrder
+  openCashDrawer?: Prisma.SortOrder
   _count?: Prisma.SystemSettingCountOrderByAggregateInput
+  _avg?: Prisma.SystemSettingAvgOrderByAggregateInput
   _max?: Prisma.SystemSettingMaxOrderByAggregateInput
   _min?: Prisma.SystemSettingMinOrderByAggregateInput
+  _sum?: Prisma.SystemSettingSumOrderByAggregateInput
 }
 
 export type SystemSettingScalarWhereWithAggregatesInput = {
@@ -247,6 +419,18 @@ export type SystemSettingScalarWhereWithAggregatesInput = {
   currency?: Prisma.StringWithAggregatesFilter<"SystemSetting"> | string
   timezone?: Prisma.StringWithAggregatesFilter<"SystemSetting"> | string
   language?: Prisma.StringWithAggregatesFilter<"SystemSetting"> | string
+  printerName?: Prisma.StringWithAggregatesFilter<"SystemSetting"> | string
+  printerPaperWidth?: Prisma.IntWithAggregatesFilter<"SystemSetting"> | number
+  autoOpenReceiptAfterCheckout?: Prisma.BoolWithAggregatesFilter<"SystemSetting"> | boolean
+  autoPrintAfterCheckout?: Prisma.BoolWithAggregatesFilter<"SystemSetting"> | boolean
+  printLogo?: Prisma.BoolWithAggregatesFilter<"SystemSetting"> | boolean
+  receiptCopies?: Prisma.IntWithAggregatesFilter<"SystemSetting"> | number
+  receiptShowCustomerInfo?: Prisma.BoolWithAggregatesFilter<"SystemSetting"> | boolean
+  receiptShowTax?: Prisma.BoolWithAggregatesFilter<"SystemSetting"> | boolean
+  receiptShowServiceCharge?: Prisma.BoolWithAggregatesFilter<"SystemSetting"> | boolean
+  receiptThankYouMessage?: Prisma.StringWithAggregatesFilter<"SystemSetting"> | string
+  receiptDeveloperCredit?: Prisma.StringWithAggregatesFilter<"SystemSetting"> | string
+  openCashDrawer?: Prisma.BoolWithAggregatesFilter<"SystemSetting"> | boolean
 }
 
 export type SystemSettingCreateInput = {
@@ -257,6 +441,18 @@ export type SystemSettingCreateInput = {
   currency?: string
   timezone?: string
   language?: string
+  printerName?: string
+  printerPaperWidth?: number
+  autoOpenReceiptAfterCheckout?: boolean
+  autoPrintAfterCheckout?: boolean
+  printLogo?: boolean
+  receiptCopies?: number
+  receiptShowCustomerInfo?: boolean
+  receiptShowTax?: boolean
+  receiptShowServiceCharge?: boolean
+  receiptThankYouMessage?: string
+  receiptDeveloperCredit?: string
+  openCashDrawer?: boolean
 }
 
 export type SystemSettingUncheckedCreateInput = {
@@ -267,6 +463,18 @@ export type SystemSettingUncheckedCreateInput = {
   currency?: string
   timezone?: string
   language?: string
+  printerName?: string
+  printerPaperWidth?: number
+  autoOpenReceiptAfterCheckout?: boolean
+  autoPrintAfterCheckout?: boolean
+  printLogo?: boolean
+  receiptCopies?: number
+  receiptShowCustomerInfo?: boolean
+  receiptShowTax?: boolean
+  receiptShowServiceCharge?: boolean
+  receiptThankYouMessage?: string
+  receiptDeveloperCredit?: string
+  openCashDrawer?: boolean
 }
 
 export type SystemSettingUpdateInput = {
@@ -277,6 +485,18 @@ export type SystemSettingUpdateInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   timezone?: Prisma.StringFieldUpdateOperationsInput | string
   language?: Prisma.StringFieldUpdateOperationsInput | string
+  printerName?: Prisma.StringFieldUpdateOperationsInput | string
+  printerPaperWidth?: Prisma.IntFieldUpdateOperationsInput | number
+  autoOpenReceiptAfterCheckout?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  autoPrintAfterCheckout?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  printLogo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiptCopies?: Prisma.IntFieldUpdateOperationsInput | number
+  receiptShowCustomerInfo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiptShowTax?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiptShowServiceCharge?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiptThankYouMessage?: Prisma.StringFieldUpdateOperationsInput | string
+  receiptDeveloperCredit?: Prisma.StringFieldUpdateOperationsInput | string
+  openCashDrawer?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type SystemSettingUncheckedUpdateInput = {
@@ -287,6 +507,18 @@ export type SystemSettingUncheckedUpdateInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   timezone?: Prisma.StringFieldUpdateOperationsInput | string
   language?: Prisma.StringFieldUpdateOperationsInput | string
+  printerName?: Prisma.StringFieldUpdateOperationsInput | string
+  printerPaperWidth?: Prisma.IntFieldUpdateOperationsInput | number
+  autoOpenReceiptAfterCheckout?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  autoPrintAfterCheckout?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  printLogo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiptCopies?: Prisma.IntFieldUpdateOperationsInput | number
+  receiptShowCustomerInfo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiptShowTax?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiptShowServiceCharge?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiptThankYouMessage?: Prisma.StringFieldUpdateOperationsInput | string
+  receiptDeveloperCredit?: Prisma.StringFieldUpdateOperationsInput | string
+  openCashDrawer?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type SystemSettingCreateManyInput = {
@@ -297,6 +529,18 @@ export type SystemSettingCreateManyInput = {
   currency?: string
   timezone?: string
   language?: string
+  printerName?: string
+  printerPaperWidth?: number
+  autoOpenReceiptAfterCheckout?: boolean
+  autoPrintAfterCheckout?: boolean
+  printLogo?: boolean
+  receiptCopies?: number
+  receiptShowCustomerInfo?: boolean
+  receiptShowTax?: boolean
+  receiptShowServiceCharge?: boolean
+  receiptThankYouMessage?: string
+  receiptDeveloperCredit?: string
+  openCashDrawer?: boolean
 }
 
 export type SystemSettingUpdateManyMutationInput = {
@@ -307,6 +551,18 @@ export type SystemSettingUpdateManyMutationInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   timezone?: Prisma.StringFieldUpdateOperationsInput | string
   language?: Prisma.StringFieldUpdateOperationsInput | string
+  printerName?: Prisma.StringFieldUpdateOperationsInput | string
+  printerPaperWidth?: Prisma.IntFieldUpdateOperationsInput | number
+  autoOpenReceiptAfterCheckout?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  autoPrintAfterCheckout?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  printLogo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiptCopies?: Prisma.IntFieldUpdateOperationsInput | number
+  receiptShowCustomerInfo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiptShowTax?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiptShowServiceCharge?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiptThankYouMessage?: Prisma.StringFieldUpdateOperationsInput | string
+  receiptDeveloperCredit?: Prisma.StringFieldUpdateOperationsInput | string
+  openCashDrawer?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type SystemSettingUncheckedUpdateManyInput = {
@@ -317,6 +573,18 @@ export type SystemSettingUncheckedUpdateManyInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   timezone?: Prisma.StringFieldUpdateOperationsInput | string
   language?: Prisma.StringFieldUpdateOperationsInput | string
+  printerName?: Prisma.StringFieldUpdateOperationsInput | string
+  printerPaperWidth?: Prisma.IntFieldUpdateOperationsInput | number
+  autoOpenReceiptAfterCheckout?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  autoPrintAfterCheckout?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  printLogo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiptCopies?: Prisma.IntFieldUpdateOperationsInput | number
+  receiptShowCustomerInfo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiptShowTax?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiptShowServiceCharge?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiptThankYouMessage?: Prisma.StringFieldUpdateOperationsInput | string
+  receiptDeveloperCredit?: Prisma.StringFieldUpdateOperationsInput | string
+  openCashDrawer?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type SystemSettingCountOrderByAggregateInput = {
@@ -327,6 +595,23 @@ export type SystemSettingCountOrderByAggregateInput = {
   currency?: Prisma.SortOrder
   timezone?: Prisma.SortOrder
   language?: Prisma.SortOrder
+  printerName?: Prisma.SortOrder
+  printerPaperWidth?: Prisma.SortOrder
+  autoOpenReceiptAfterCheckout?: Prisma.SortOrder
+  autoPrintAfterCheckout?: Prisma.SortOrder
+  printLogo?: Prisma.SortOrder
+  receiptCopies?: Prisma.SortOrder
+  receiptShowCustomerInfo?: Prisma.SortOrder
+  receiptShowTax?: Prisma.SortOrder
+  receiptShowServiceCharge?: Prisma.SortOrder
+  receiptThankYouMessage?: Prisma.SortOrder
+  receiptDeveloperCredit?: Prisma.SortOrder
+  openCashDrawer?: Prisma.SortOrder
+}
+
+export type SystemSettingAvgOrderByAggregateInput = {
+  printerPaperWidth?: Prisma.SortOrder
+  receiptCopies?: Prisma.SortOrder
 }
 
 export type SystemSettingMaxOrderByAggregateInput = {
@@ -337,6 +622,18 @@ export type SystemSettingMaxOrderByAggregateInput = {
   currency?: Prisma.SortOrder
   timezone?: Prisma.SortOrder
   language?: Prisma.SortOrder
+  printerName?: Prisma.SortOrder
+  printerPaperWidth?: Prisma.SortOrder
+  autoOpenReceiptAfterCheckout?: Prisma.SortOrder
+  autoPrintAfterCheckout?: Prisma.SortOrder
+  printLogo?: Prisma.SortOrder
+  receiptCopies?: Prisma.SortOrder
+  receiptShowCustomerInfo?: Prisma.SortOrder
+  receiptShowTax?: Prisma.SortOrder
+  receiptShowServiceCharge?: Prisma.SortOrder
+  receiptThankYouMessage?: Prisma.SortOrder
+  receiptDeveloperCredit?: Prisma.SortOrder
+  openCashDrawer?: Prisma.SortOrder
 }
 
 export type SystemSettingMinOrderByAggregateInput = {
@@ -347,6 +644,23 @@ export type SystemSettingMinOrderByAggregateInput = {
   currency?: Prisma.SortOrder
   timezone?: Prisma.SortOrder
   language?: Prisma.SortOrder
+  printerName?: Prisma.SortOrder
+  printerPaperWidth?: Prisma.SortOrder
+  autoOpenReceiptAfterCheckout?: Prisma.SortOrder
+  autoPrintAfterCheckout?: Prisma.SortOrder
+  printLogo?: Prisma.SortOrder
+  receiptCopies?: Prisma.SortOrder
+  receiptShowCustomerInfo?: Prisma.SortOrder
+  receiptShowTax?: Prisma.SortOrder
+  receiptShowServiceCharge?: Prisma.SortOrder
+  receiptThankYouMessage?: Prisma.SortOrder
+  receiptDeveloperCredit?: Prisma.SortOrder
+  openCashDrawer?: Prisma.SortOrder
+}
+
+export type SystemSettingSumOrderByAggregateInput = {
+  printerPaperWidth?: Prisma.SortOrder
+  receiptCopies?: Prisma.SortOrder
 }
 
 
@@ -359,6 +673,18 @@ export type SystemSettingSelect<ExtArgs extends runtime.Types.Extensions.Interna
   currency?: boolean
   timezone?: boolean
   language?: boolean
+  printerName?: boolean
+  printerPaperWidth?: boolean
+  autoOpenReceiptAfterCheckout?: boolean
+  autoPrintAfterCheckout?: boolean
+  printLogo?: boolean
+  receiptCopies?: boolean
+  receiptShowCustomerInfo?: boolean
+  receiptShowTax?: boolean
+  receiptShowServiceCharge?: boolean
+  receiptThankYouMessage?: boolean
+  receiptDeveloperCredit?: boolean
+  openCashDrawer?: boolean
 }, ExtArgs["result"]["systemSetting"]>
 
 export type SystemSettingSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -369,6 +695,18 @@ export type SystemSettingSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   currency?: boolean
   timezone?: boolean
   language?: boolean
+  printerName?: boolean
+  printerPaperWidth?: boolean
+  autoOpenReceiptAfterCheckout?: boolean
+  autoPrintAfterCheckout?: boolean
+  printLogo?: boolean
+  receiptCopies?: boolean
+  receiptShowCustomerInfo?: boolean
+  receiptShowTax?: boolean
+  receiptShowServiceCharge?: boolean
+  receiptThankYouMessage?: boolean
+  receiptDeveloperCredit?: boolean
+  openCashDrawer?: boolean
 }, ExtArgs["result"]["systemSetting"]>
 
 export type SystemSettingSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -379,6 +717,18 @@ export type SystemSettingSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   currency?: boolean
   timezone?: boolean
   language?: boolean
+  printerName?: boolean
+  printerPaperWidth?: boolean
+  autoOpenReceiptAfterCheckout?: boolean
+  autoPrintAfterCheckout?: boolean
+  printLogo?: boolean
+  receiptCopies?: boolean
+  receiptShowCustomerInfo?: boolean
+  receiptShowTax?: boolean
+  receiptShowServiceCharge?: boolean
+  receiptThankYouMessage?: boolean
+  receiptDeveloperCredit?: boolean
+  openCashDrawer?: boolean
 }, ExtArgs["result"]["systemSetting"]>
 
 export type SystemSettingSelectScalar = {
@@ -389,9 +739,21 @@ export type SystemSettingSelectScalar = {
   currency?: boolean
   timezone?: boolean
   language?: boolean
+  printerName?: boolean
+  printerPaperWidth?: boolean
+  autoOpenReceiptAfterCheckout?: boolean
+  autoPrintAfterCheckout?: boolean
+  printLogo?: boolean
+  receiptCopies?: boolean
+  receiptShowCustomerInfo?: boolean
+  receiptShowTax?: boolean
+  receiptShowServiceCharge?: boolean
+  receiptThankYouMessage?: boolean
+  receiptDeveloperCredit?: boolean
+  openCashDrawer?: boolean
 }
 
-export type SystemSettingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "restaurantName" | "logo" | "receiptFooter" | "currency" | "timezone" | "language", ExtArgs["result"]["systemSetting"]>
+export type SystemSettingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "restaurantName" | "logo" | "receiptFooter" | "currency" | "timezone" | "language" | "printerName" | "printerPaperWidth" | "autoOpenReceiptAfterCheckout" | "autoPrintAfterCheckout" | "printLogo" | "receiptCopies" | "receiptShowCustomerInfo" | "receiptShowTax" | "receiptShowServiceCharge" | "receiptThankYouMessage" | "receiptDeveloperCredit" | "openCashDrawer", ExtArgs["result"]["systemSetting"]>
 
 export type $SystemSettingPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "SystemSetting"
@@ -404,6 +766,18 @@ export type $SystemSettingPayload<ExtArgs extends runtime.Types.Extensions.Inter
     currency: string
     timezone: string
     language: string
+    printerName: string
+    printerPaperWidth: number
+    autoOpenReceiptAfterCheckout: boolean
+    autoPrintAfterCheckout: boolean
+    printLogo: boolean
+    receiptCopies: number
+    receiptShowCustomerInfo: boolean
+    receiptShowTax: boolean
+    receiptShowServiceCharge: boolean
+    receiptThankYouMessage: string
+    receiptDeveloperCredit: string
+    openCashDrawer: boolean
   }, ExtArgs["result"]["systemSetting"]>
   composites: {}
 }
@@ -834,6 +1208,18 @@ export interface SystemSettingFieldRefs {
   readonly currency: Prisma.FieldRef<"SystemSetting", 'String'>
   readonly timezone: Prisma.FieldRef<"SystemSetting", 'String'>
   readonly language: Prisma.FieldRef<"SystemSetting", 'String'>
+  readonly printerName: Prisma.FieldRef<"SystemSetting", 'String'>
+  readonly printerPaperWidth: Prisma.FieldRef<"SystemSetting", 'Int'>
+  readonly autoOpenReceiptAfterCheckout: Prisma.FieldRef<"SystemSetting", 'Boolean'>
+  readonly autoPrintAfterCheckout: Prisma.FieldRef<"SystemSetting", 'Boolean'>
+  readonly printLogo: Prisma.FieldRef<"SystemSetting", 'Boolean'>
+  readonly receiptCopies: Prisma.FieldRef<"SystemSetting", 'Int'>
+  readonly receiptShowCustomerInfo: Prisma.FieldRef<"SystemSetting", 'Boolean'>
+  readonly receiptShowTax: Prisma.FieldRef<"SystemSetting", 'Boolean'>
+  readonly receiptShowServiceCharge: Prisma.FieldRef<"SystemSetting", 'Boolean'>
+  readonly receiptThankYouMessage: Prisma.FieldRef<"SystemSetting", 'String'>
+  readonly receiptDeveloperCredit: Prisma.FieldRef<"SystemSetting", 'String'>
+  readonly openCashDrawer: Prisma.FieldRef<"SystemSetting", 'Boolean'>
 }
     
 

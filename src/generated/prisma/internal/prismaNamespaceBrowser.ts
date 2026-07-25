@@ -300,7 +300,19 @@ export const SystemSettingScalarFieldEnum = {
   receiptFooter: 'receiptFooter',
   currency: 'currency',
   timezone: 'timezone',
-  language: 'language'
+  language: 'language',
+  printerName: 'printerName',
+  printerPaperWidth: 'printerPaperWidth',
+  autoOpenReceiptAfterCheckout: 'autoOpenReceiptAfterCheckout',
+  autoPrintAfterCheckout: 'autoPrintAfterCheckout',
+  printLogo: 'printLogo',
+  receiptCopies: 'receiptCopies',
+  receiptShowCustomerInfo: 'receiptShowCustomerInfo',
+  receiptShowTax: 'receiptShowTax',
+  receiptShowServiceCharge: 'receiptShowServiceCharge',
+  receiptThankYouMessage: 'receiptThankYouMessage',
+  receiptDeveloperCredit: 'receiptDeveloperCredit',
+  openCashDrawer: 'openCashDrawer'
 } as const
 
 export type SystemSettingScalarFieldEnum = (typeof SystemSettingScalarFieldEnum)[keyof typeof SystemSettingScalarFieldEnum]

@@ -315,11 +315,23 @@ model ActivityLog {
 }
 
 model SystemSetting {
-  id             String  @id @default(uuid()) @db.Uuid
-  restaurantName String
-  logo           String?
-  receiptFooter  String?
-  currency       String  @default("LKR") @db.VarChar(3)
-  timezone       String  @default("Asia/Colombo")
-  language       String  @default("en")
+  id                           String  @id @default(uuid()) @db.Uuid
+  restaurantName               String
+  logo                         String?
+  receiptFooter                String?
+  currency                     String  @default("LKR") @db.VarChar(3)
+  timezone                     String  @default("Asia/Colombo")
+  language                     String  @default("en")
+  printerName                  String  @default("Xprinter XP-80T")
+  printerPaperWidth            Int     @default(80)
+  autoOpenReceiptAfterCheckout Boolean @default(true)
+  autoPrintAfterCheckout       Boolean @default(false)
+  printLogo                    Boolean @default(true)
+  receiptCopies                Int     @default(1)
+  receiptShowCustomerInfo      Boolean @default(true)
+  receiptShowTax               Boolean @default(true)
+  receiptShowServiceCharge     Boolean @default(true)
+  receiptThankYouMessage       String  @default("Thank You!\nPlease Visit Again")
+  receiptDeveloperCredit       String  @default("Design & Deploy by\nStartek (PVT) LTD")
+  openCashDrawer               Boolean @default(false)
 }

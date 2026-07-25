@@ -17,6 +17,8 @@ export function Topbar({ onMenuClick, user }: TopbarProps) {
   const [now, setNow] = useState<Date | null>(null);
   const pageMeta = pathname === "/menu/categories"
     ? { title: "Categories", description: "Menu organization" }
+    : pathname.startsWith("/settings")
+      ? { title: "Settings", description: "System and receipt printing preferences" }
     : pathname.startsWith("/orders/")
       ? { title: "Order Details", description: "Invoice and payment information" }
     : pathname === "/orders"
@@ -46,7 +48,7 @@ export function Topbar({ onMenuClick, user }: TopbarProps) {
   }, []);
 
   return (
-    <header className="sticky top-0 z-30 flex h-20 items-center gap-3 border-b border-border/80 bg-card/92 px-4 shadow-[0_6px_24px_rgba(74,35,16,0.04)] backdrop-blur-xl sm:px-6 lg:px-8 2xl:px-10">
+    <header className="no-print sticky top-0 z-30 flex h-20 items-center gap-3 border-b border-border/80 bg-card/92 px-4 shadow-[0_6px_24px_rgba(74,35,16,0.04)] backdrop-blur-xl sm:px-6 lg:px-8 2xl:px-10">
       <button
         aria-label="Open navigation"
         className="flex size-10 shrink-0 items-center justify-center rounded-xl border border-border bg-card text-foreground transition hover:border-primary hover:bg-muted focus-visible:ring-2 focus-visible:ring-primary lg:hidden"

@@ -45,7 +45,7 @@ export function OrderActionControls({ canCancel, orderId, orderNumber, showView 
         {showView && <Link aria-label={`View ${orderNumber}`} className={buttonClass} href={`/orders/${orderId}`} title="View order"><Eye aria-hidden="true" className="size-4" /></Link>}
         {status === "PENDING" && <button aria-label={`Complete ${orderNumber}`} className={buttonClass} onClick={() => setDialog("complete")} title="Mark completed" type="button"><CheckCircle2 aria-hidden="true" className="size-4" /></button>}
         {canCancel && status !== "CANCELLED" && <button aria-label={`Cancel ${orderNumber}`} className={`${buttonClass} hover:border-destructive hover:bg-destructive/5 hover:text-destructive`} onClick={() => setDialog("cancel")} title="Cancel order" type="button"><XCircle aria-hidden="true" className="size-4" /></button>}
-        <button aria-label={`Reprint ${orderNumber}`} className={buttonClass} onClick={() => toast.info("Receipt reprinting will be available with printer integration.")} title="Reprint receipt" type="button"><Printer aria-hidden="true" className="size-4" /></button>
+        <Link aria-label={`Reprint ${orderNumber}`} className={buttonClass} href={`/orders/${orderId}/receipt`} target="_blank" title="Open 80 mm receipt"><Printer aria-hidden="true" className="size-4" /></Link>
       </div>
 
       <Modal onClose={() => !pending && setDialog(null)} open={dialog === "complete"} size="sm" title="Complete pending order?">

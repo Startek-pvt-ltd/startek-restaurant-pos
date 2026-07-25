@@ -49,7 +49,7 @@ export function AppSidebar({ isOpen, onClose }: AppSidebarProps) {
       <button
         aria-label="Close navigation"
         className={cn(
-          "fixed inset-0 z-40 bg-secondary/45 backdrop-blur-sm transition-opacity duration-300 lg:hidden",
+          "no-print fixed inset-0 z-40 bg-secondary/45 backdrop-blur-sm transition-opacity duration-300 lg:hidden",
           isOpen ? "opacity-100" : "pointer-events-none opacity-0",
         )}
         onClick={onClose}
@@ -59,7 +59,7 @@ export function AppSidebar({ isOpen, onClose }: AppSidebarProps) {
       <aside
         aria-label="Application sidebar"
         className={cn(
-          "fixed inset-y-0 left-0 z-50 flex w-72 flex-col overflow-hidden bg-secondary text-white shadow-[14px_0_45px_rgba(74,35,16,0.16)] transition-transform duration-300 ease-out lg:translate-x-0",
+          "no-print fixed inset-y-0 left-0 z-50 flex w-72 flex-col overflow-hidden bg-secondary text-white shadow-[14px_0_45px_rgba(74,35,16,0.16)] transition-transform duration-300 ease-out lg:translate-x-0",
           isOpen ? "translate-x-0" : "-translate-x-full",
         )}
       >

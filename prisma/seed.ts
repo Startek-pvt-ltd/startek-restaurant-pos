@@ -16,6 +16,7 @@ const prisma = new PrismaClient({
 });
 
 const restaurantId = "00000000-0000-4000-8000-000000000001";
+const systemSettingId = "00000000-0000-4000-8000-000000000002";
 const receiptFooter = "Design & Deploy by\n\nStartek (PVT) LTD";
 const categoryNames = ["Rice", "Kottu", "Noodles", "Fried Rice", "Beverages", "Desserts"];
 
@@ -34,6 +35,40 @@ async function main() {
       address: "No.32 Padukka Road\nMeegoda",
       phone: "0777250493",
       receiptFooter,
+    },
+  });
+
+  await prisma.systemSetting.upsert({
+    where: { id: systemSettingId },
+    update: {
+      restaurantName: "Rice & Kottu Hut",
+      receiptFooter: "Thank You!\nPlease Visit Again\n\nDesign & Deploy by\nStartek (PVT) LTD",
+      printerName: "Xprinter XP-80T",
+      printerPaperWidth: 80,
+      autoOpenReceiptAfterCheckout: true,
+      receiptShowCustomerInfo: true,
+      receiptShowTax: true,
+      receiptShowServiceCharge: true,
+      receiptThankYouMessage: "Thank You!\nPlease Visit Again",
+      receiptDeveloperCredit: "Design & Deploy by\nStartek (PVT) LTD",
+    },
+    create: {
+      id: systemSettingId,
+      restaurantName: "Rice & Kottu Hut",
+      logo: "/logos/rice-kottu-hut-logo.png",
+      receiptFooter: "Thank You!\nPlease Visit Again\n\nDesign & Deploy by\nStartek (PVT) LTD",
+      printerName: "Xprinter XP-80T",
+      printerPaperWidth: 80,
+      autoOpenReceiptAfterCheckout: true,
+      autoPrintAfterCheckout: false,
+      printLogo: true,
+      receiptCopies: 1,
+      receiptShowCustomerInfo: true,
+      receiptShowTax: true,
+      receiptShowServiceCharge: true,
+      receiptThankYouMessage: "Thank You!\nPlease Visit Again",
+      receiptDeveloperCredit: "Design & Deploy by\nStartek (PVT) LTD",
+      openCashDrawer: false,
     },
   });
 
@@ -108,6 +143,7 @@ async function main() {
   );
 
   console.log("Seeded restaurant: Rice & Kottu Hut");
+  console.log("Seeded printer settings: Xprinter XP-80T (80 mm)");
   console.log("Seeded super admin: Kevin Menuja (admin)");
   console.log(`Seeded categories: ${categoryNames.length}`);
   console.log(
