@@ -24,7 +24,6 @@ export type OrderListRecord = {
   id: string;
   orderNumber: string;
   createdAt: string;
-  customer: { fullName: string; phone: string } | null;
   orderType: OrderTypeFilter;
   cashierName: string;
   paymentMethod: string | null;
@@ -53,7 +52,6 @@ export type OrderDetailRecord = {
   cancelledAt: string | null;
   cancelledBy: string | null;
   cashierName: string;
-  customer: { fullName: string; phone: string; email: string | null; address: string | null } | null;
   items: Array<{
     id: string;
     name: string;

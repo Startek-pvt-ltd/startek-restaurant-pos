@@ -1,60 +1,57 @@
 # Project
 
-Startek Restaurant POS is the restaurant management platform for Rice & Kottu Hut. The application includes a maintainable Next.js foundation, PostgreSQL persistence, Auth.js credential authentication with role-based access control, and a responsive management dashboard.
+Startek Restaurant POS is the authenticated restaurant billing platform for Rice & Kottu Hut.
 
-## Product scope
+## Approved scope
 
-Approved application modules are Dashboard, POS Billing, Menu Management, Orders, Customers, Reports, Expenses, Staff, Settings, and Logout.
+The application navigation is exactly: Dashboard, POS Billing, Menu Management, Orders, Reports, Expenses, Staff, Settings, and Logout. Dine-In, Takeaway, and Delivery are supported order types.
 
-The product does not include table management, a kitchen display system, inventory management, or supplier management. These excluded areas must not appear in navigation, dashboards, alerts, or future feature planning.
+The following are excluded: Customer Management, Table Management, Kitchen Display, Inventory Management, Supplier Management, and PickMe/Uber-specific workflows. Excluded modules must not appear in navigation, dashboard cards, POS, order UI, receipts, alerts, or future-task claims.
 
-## Dashboard
+## Implemented modules
 
-- The protected `/dashboard` route uses the existing authenticated session.
-- Dashboard statistics, charts, recent orders, best-selling items, expenses, and activity currently use clearly isolated mock presentation data.
-- No sales calculations, business APIs, or dashboard database queries are implemented in TASK-004.
-- Navigation supports a fixed desktop sidebar and a drawer on tablet and mobile screens.
+### Authentication
 
-## Menu and category management
+- Active `SUPER_ADMIN`, `OWNER`, `MANAGER`, and `CASHIER` accounts may authenticate by username or email.
+- `KITCHEN` remains a historical enum value but cannot authenticate into application workflows.
+- Protected routes use an optimistic Auth.js Proxy check and a database-backed `requireAuth` check close to server data access.
+- Successful login/logout activity is recorded when audit logging is available. Password hashes are selected only for server-side bcrypt comparison and never added to the session.
 
-- `/menu` provides database-backed menu item search, category and availability filters, sorting, card and table layouts, and LKR price formatting.
-- `/menu/categories` provides category search, display-order sorting, item counts, status controls, and protected create, update, and delete workflows.
-- Super admins, owners, and managers can manage menu data. Cashiers receive a read-only catalogue, and all mutation permissions are rechecked on the server.
-- Item images may use an `http(s)` URL or a local `/menu-items/...` path. Missing images use the built-in food placeholder.
-- Menu operations use validated Server Actions and Prisma services; no business API route is required.
+### Dashboard
 
-## POS billing
+- `/dashboard` uses the authenticated shell and clearly isolated mock metrics/charts.
+- Customer/table/inventory/kitchen/supplier references are absent.
+- Quick actions link only to approved working routes.
 
-- `/pos` is a protected, touch-friendly restaurant ordering screen with category navigation, instant menu search, product cards, and a live shopping cart.
-- The Zustand cart persists on the cashier device until checkout and supports one held order for fast interruption and resume workflows.
-- Dine-in, takeaway, and delivery orders support notes, percentage or fixed discounts, Cash/Card/QR payment, and automatic cash change.
-- Tax and service charge values are read from the restaurant record and displayed as read-only billing inputs for cashiers.
-- Checkout re-reads product prices and availability, recalculates totals on the server, and atomically creates the completed order, items, payment, and activity entry.
-- Receipt printing is intentionally a placeholder pending printer integration.
+### Menu Management
 
-## Order management
+- `/menu` and `/menu/categories` use Prisma data, Zod validation, Server Actions, responsive views, and safe error messages.
+- Super admins, owners, and managers may mutate menu data; cashiers have read-only access.
+- Referenced items cannot be deleted from order history and should be marked unavailable.
 
-- `/orders` provides database-backed invoice/customer search, date and status filters, newest/oldest sorting, daily statistics, and pagination.
-- `/orders/[id]` displays the complete restaurant invoice, price snapshots, customer, cashier, payment, notes, and cancellation audit information.
-- Super admins, owners, and managers can cancel non-cancelled orders with a required reason. Cashiers can view, create, complete pending orders, and use the reprint placeholder, but cannot cancel.
-- Cancellation is a status transition rather than deletion, and both completion and cancellation are recorded in `ActivityLog`.
-- POS invoices use the server-generated `RKH-YYYYMMDD-0001` format with transaction-level concurrency protection.
+### POS Billing
 
-## Thermal receipt printing
+- `/pos` loads categories, products, prices, and restaurant settings from PostgreSQL.
+- Zustand persists the cart and one held order on the cashier device.
+- The server reloads current prices/availability/settings, validates payment and discounts, and writes Order, OrderItem, Payment, and ActivityLog in one serializable transaction.
+- A synchronous submission lock, database advisory lock, retry handling, and the unique invoice constraint protect checkout against duplicate submissions/invoices.
 
-- Order receipts are formatted for the Xprinter XP-80T using 80 mm paper and an approximately 72 mm printable content width.
-- `/orders/[id]/receipt` provides authenticated preview, manual reprint, and browser/system print-dialog support.
-- `/settings/receipt` persists the printer display name, paper width, separate preview/print automation, logo visibility, one-to-three copies, optional customer/tax/service lines, and custom footer copy.
-- Successful checkout commits the order first, then opens the saved receipt preview. Refreshing the receipt never repeats checkout.
-- The operating system remains responsible for selecting the installed Xprinter XP-80T. Direct USB, network printing, and cash-drawer commands are not implemented.
+### Orders
 
-## Authentication
+- `/orders` provides invoice search, date/type/payment/status filters, sorting, statistics, and pagination.
+- `/orders/[id]` displays the invoice snapshot, cashier, order type, items, totals, payment, notes, and cancellation audit.
+- Orders are never physically deleted. Completion and authorized cancellation are transactional and audited.
 
-- Active users can authenticate with either username or email and a bcrypt-protected password.
-- Auth.js stores an encrypted JWT session in a secure, HTTP-only cookie. Sessions last eight hours by default or 30 days when the user explicitly selects remember me.
-- Protected server code uses `requireAuth`, `requireRole`, and `hasRole` from `src/lib/auth-utils.ts`.
-- Successful login and logout events are written to `ActivityLog` when database logging is available.
-- `/dashboard` requires authentication, while signed-in users are redirected away from `/login`.
+### Thermal receipts
+
+- `/orders/[id]/receipt` is authenticated and renders stored order/payment snapshots for 80 mm paper.
+- Customer information is never printed. Item columns are Item, Qty, and Total.
+- Zero discount, tax, and service-charge lines are hidden. Tendered amount/change appear only for cash payments.
+- The browser/system print dialog remains responsible for selecting Xprinter XP-80T.
+
+### Placeholders
+
+`/reports`, `/expenses`, and `/staff` are protected, responsive placeholders only. No reporting, expense-entry, export, or staff-management business logic is claimed in TASK-009.
 
 ## Stakeholders
 

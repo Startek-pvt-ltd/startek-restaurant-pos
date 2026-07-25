@@ -2,27 +2,31 @@
 
 ## Completed
 
-- Next.js application foundation and branded setup screen
-- Feature-based directory structure
-- PostgreSQL Prisma configuration and reusable client
-- Core dependency and quality tooling setup
-- Production database schema, migration, and seed data
-- Auth.js credentials authentication and role-based access control
-- Responsive professional dashboard with mock statistics, charts, orders, expenses, and activity
-- Database-backed menu and category management with validation, role-based writes, filtering, sorting, responsive views, and safe seed data
-- Touch-friendly POS billing with a persisted cart, held orders, validated restaurant pricing, and atomic checkout
-- Database-backed order management with search, filters, pagination, invoice details, role-protected status changes, and cancellation auditing
-- Xprinter XP-80T receipt preview, 80 mm browser printing, reprinting, configurable receipt content, and post-checkout integration
+- TASK-001 — Project setup
+- TASK-002 — Prisma/PostgreSQL database foundation
+- TASK-003 — Auth.js credentials authentication and role-based protection
+- TASK-004 — Responsive dashboard using isolated mock presentation data
+- TASK-005 — Database-backed menu and category management
+- TASK-006 — Touch-friendly POS with server-authoritative atomic checkout
+- TASK-007 — Database-backed order list/details/status/cancellation workflows
+- TASK-008 — 80 mm Xprinter XP-80T browser receipt printing
+- TASK-009 — Scope cleanup, audit, bug fixes, manual QA, and stabilization documentation
 
-## Deferred
+## Placeholder routes only
 
-- Customer management
-- Reports and expenses
-- Staff and restaurant settings
+- Reports
+- Expenses
+- Staff
 
-## Excluded from product scope
+These routes contain no business calculations, exports, data-entry workflows, or new APIs.
 
-- Table management
-- Kitchen display system
-- Inventory management
-- Supplier management
+## Excluded product scope
+
+- Customer Management
+- Table Management
+- Kitchen Display System
+- Inventory Management
+- Supplier Management
+- PickMe/Uber-specific workflows
+
+Historical database structures for some excluded areas remain pending a separately approved, non-destructive migration plan.

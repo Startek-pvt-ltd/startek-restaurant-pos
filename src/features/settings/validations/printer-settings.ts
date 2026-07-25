@@ -7,9 +7,6 @@ export const printerSettingsSchema = z.object({
   autoPrintAfterCheckout: z.boolean(),
   printLogo: z.boolean(),
   receiptCopies: z.number().int().min(1).max(3),
-  showCustomerInformation: z.boolean(),
   showTaxLine: z.boolean(),
   showServiceChargeLine: z.boolean(),
-  thankYouMessage: z.string().trim().min(1).max(200),
-  developerCredit: z.string().trim().min(1).max(200),
 });

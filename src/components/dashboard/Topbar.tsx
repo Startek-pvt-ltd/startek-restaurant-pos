@@ -17,6 +17,12 @@ export function Topbar({ onMenuClick, user }: TopbarProps) {
   const [now, setNow] = useState<Date | null>(null);
   const pageMeta = pathname === "/menu/categories"
     ? { title: "Categories", description: "Menu organization" }
+    : pathname.startsWith("/reports")
+      ? { title: "Reports", description: "Reporting workspace" }
+    : pathname.startsWith("/expenses")
+      ? { title: "Expenses", description: "Expense management workspace" }
+    : pathname.startsWith("/staff")
+      ? { title: "Staff", description: "Staff management workspace" }
     : pathname.startsWith("/settings")
       ? { title: "Settings", description: "System and receipt printing preferences" }
     : pathname.startsWith("/orders/")

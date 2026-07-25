@@ -4,7 +4,7 @@ const activities = [
   { user: "Kevin Menuja", initials: "KM", action: "Completed order #RKH-1085", time: "4 min ago" },
   { user: "Amali Perera", initials: "AP", action: "Created order #RKH-1084", time: "10 min ago" },
   { user: "Nadeesha Silva", initials: "NS", action: "Recorded the electricity expense", time: "14 min ago" },
-  { user: "Kevin Menuja", initials: "KM", action: "Added a walk-in customer", time: "22 min ago" },
+  { user: "Kevin Menuja", initials: "KM", action: "Updated receipt printer settings", time: "22 min ago" },
   { user: "Amali Perera", initials: "AP", action: "Updated the Chicken Kottu price", time: "31 min ago" },
 ];
 

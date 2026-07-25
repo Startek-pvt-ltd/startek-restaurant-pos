@@ -1,38 +1,37 @@
-# API
+# API and Server Boundaries
 
-Auth.js exposes its standard GET and POST handlers at `/api/auth/[...nextauth]`. These handlers provide CSRF-protected credential sign-in, JWT session inspection, and sign-out. They must be accessed through Auth.js clients rather than called with unvalidated application data.
+## Auth.js
 
-No business API endpoints are included yet. Future endpoints should live in App Router route handlers, validate inputs with Zod, call `requireAuth` or `requireRole`, keep business logic in feature services, and return consistent typed error responses.
+Auth.js exposes its standard GET/POST handlers at `/api/auth/[...nextauth]` for credentials sign-in, session handling, CSRF protection, and sign-out. Use Auth.js clients rather than sending unvalidated application payloads directly.
 
-## Menu operations
+There are no public business API routes. TASK-009 does not implement report exports or new APIs.
 
-TASK-005 intentionally uses authenticated Server Actions instead of public business API routes. Category and menu item create, update, availability/status toggle, and delete operations:
+## Authorization contract
 
-- validate untrusted payloads with shared Zod schemas;
-- require an authenticated `SUPER_ADMIN`, `OWNER`, or `MANAGER` on every mutation;
-- call the isolated Prisma service layer;
-- return a constrained success or user-safe error result; and
-- revalidate `/menu` and `/menu/categories` after successful writes.
+- `requireAuth` verifies the encrypted Auth.js session and rechecks the current user status/role in PostgreSQL.
+- `requireRole` adds route-level role enforcement.
+- `hasRole` supports UI and server permission decisions.
+- Approved application roles are `SUPER_ADMIN`, `OWNER`, `MANAGER`, and `CASHIER`; inactive accounts and `KITCHEN` are rejected.
+- Proxy performs only the optimistic session redirect. Server Actions and services repeat authorization near every mutation.
 
-Cashiers can load both pages but cannot invoke a successful write. Category deletion is rejected while related menu items exist, and menu items referenced by order history must be marked unavailable instead of deleted.
+## Menu Server Actions
 
-## POS checkout
+Category and menu-item create/update/toggle/delete operations validate Zod payloads, authorize `SUPER_ADMIN`, `OWNER`, or `MANAGER`, call Prisma services, return constrained messages, and revalidate menu routes. Cashiers are read-only.
 
-TASK-006 uses the authenticated `completeOrderAction` Server Action instead of adding a public checkout API. It accepts menu item identifiers and quantities, order type, notes, discount input, and payment input.
+## POS checkout Server Action
 
-The server does not trust client prices or calculated totals. It reloads current menu prices, availability, the cashier account, and restaurant tax/service settings before calculating and writing the order. The order, line items, paid payment, cash tender/change, and activity log are committed in one serializable PostgreSQL transaction.
+`completeOrderAction` accepts item IDs/quantities, order type, notes, discount input, payment method, and cash received. It never accepts trusted browser totals.
 
-Allowed roles are `SUPER_ADMIN`, `OWNER`, `MANAGER`, and `CASHIER`. `KITCHEN` cannot access or submit POS billing.
+The service reloads the active cashier, menu prices/availability/category status, tax, and service charge. It calculates all totals server-side and atomically creates the order, item snapshots, payment, and activity entry. Known validation errors are mapped to safe cashier messages; unexpected database details are logged only on the server.
 
-## Order operations
+## Order Server Actions
 
-TASK-007 uses authenticated Server Actions and server-rendered Prisma queries; it does not add a public business API.
-
-- `completeOrderStatusAction` accepts only a validated order UUID and transitions a pending order to completed.
-- `cancelOrderAction` accepts a validated UUID and cancellation reason, requires `SUPER_ADMIN`, `OWNER`, or `MANAGER`, preserves the order, and writes its audit metadata.
-- Both actions authenticate and authorize independently of the rendered page, return constrained user-safe results, update `ActivityLog`, and revalidate the list and detail routes.
-- Order list query parameters are treated as untrusted input and parsed with Zod before Prisma filters are constructed.
+- `completeOrderStatusAction` validates an order UUID and atomically transitions only a pending order to completed.
+- `cancelOrderAction` validates a UUID and required cancellation reason, permits only `SUPER_ADMIN`, `OWNER`, or `MANAGER`, retains the order, and writes cancellation/audit metadata.
+- Order query parameters are parsed with Zod before Prisma filters are constructed.
 
 ## Printer settings and receipts
 
-Receipt printing does not expose a printer API. The authenticated `/orders/[id]/receipt` page renders stored order/payment snapshots and invokes the browser/system print dialog. `updatePrinterSettingsAction` validates Xprinter display, fixed 80 mm paper, separate preview/print automation, conditional receipt content, custom footer copy, and one-to-three copies. Only `SUPER_ADMIN`, `OWNER`, or `MANAGER` may update these preferences.
+Printer settings use a protected Server Action. Managers can configure printer display name, fixed 80 mm width, auto-open/auto-print preferences, logo, copies, and optional non-zero tax/service display. Customer printing and custom receipt identity/footer copy are not exposed.
+
+Receipt pages are server-rendered from stored snapshots and use the browser/system print dialog. No direct USB, network, or cash-drawer API exists.

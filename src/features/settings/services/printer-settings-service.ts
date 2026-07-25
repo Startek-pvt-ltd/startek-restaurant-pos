@@ -14,11 +14,8 @@ const defaults: PrinterSettings = {
   autoPrintAfterCheckout: false,
   printLogo: true,
   receiptCopies: 1,
-  showCustomerInformation: true,
   showTaxLine: true,
   showServiceChargeLine: true,
-  thankYouMessage: "Thank You!\nPlease Visit Again",
-  developerCredit: "Design & Deploy by\nStartek (PVT) LTD",
   openCashDrawer: false,
 };
 
@@ -31,11 +28,8 @@ export async function getPrinterSettings(): Promise<PrinterSettings> {
       autoPrintAfterCheckout: true,
       printLogo: true,
       receiptCopies: true,
-      receiptShowCustomerInfo: true,
       receiptShowTax: true,
       receiptShowServiceCharge: true,
-      receiptThankYouMessage: true,
-      receiptDeveloperCredit: true,
       openCashDrawer: true,
     },
     orderBy: { id: "asc" },
@@ -49,11 +43,8 @@ export async function getPrinterSettings(): Promise<PrinterSettings> {
     autoPrintAfterCheckout: setting.autoPrintAfterCheckout,
     printLogo: setting.printLogo,
     receiptCopies: setting.receiptCopies,
-    showCustomerInformation: setting.receiptShowCustomerInfo,
     showTaxLine: setting.receiptShowTax,
     showServiceChargeLine: setting.receiptShowServiceCharge,
-    thankYouMessage: setting.receiptThankYouMessage,
-    developerCredit: setting.receiptDeveloperCredit,
     openCashDrawer: setting.openCashDrawer,
   };
 }
@@ -86,11 +77,8 @@ export async function savePrinterSettings(
         autoPrintAfterCheckout: input.autoPrintAfterCheckout,
         printLogo: input.printLogo,
         receiptCopies: input.receiptCopies,
-        receiptShowCustomerInfo: input.showCustomerInformation,
         receiptShowTax: input.showTaxLine,
         receiptShowServiceCharge: input.showServiceChargeLine,
-        receiptThankYouMessage: input.thankYouMessage,
-        receiptDeveloperCredit: input.developerCredit,
       },
     });
     await tx.activityLog.create({

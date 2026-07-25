@@ -142,7 +142,7 @@
 .receipt-row { display: flex; justify-content: space-between; gap: 3mm; padding: 0.4mm 0; }
 .receipt-row > :last-child { text-align: right; overflow-wrap: anywhere; }
 .receipt-total { border-top: 1px solid #000; font-size: 12px; font-weight: 900; margin-top: 1mm; padding-top: 1.5mm; }
-.receipt-items-head, .receipt-item { display: grid; grid-template-columns: minmax(0, 1fr) 8mm 17mm 18mm; gap: 1mm; align-items: end; }
+.receipt-items-head, .receipt-item { display: grid; grid-template-columns: minmax(0, 1fr) 8mm 22mm; gap: 1mm; align-items: end; }
 .receipt-items-head { font-weight: 900; border-bottom: 1px solid #000; padding-bottom: 1mm; }
 .receipt-items-head span:not(:first-child), .receipt-item span { text-align: right; }
 .receipt-item { padding: 1mm 0; break-inside: avoid; page-break-inside: avoid; }
@@ -200,4 +200,5 @@
     break-after: page;
     page-break-after: always;
   }
+
 }

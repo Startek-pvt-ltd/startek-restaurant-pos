@@ -5,11 +5,8 @@ export type PrinterSettings = {
   autoPrintAfterCheckout: boolean;
   printLogo: boolean;
   receiptCopies: number;
-  showCustomerInformation: boolean;
   showTaxLine: boolean;
   showServiceChargeLine: boolean;
-  thankYouMessage: string;
-  developerCredit: string;
   openCashDrawer: boolean;
 };
 

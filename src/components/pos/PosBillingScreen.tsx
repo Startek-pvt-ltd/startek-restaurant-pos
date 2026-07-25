@@ -1,7 +1,7 @@
 "use client";
 
 import { Search, ShoppingCart, Sparkles } from "lucide-react";
-import { useCallback, useMemo, useState, useTransition } from "react";
+import { useCallback, useMemo, useRef, useState, useTransition } from "react";
 import { toast } from "sonner";
 
 import { completeOrderAction } from "@/features/pos/actions/checkout-actions";
@@ -31,6 +31,7 @@ export function PosBillingScreen({ categories, products, settings }: PosBillingS
   const [search, setSearch] = useState("");
   const [lastOrder, setLastOrder] = useState<{ id: string; orderNumber: string; grandTotal: number } | null>(null);
   const [pending, startTransition] = useTransition();
+  const checkoutLocked = useRef(false);
 
   const hydrated = usePosStore((state) => state.hydrated);
   const items = usePosStore((state) => state.items);
@@ -102,36 +103,44 @@ export function PosBillingScreen({ categories, products, settings }: PosBillingS
   const handleAdd = useCallback((product: PosProduct) => addItem(product), [addItem]);
 
   const handleComplete = () => {
+    if (checkoutLocked.current || pending) return;
     if (checkoutIssue) {
       toast.error(checkoutIssue);
       return;
     }
 
+    checkoutLocked.current = true;
     startTransition(async () => {
-      const result = await completeOrderAction({
-        items: items.map((item) => ({ menuItemId: item.id, quantity: item.quantity })),
-        orderType,
-        notes,
-        discountType,
-        discountValue,
-        paymentMethod,
-        amountReceived: paymentMethod === "CASH" ? amountReceived : null,
-      });
+      try {
+        const result = await completeOrderAction({
+          items: items.map((item) => ({ menuItemId: item.id, quantity: item.quantity })),
+          orderType,
+          notes,
+          discountType,
+          discountValue,
+          paymentMethod,
+          amountReceived: paymentMethod === "CASH" ? amountReceived : null,
+        });
 
-      if (!result.success) {
-        toast.error(result.message);
-        return;
-      }
+        if (!result.success) {
+          toast.error(result.message);
+          return;
+        }
 
-      setLastOrder({ id: result.orderId, orderNumber: result.orderNumber, grandTotal: result.grandTotal });
-      clearCart();
-      if (settings.autoOpenReceiptAfterCheckout || settings.autoPrintAfterCheckout) {
-        window.location.assign(`/orders/${result.orderId}/receipt${settings.autoPrintAfterCheckout ? "?auto=1" : ""}`);
-        return;
+        setLastOrder({ id: result.orderId, orderNumber: result.orderNumber, grandTotal: result.grandTotal });
+        clearCart();
+        if (settings.autoOpenReceiptAfterCheckout || settings.autoPrintAfterCheckout) {
+          window.location.assign(`/orders/${result.orderId}/receipt${settings.autoPrintAfterCheckout ? "?auto=1" : ""}`);
+          return;
+        }
+        toast.success(result.message, {
+          description: result.balance > 0 ? `Cash change due: ${formatMoney(result.balance, settings.currency)}.` : undefined,
+        });
+      } catch {
+        toast.error("Checkout could not be completed. Check the connection and try again.");
+      } finally {
+        checkoutLocked.current = false;
       }
-      toast.success(result.message, {
-        description: result.balance > 0 ? `Return ${formatMoney(result.balance, settings.currency)} to the customer.` : undefined,
-      });
     });
   };
 

@@ -32,7 +32,6 @@ export function OrdersTable({ canCancel, orders }: { canCancel: boolean; orders:
           <article className="space-y-3 p-4" key={order.id}>
             <div className="flex items-start justify-between gap-3"><div><p className="font-black text-secondary">{order.orderNumber}</p><p className="mt-1 text-xs text-muted-foreground">{formatDate(order.createdAt)}</p></div><OrderStatusBadge value={order.status} /></div>
             <dl className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
-              <div><dt className="text-xs text-muted-foreground">Customer</dt><dd className="font-bold text-secondary">{order.customer?.fullName ?? "Walk-in Customer"}</dd></div>
               <div><dt className="text-xs text-muted-foreground">Order type</dt><dd className="font-bold text-secondary">{order.orderType.replaceAll("_", "-")}</dd></div>
               <div><dt className="text-xs text-muted-foreground">Payment</dt><dd className="font-bold text-secondary">{order.paymentMethod ?? "Not recorded"}</dd></div>
               <div><dt className="text-xs text-muted-foreground">Grand total</dt><dd className="font-black text-secondary">{formatMoney(Number(order.grandTotal))}</dd></div>
@@ -44,13 +43,12 @@ export function OrdersTable({ canCancel, orders }: { canCancel: boolean; orders:
 
       <div className="hidden overflow-x-auto md:block dashboard-scrollbar">
         <table className="w-full min-w-[1180px] border-collapse text-left">
-          <thead className="bg-secondary text-[0.68rem] uppercase tracking-wider text-white/70"><tr>{["Invoice number", "Date and time", "Customer", "Order type", "Cashier", "Payment", "Payment status", "Order status", "Grand total", "Actions"].map((heading) => <th className="px-4 py-3.5 font-black" key={heading} scope="col">{heading}</th>)}</tr></thead>
+          <thead className="bg-secondary text-[0.68rem] uppercase tracking-wider text-white/70"><tr>{["Invoice number", "Date and time", "Order type", "Cashier", "Payment", "Payment status", "Order status", "Grand total", "Actions"].map((heading) => <th className="px-4 py-3.5 font-black" key={heading} scope="col">{heading}</th>)}</tr></thead>
           <tbody className="divide-y divide-border">
             {orders.map((order) => (
               <tr className="transition hover:bg-muted/35" key={order.id}>
                 <td className="whitespace-nowrap px-4 py-4 text-sm font-black text-secondary">{order.orderNumber}</td>
                 <td className="whitespace-nowrap px-4 py-4 text-xs font-semibold text-muted-foreground">{formatDate(order.createdAt)}</td>
-                <td className="px-4 py-4"><p className="text-sm font-bold text-secondary">{order.customer?.fullName ?? "Walk-in Customer"}</p>{order.customer?.phone && <p className="text-xs text-muted-foreground">{order.customer.phone}</p>}</td>
                 <td className="whitespace-nowrap px-4 py-4 text-xs font-black text-secondary">{order.orderType.replaceAll("_", "-")}</td>
                 <td className="px-4 py-4 text-sm font-semibold text-secondary">{order.cashierName}</td>
                 <td className="px-4 py-4 text-sm font-bold text-secondary">{order.paymentMethod ?? "—"}</td>

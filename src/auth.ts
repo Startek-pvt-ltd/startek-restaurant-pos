@@ -12,6 +12,7 @@ const DUMMY_PASSWORD_HASH =
   "$2b$12$KIXxOANn/RZgK7mE8YqN2u0i5CW8bVfO7gFNYxyDM6YqF8vU0kDNK";
 const DEFAULT_SESSION_AGE = 8 * 60 * 60;
 const REMEMBERED_SESSION_AGE = 30 * 24 * 60 * 60;
+const APPLICATION_ROLES = ["SUPER_ADMIN", "OWNER", "MANAGER", "CASHIER"] as const;
 
 async function writeActivity(userId: string | undefined, action: "LOGIN" | "LOGOUT") {
   if (!userId) return;
@@ -68,7 +69,12 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           user?.password ?? DUMMY_PASSWORD_HASH,
         );
 
-        if (!user || !passwordMatches || user.status !== "ACTIVE") return null;
+        if (
+          !user ||
+          !passwordMatches ||
+          user.status !== "ACTIVE" ||
+          !APPLICATION_ROLES.includes(user.role as (typeof APPLICATION_ROLES)[number])
+        ) return null;
 
         return {
           id: user.id,
@@ -94,11 +100,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         return NextResponse.redirect(new URL("/dashboard", request.nextUrl));
       }
 
-      if (request.nextUrl.pathname.startsWith("/dashboard")) {
-        return isAuthenticated;
-      }
-
-      return true;
+      return isLoginPage || isAuthenticated;
     },
     jwt({ token, user }) {
       if (user) {

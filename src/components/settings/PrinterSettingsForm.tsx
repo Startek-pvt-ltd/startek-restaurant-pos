@@ -26,11 +26,8 @@ export function PrinterSettingsForm({ canManage, initial }: { canManage: boolean
       autoPrintAfterCheckout: settings.autoPrintAfterCheckout,
       printLogo: settings.printLogo,
       receiptCopies: settings.receiptCopies,
-      showCustomerInformation: settings.showCustomerInformation,
       showTaxLine: settings.showTaxLine,
       showServiceChargeLine: settings.showServiceChargeLine,
-      thankYouMessage: settings.thankYouMessage,
-      developerCredit: settings.developerCredit,
     });
     if (result.success) toast.success(result.message);
     else toast.error(result.message);
@@ -46,10 +43,8 @@ export function PrinterSettingsForm({ canManage, initial }: { canManage: boolean
         <SettingToggle checked={settings.autoOpenReceiptAfterCheckout} description="Navigate to the saved receipt after a successful transaction." disabled={disabled} label="Auto-open receipt preview after checkout" onChange={(value) => update("autoOpenReceiptAfterCheckout", value)} />
         <SettingToggle checked={settings.autoPrintAfterCheckout} description="Trigger the browser/system print dialog after the preview loads." disabled={disabled} label="Auto-trigger print dialog after checkout" onChange={(value) => update("autoPrintAfterCheckout", value)} />
         <SettingToggle checked={settings.printLogo} description="Render a grayscale, high-contrast restaurant logo." disabled={disabled} label="Print logo" onChange={(value) => update("printLogo", value)} />
-        <SettingToggle checked={settings.showCustomerInformation} description="Show the saved customer name when one is attached to the order." disabled={disabled} label="Show customer information" onChange={(value) => update("showCustomerInformation", value)} />
         <SettingToggle checked={settings.showTaxLine} description="Show the stored tax line on printed receipts." disabled={disabled} label="Show tax line" onChange={(value) => update("showTaxLine", value)} />
         <SettingToggle checked={settings.showServiceChargeLine} description="Show the stored service charge line on printed receipts." disabled={disabled} label="Show service charge line" onChange={(value) => update("showServiceChargeLine", value)} />
-        <div className="grid gap-4 sm:grid-cols-2"><label className="text-sm font-black text-secondary">Thank-you message<textarea className={`${inputClass} min-h-24 py-3`} disabled={disabled} maxLength={200} onChange={(event) => update("thankYouMessage", event.target.value)} value={settings.thankYouMessage} /></label><label className="text-sm font-black text-secondary">Developer credit<textarea className={`${inputClass} min-h-24 py-3`} disabled={disabled} maxLength={200} onChange={(event) => update("developerCredit", event.target.value)} value={settings.developerCredit} /></label></div>
         <div className="flex min-h-14 items-center justify-between gap-4 rounded-xl border border-dashed border-input bg-stone-50 p-3 text-sm text-stone-500"><span><span className="flex items-center gap-2 font-black"><Usb aria-hidden="true" className="size-4" />Open cash drawer</span><span className="mt-0.5 block text-xs">Future placeholder — no device command is sent.</span></span><input aria-label="Open cash drawer (future placeholder)" checked={false} className="size-5" disabled type="checkbox" /></div>
       </div>
     </div>

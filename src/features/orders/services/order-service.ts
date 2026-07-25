@@ -27,11 +27,7 @@ export async function getOrdersPage(filters: OrderListFilters) {
   const where: Prisma.OrderWhereInput = {
     ...(filters.query
       ? {
-          OR: [
-            { orderNumber: { contains: filters.query, mode: "insensitive" as const } },
-            { customer: { is: { fullName: { contains: filters.query, mode: "insensitive" as const } } } },
-            { customer: { is: { phone: { contains: filters.query } } } },
-          ],
+          orderNumber: { contains: filters.query, mode: "insensitive" as const },
         }
       : {}),
     ...(filters.dateFrom || filters.dateTo
@@ -73,7 +69,6 @@ export async function getOrdersPage(filters: OrderListFilters) {
           orderType: true,
           status: true,
           grandTotal: true,
-          customer: { select: { fullName: true, phone: true } },
           cashier: { select: { fullName: true } },
           payments: {
             select: { paymentMethod: true, paymentStatus: true },
@@ -101,7 +96,6 @@ export async function getOrdersPage(filters: OrderListFilters) {
       id: order.id,
       orderNumber: order.orderNumber,
       createdAt: order.createdAt.toISOString(),
-      customer: order.customer,
       orderType: order.orderType,
       cashierName: order.cashier.fullName,
       paymentMethod: order.payments[0]?.paymentMethod ?? null,
@@ -142,7 +136,6 @@ export async function getOrderDetail(id: string): Promise<OrderDetailRecord | nu
         serviceCharge: true,
         grandTotal: true,
         cashier: { select: { fullName: true } },
-        customer: { select: { fullName: true, phone: true, email: true, address: true } },
         items: {
           select: {
             id: true,
@@ -198,7 +191,6 @@ export async function getOrderDetail(id: string): Promise<OrderDetailRecord | nu
     cancelledAt: order.cancelledAt?.toISOString() ?? null,
     cancelledBy: order.cancelledBy?.fullName ?? null,
     cashierName: order.cashier.fullName,
-    customer: order.customer,
     items: order.items.map((item) => ({
       id: item.id,
       name: item.menuItem.name,

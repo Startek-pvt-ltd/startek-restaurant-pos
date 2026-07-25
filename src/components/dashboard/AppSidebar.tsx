@@ -6,13 +6,11 @@ import {
   ClipboardList,
   ContactRound,
   LayoutDashboard,
-  Layers3,
   LogOut,
   PanelLeftClose,
   ReceiptText,
   Settings,
   Store,
-  UsersRound,
   UtensilsCrossed,
   X,
 } from "lucide-react";
@@ -27,9 +25,7 @@ const navigation = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { label: "POS Billing", href: "/pos", icon: ReceiptText },
   { label: "Menu Management", href: "/menu", icon: UtensilsCrossed },
-  { label: "Categories", href: "/menu/categories", icon: Layers3 },
   { label: "Orders", href: "/orders", icon: ClipboardList },
-  { label: "Customers", href: "/customers", icon: UsersRound },
   { label: "Reports", href: "/reports", icon: ChartNoAxesCombined },
   { label: "Expenses", href: "/expenses", icon: CircleDollarSign },
   { label: "Staff", href: "/staff", icon: ContactRound },
@@ -94,7 +90,7 @@ export function AppSidebar({ isOpen, onClose }: AppSidebarProps) {
             {navigation.map((item) => {
               const active =
                 pathname === item.href ||
-                (item.href !== "/menu" && pathname.startsWith(`${item.href}/`));
+                pathname.startsWith(`${item.href}/`);
               const Icon = item.icon;
 
               return (

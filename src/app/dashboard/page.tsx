@@ -5,8 +5,8 @@ import {
   Plus,
   ReceiptText,
   ShoppingBag,
-  UserPlus,
-  UsersRound,
+  Tags,
+  TrendingUp,
   WalletCards,
 } from "lucide-react";
 
@@ -45,11 +45,11 @@ const stats = [
     icon: WalletCards,
   },
   {
-    title: "Total Customers",
-    value: "1,248",
-    detail: "+36 new this month",
+    title: "Average Order Value",
+    value: "Rs. 563.95",
+    detail: "+4.1% from yesterday",
     tone: "success" as const,
-    icon: UsersRound,
+    icon: TrendingUp,
   },
   {
     title: "Total Expenses",
@@ -70,9 +70,9 @@ const stats = [
 const quickActions = [
   { label: "New Order", description: "Start POS billing", icon: Plus, emphasized: true, href: "/pos" },
   { label: "Add Menu Item", description: "Create a new dish", icon: ShoppingBag, href: "/menu?action=new" },
-  { label: "Add Customer", description: "Register a customer", icon: UserPlus },
-  { label: "Add Expense", description: "Record a cost", icon: ReceiptText },
-  { label: "View Reports", description: "Open sales reports", icon: FileChartColumn },
+  { label: "Manage Categories", description: "Organize the menu", icon: Tags, href: "/menu/categories" },
+  { label: "Add Expense", description: "Open expense workspace", icon: ReceiptText, href: "/expenses" },
+  { label: "View Reports", description: "Open report workspace", icon: FileChartColumn, href: "/reports" },
 ];
 
 export default async function DashboardPage() {

@@ -14,9 +14,9 @@ export function OrderFilters({ filters }: { filters: OrderListFilters }) {
       </div>
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-8">
         <label className="relative sm:col-span-2 2xl:col-span-2">
-          <span className="sr-only">Search invoice, customer name, or phone</span>
+          <span className="sr-only">Search invoice number</span>
           <Search aria-hidden="true" className="absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-          <input className={`${inputClass} pl-10`} defaultValue={filters.query} name="query" placeholder="Invoice, customer, phone…" type="search" />
+          <input className={`${inputClass} pl-10`} defaultValue={filters.query} name="query" placeholder="Invoice number…" type="search" />
         </label>
         <label><span className="mb-1 block text-[0.68rem] font-black uppercase tracking-wide text-muted-foreground">From</span><input className={inputClass} defaultValue={filters.dateFrom} name="dateFrom" type="date" /></label>
         <label><span className="mb-1 block text-[0.68rem] font-black uppercase tracking-wide text-muted-foreground">To</span><input className={inputClass} defaultValue={filters.dateTo} name="dateTo" type="date" /></label>

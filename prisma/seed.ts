@@ -46,7 +46,7 @@ async function main() {
       printerName: "Xprinter XP-80T",
       printerPaperWidth: 80,
       autoOpenReceiptAfterCheckout: true,
-      receiptShowCustomerInfo: true,
+      receiptShowCustomerInfo: false,
       receiptShowTax: true,
       receiptShowServiceCharge: true,
       receiptThankYouMessage: "Thank You!\nPlease Visit Again",
@@ -63,7 +63,7 @@ async function main() {
       autoPrintAfterCheckout: false,
       printLogo: true,
       receiptCopies: 1,
-      receiptShowCustomerInfo: true,
+      receiptShowCustomerInfo: false,
       receiptShowTax: true,
       receiptShowServiceCharge: true,
       receiptThankYouMessage: "Thank You!\nPlease Visit Again",
@@ -130,18 +130,6 @@ async function main() {
     seededMenuItemCount = result.count;
   }
 
-  await prisma.$transaction(
-    Array.from({ length: 20 }, (_, index) => {
-      const tableNumber = `Table ${index + 1}`;
-
-      return prisma.restaurantTable.upsert({
-        where: { tableNumber },
-        update: { active: true },
-        create: { tableNumber },
-      });
-    }),
-  );
-
   console.log("Seeded restaurant: Rice & Kottu Hut");
   console.log("Seeded printer settings: Xprinter XP-80T (80 mm)");
   console.log("Seeded super admin: Kevin Menuja (admin)");
@@ -151,7 +139,6 @@ async function main() {
       ? `Seeded sample menu items: ${seededMenuItemCount}`
       : `Sample menu items skipped: ${menuItemCount} existing item(s) preserved`,
   );
-  console.log("Seeded tables: 20");
 }
 
 main()

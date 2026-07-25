@@ -1,37 +1,40 @@
 # UI Guide
 
-## Thermal receipt
-
-- Target paper: 80 mm; printable receipt width: 72 mm.
-- Receipt output is monochrome, monospace, and free of background colors or dashboard chrome.
-- Receipt sections and item rows avoid internal page breaks.
-- Users select `Xprinter XP-80T` and `80 mm` paper in the operating system print dialog.
-- Monetary columns use tabular numerals, long item names wrap, and Cash-only tender/change fields are omitted for Card and QR payments.
-- The preview toolbar returns to both order details and POS; all toolbar and dashboard elements are excluded from print output.
-
-## Brand palette
-
-- Primary gold: `#F4B400`
-- Dark brown: `#4A2310`
-- Cream background: `#FFF8E6`
-- White cards: `#FFFFFF`
-- Success green: `#22C55E`
-- Warning orange: `#F97316`
-- Error red: `#EF4444`
-
-Use cream for page backgrounds, white for elevated surfaces, dark brown for readable text, and gold for primary actions and emphasis. Preserve the logo aspect ratio and original artwork.
-
-## Dashboard patterns
-
-- Use large rounded white cards, subtle brown-tinted shadows, and restrained gold accents.
-- Keep the authenticated application sidebar fixed on desktop and available as a dismissible drawer on tablet and mobile.
-- Always show visible keyboard focus states for links, buttons, form controls, and drawer actions.
-- Use concise labels and readable status badges with sufficient foreground/background contrast.
-- Format monetary mock values in Sri Lankan rupees using `Rs.` and two decimal places.
-- Dashboard visualizations use Recharts and must include meaningful accessible labels.
-
 ## Approved navigation
 
-Dashboard, POS Billing, Menu Management, Orders, Customers, Reports, Expenses, Staff, Settings, and Logout.
+The sidebar order is: Dashboard, POS Billing, Menu Management, Orders, Reports, Expenses, Staff, Settings, and Logout.
 
-Do not display table-management, kitchen-display, inventory, or supplier features.
+Categories are managed inside Menu Management and do not receive a separate top-level item. Customer, table, kitchen, inventory, supplier, and marketplace-specific links/content are prohibited.
+
+## Responsive shell
+
+- Desktop: fixed 288 px sidebar and scrollable content.
+- Tablet/mobile: keyboard-accessible navigation drawer with overlay and explicit close controls.
+- Tables use horizontal scrolling instead of clipping required columns.
+- POS stacks category, products, and cart content at narrower widths while preserving touch-sized controls.
+
+## Brand and accessibility
+
+- Gold `#F4B400`, dark brown `#4A2310`, cream `#FFF8E6`, white `#FFFFFF`
+- Success `#22C55E`, warning `#F97316`, danger `#EF4444`
+- Use visible focus rings, semantic headings, accessible names, sufficient contrast, labeled form fields, and status/alert roles.
+- Use reduced-motion preferences, lazy menu images, large rounded cards, and restrained shadows/animation.
+- Format LKR as `Rs. 1,250.00`.
+
+## Module placeholders
+
+Reports, Expenses, and Staff use the authenticated dashboard shell and a clear “Coming in a future task” state. They must not imply implemented calculations, exports, data entry, or staff administration.
+
+## Thermal receipt
+
+- Target: Xprinter XP-80T, 80 mm paper, approximately 72 mm printable width.
+- Monochrome, monospace, minimal margins, no dashboard/background output.
+- Item columns: Item, Qty, Total.
+- Never show customer information.
+- Hide discount, tax, and service-charge lines when their values are zero.
+- Show amount received and balance only for cash.
+- Prevent page breaks inside receipt sections/item rows.
+- Header: Rice & Kottu Hut; No.32, Padukka Road, Meegoda; 0777250493 / 0778375427.
+- Footer: Thank You! / Please Visit Again / Design & Deploy by / Startek (PVT) LTD.
+
+Users select Xprinter XP-80T and 80 mm paper in the operating-system print dialog. Direct printer/cash-drawer communication is not implemented.

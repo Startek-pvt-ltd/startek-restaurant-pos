@@ -1,42 +1,40 @@
 # Database
 
-PostgreSQL is accessed through Prisma ORM 7 and the PostgreSQL driver adapter. Connection settings belong in the root `.env` file as `DATABASE_URL`; never commit credentials. Copy `.env.example` and replace its example credentials for local development.
+PostgreSQL is accessed through Prisma ORM 7 and the PostgreSQL driver adapter. `DATABASE_URL` belongs in `.env`; never commit production credentials.
 
-The schema covers restaurant configuration, users, menu categories and items, tables, customers, orders and payments, suppliers and inventory, expenses, activity logs, and system settings.
+## Active runtime data
 
-## Menu data operations
+- Restaurant and SystemSetting: billing and receipt configuration
+- User and ActivityLog: authentication, roles, and audit history
+- Category and MenuItem: POS catalogue
+- Order, OrderItem, and Payment: immutable billing history and price/payment snapshots
+- Expense: retained for the approved future Expenses module
 
-- `Category.name` is unique and categories are ordered by `displayOrder` and name.
-- `MenuItem` belongs to one category; category deletion uses the existing restrictive foreign key so related items cannot be orphaned.
-- Menu prices remain PostgreSQL decimals and are serialized as decimal strings before reaching Client Components.
-- The seed creates ten sample menu items only when the menu item table is empty. Existing menu records and edited prices are never overwritten.
-- Images are stored as URL/path strings only. Local files belong in `public/menu-items`; no binary image data is stored in PostgreSQL.
+## Transaction and integrity rules
 
-## POS billing records
+- POS checkout uses a serializable transaction for Order, OrderItem, Payment, and ActivityLog.
+- Invoice numbers use `RKH-YYYYMMDD-NNNN`, a PostgreSQL transaction advisory lock, bounded retries, and the unique `Order.orderNumber` constraint.
+- Menu prices use decimal columns and are reloaded on checkout; `OrderItem.unitPrice` and `totalPrice` preserve history.
+- Order cancellation is a status/audit update, never a physical delete.
+- Foreign keys restrict deletion of users/menu items needed by history; child order items/payments cascade only with an order, although runtime code never deletes orders.
 
-- `Order.orderType` uses `DINE_IN`, `TAKEAWAY`, or `DELIVERY` and defaults to `TAKEAWAY` for backward compatibility.
-- `Order.notes` stores optional whole-order preparation notes.
-- Completed checkout snapshots menu prices into `OrderItem.unitPrice` and `OrderItem.totalPrice`.
-- `Payment.receivedAmount` and `Payment.changeAmount` preserve cash tender and change while card and QR payments leave them null.
-- Billing writes use a serializable transaction so partial orders or payments are never stored.
+## Historical models retained intentionally
 
-## Order management and cancellation
+`RestaurantTable`, `Customer`, `Supplier`, `InventoryItem`, `StockTransaction`, their relations, `TableStatus`, `StockMovement`, and `KITCHEN` remain in the checked-in schema and old migrations. They are not used by the current UI/runtime.
 
-- `Order.cancellationReason`, `Order.cancelledAt`, and `Order.cancelledById` form a nullable cancellation audit trail and preserve all existing order history.
-- `cancelledById` references `User` with `ON DELETE SET NULL`; the textual reason and timestamp remain if the user is later removed.
-- Cancellation and pending-order completion update the order and create an `ActivityLog` inside the same database transaction.
-- Invoice numbers use `RKH-YYYYMMDD-NNNN`. Checkout takes a PostgreSQL transaction-level advisory lock for the Colombo calendar-date prefix, reads the next four-digit sequence, and relies on the unique `Order.orderNumber` constraint as a final safeguard.
-- Order list queries use indexed order date/status fields, relation filters for customer and payment data, and database `skip`/`take` pagination.
+Removing them now would require a destructive migration and could discard deployed data. Cleanup is deferred to a separately approved data-retention/migration task with backups, usage verification, and an explicit rollback plan. TASK-009 does not delete migrations, reset the database, or remove existing records.
 
-## Printer settings
+The seed no longer creates restaurant tables and defaults customer receipt visibility off. It preserves existing menu/order data and creates sample menu items only when none exist.
 
-`SystemSetting` stores the Xprinter XP-80T display name, 80 mm paper width, separate auto-preview/auto-print preferences, logo and optional-line visibility, one-to-three copies, thank-you text, developer credit, and a disabled cash-drawer placeholder. Printer changes are validated, role-protected, and written with an `ActivityLog` entry. No operating-system printer credentials are stored.
+## Receipt settings compatibility
 
-## Commands
+Legacy SystemSetting columns for customer visibility and custom footer copy remain for migration compatibility. Runtime receipt rendering ignores customer visibility and uses the approved fixed identity/footer. This avoids a destructive schema change while preventing old settings from re-enabling removed content.
 
-- `npm run prisma:generate` regenerates Prisma Client after schema changes.
-- `npm run prisma:migrate -- --name <migration-name>` creates and applies a development migration.
-- `npm run prisma:seed` safely upserts the required baseline data.
-- `npm run prisma:studio` opens the local database browser.
+## Verified commands
 
-Production environments should apply checked-in migrations with `npx prisma migrate deploy`.
+- `npx prisma format`
+- `npx prisma validate`
+- `npm run prisma:generate`
+- `npx prisma migrate status`
+
+Production should apply checked-in migrations with `npx prisma migrate deploy`. Prisma Studio remains available through `npm run prisma:studio`.

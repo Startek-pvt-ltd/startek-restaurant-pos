@@ -1,83 +1,19 @@
-# Startek Restaurant POS
+# Startek Restaurant POS Milestones
 
-## Milestone 1 ✅
-Project Setup
+| Milestone | Status |
+| --- | --- |
+| TASK-001 Project Setup | Complete |
+| TASK-002 Database Foundation | Complete |
+| TASK-003 Authentication and RBAC | Complete |
+| TASK-004 Professional Dashboard | Complete |
+| TASK-005 Menu and Category Management | Complete |
+| TASK-006 POS Billing | Complete |
+| TASK-007 Order Management | Complete |
+| TASK-008 Xprinter XP-80T Receipt Printing | Complete |
+| TASK-009 System Audit, Bug Fixing, and Stabilization | Complete |
+| Reports business module | Pending; placeholder only |
+| Expenses business module | Pending; placeholder only |
+| Staff business module | Pending; placeholder only |
+| Production deployment | Pending |
 
-Status: Complete
-
----
-
-## Milestone 2
-Database Foundation
-
-Status: Complete
-
----
-
-## Milestone 3
-Authentication
-
-Status: Complete
-
----
-
-## Milestone 4
-Dashboard
-
-Status: Complete
-
----
-
-## Milestone 5 ✅
-Menu and Category Management
-
-Status: Complete
-
----
-
-## Milestone 6 ✅
-POS Billing
-
-Status: Complete
-
----
-
-## Milestone 7 ✅
-Order Management
-
-Status: Complete
-
----
-
-## Milestone 8 ✅
-Receipt Printing for Xprinter XP-80T
-
-Status: Complete
-
----
-
-## Milestone 9
-Customers and Expenses
-
-Status: Pending
-
----
-
-## Milestone 10
-Reports
-
-Status: Pending
-
----
-
-## Milestone 11
-Staff and Settings
-
-Status: Pending
-
----
-
-## Milestone 12
-Production Deployment
-
-Status: Pending
+Customer management, table management, kitchen display, inventory, and supplier management are excluded rather than pending milestones.
