@@ -218,13 +218,13 @@ export type SystemSettingAggregateArgs<ExtArgs extends runtime.Types.Extensions.
   _count?: true | SystemSettingCountAggregateInputType
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-   *
+   * 
    * Select which fields to average
   **/
   _avg?: SystemSettingAvgAggregateInputType
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-   *
+   * 
    * Select which fields to sum
   **/
   _sum?: SystemSettingSumAggregateInputType

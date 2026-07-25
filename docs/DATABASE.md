@@ -8,7 +8,7 @@ PostgreSQL is accessed through Prisma ORM 7 and the PostgreSQL driver adapter. `
 - User and ActivityLog: authentication, roles, and audit history
 - Category and MenuItem: POS catalogue
 - Order, OrderItem, and Payment: immutable billing history and price/payment snapshots
-- Expense: retained for the approved future Expenses module
+- Expense: operating-expense records, dates, references, decimal amounts, creator, and audit timestamps
 
 ## Transaction and integrity rules
 
@@ -17,6 +17,11 @@ PostgreSQL is accessed through Prisma ORM 7 and the PostgreSQL driver adapter. `
 - Menu prices use decimal columns and are reloaded on checkout; `OrderItem.unitPrice` and `totalPrice` preserve history.
 - Order cancellation is a status/audit update, never a physical delete.
 - Foreign keys restrict deletion of users/menu items needed by history; child order items/payments cascade only with an order, although runtime code never deletes orders.
+- Expense money uses `Decimal(12,2)`. `expenseDate` is a PostgreSQL `DATE`; `updatedAt` supports optimistic concurrency checks. Expense create/update/delete and the corresponding activity entry share a database transaction.
+
+## Expense migration
+
+Migration `20260726093000_add_expenses_management` adds `expenseDate`, optional `referenceNumber`, `updatedAt`, and an expense-date index without deleting rows. Existing rows are backfilled from their Colombo-local `createdAt` date. Legacy enum values are translated as `UTILITIES → ELECTRICITY`, `PURCHASE → INGREDIENTS`, and `REPAIR → MAINTENANCE`; unchanged categories retain their original value.
 
 ## Historical models retained intentionally
 
@@ -36,5 +41,6 @@ Legacy SystemSetting columns for customer visibility and custom footer copy rema
 - `npx prisma validate`
 - `npm run prisma:generate`
 - `npx prisma migrate status`
+- `npx prisma migrate deploy`
 
 Production should apply checked-in migrations with `npx prisma migrate deploy`. Prisma Studio remains available through `npm run prisma:studio`.

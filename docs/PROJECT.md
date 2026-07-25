@@ -42,6 +42,13 @@ The following are excluded: Customer Management, Table Management, Kitchen Displ
 - `/orders/[id]` displays the invoice snapshot, cashier, order type, items, totals, payment, notes, and cancellation audit.
 - Orders are never physically deleted. Completion and authorized cancellation are transactional and audited.
 
+### Expenses
+
+- `/expenses` provides PostgreSQL-backed create, view, edit, and owner-level delete workflows.
+- Search, category/date filters, amount/date sorting, pagination, and daily/weekly/monthly/filtered totals are calculated server-side.
+- Super admins and owners have full access; managers may create/view/edit; cashiers are denied at the protected route and every mutation boundary.
+- Create, update, and deletion events are recorded in `ActivityLog`. Physical deletion requires explicit confirmation and writes its audit record in the same transaction before removal.
+
 ### Thermal receipts
 
 - `/orders/[id]/receipt` is authenticated and renders stored order/payment snapshots for 80 mm paper.
@@ -51,7 +58,7 @@ The following are excluded: Customer Management, Table Management, Kitchen Displ
 
 ### Placeholders
 
-`/reports`, `/expenses`, and `/staff` are protected, responsive placeholders only. No reporting, expense-entry, export, or staff-management business logic is claimed in TASK-009.
+`/reports` and `/staff` remain protected, responsive placeholders only. No reporting exports, profit-and-loss calculations, or staff-management business logic is part of TASK-010.
 
 ## Stakeholders
 

@@ -274,9 +274,12 @@ export const ExpenseScalarFieldEnum = {
   category: 'category',
   title: 'title',
   amount: 'amount',
+  expenseDate: 'expenseDate',
   remarks: 'remarks',
+  referenceNumber: 'referenceNumber',
   createdBy: 'createdBy',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type ExpenseScalarFieldEnum = (typeof ExpenseScalarFieldEnum)[keyof typeof ExpenseScalarFieldEnum]

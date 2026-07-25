@@ -88,11 +88,17 @@ export type StockMovement = (typeof StockMovement)[keyof typeof StockMovement]
 
 
 export const ExpenseCategory = {
-  UTILITIES: 'UTILITIES',
+  INGREDIENTS: 'INGREDIENTS',
+  PACKAGING: 'PACKAGING',
+  GAS: 'GAS',
+  ELECTRICITY: 'ELECTRICITY',
+  WATER: 'WATER',
   SALARY: 'SALARY',
+  TRANSPORT: 'TRANSPORT',
+  MAINTENANCE: 'MAINTENANCE',
+  RENT: 'RENT',
   MARKETING: 'MARKETING',
-  PURCHASE: 'PURCHASE',
-  REPAIR: 'REPAIR',
+  STAFF_MEALS: 'STAFF_MEALS',
   OTHER: 'OTHER'
 } as const
 

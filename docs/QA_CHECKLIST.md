@@ -1,4 +1,4 @@
-# QA Checklist — TASK-009
+# QA Checklist
 
 Executed on 2026-07-26 in the local `fix/system-stabilization` workspace.
 
@@ -85,3 +85,29 @@ Executed on 2026-07-26 in the local `fix/system-stabilization` workspace.
 - [x] No database reset performed
 - [x] No existing order/menu/user records removed or overwritten
 - [x] Obsolete schema models retained and documented for planned migration cleanup
+
+## TASK-010 Expenses Management
+
+Executed on 2026-07-26 in the local `feature/expenses` workspace.
+
+- [x] Safe expense migration applied without a reset or deleted migration
+- [x] Prisma Client regenerated; schema validation and migration status passed
+- [x] `/expenses` remains inside the authenticated dashboard shell
+- [x] Seeded super admin received HTTP 200 and the complete expense page content
+- [x] Authenticated Cashier fixture received HTTP 307 to `/dashboard?error=forbidden`; fixture and login log were removed
+- [x] `SUPER_ADMIN` and `OWNER` create/view/edit/delete policy is enforced server-side
+- [x] `MANAGER` create/view/edit policy and delete denial are enforced server-side
+- [x] `CASHIER` route and mutation access are denied server-side
+- [x] Required title/category/date and positive two-decimal amount validation implemented
+- [x] Future dates, overlong reference numbers, and overlong descriptions are rejected
+- [x] Search covers title, reference number, and description
+- [x] Category/date filters, four sort modes, and 10/20/50-row pagination implemented
+- [x] Today, Monday-to-date week, month-to-date, and filtered totals use Prisma Decimal aggregates
+- [x] Create/update/delete activity events include actor, expense ID, safe title, and timestamp
+- [x] Concurrent edit/delete conflicts use `updatedAt` optimistic checks and safe messages
+- [x] Responsive mobile cards and desktop table include accessible actions and dialogs
+- [x] Loading, error, empty, validation, authorization, and database-error states implemented
+- [x] Database-backed temporary-fixture suite passed 20 validation, CRUD, permission, query, total, concurrency, and audit assertions; all fixtures were removed
+- [x] Production build exposed `/expenses` as a dynamic server-rendered route
+- [ ] In-app viewport interaction could not be completed because the browser tab did not attach to the local test session; responsive behavior was source/build verified
+- [ ] Physical printer output, reporting exports, P&L, payroll, and receipt-image storage are outside TASK-010

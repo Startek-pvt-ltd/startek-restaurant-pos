@@ -11,8 +11,8 @@
 | TASK-007 Order Management | Complete |
 | TASK-008 Xprinter XP-80T Receipt Printing | Complete |
 | TASK-009 System Audit, Bug Fixing, and Stabilization | Complete |
+| TASK-010 Expenses Management | Complete |
 | Reports business module | Pending; placeholder only |
-| Expenses business module | Pending; placeholder only |
 | Staff business module | Pending; placeholder only |
 | Production deployment | Pending |
 

@@ -4,7 +4,7 @@
 
 Auth.js exposes its standard GET/POST handlers at `/api/auth/[...nextauth]` for credentials sign-in, session handling, CSRF protection, and sign-out. Use Auth.js clients rather than sending unvalidated application payloads directly.
 
-There are no public business API routes. TASK-009 does not implement report exports or new APIs.
+There are no public business API routes. TASK-010 uses Server Actions and does not implement report exports or new route handlers.
 
 ## Authorization contract
 
@@ -29,6 +29,13 @@ The service reloads the active cashier, menu prices/availability/category status
 - `completeOrderStatusAction` validates an order UUID and atomically transitions only a pending order to completed.
 - `cancelOrderAction` validates a UUID and required cancellation reason, permits only `SUPER_ADMIN`, `OWNER`, or `MANAGER`, retains the order, and writes cancellation/audit metadata.
 - Order query parameters are parsed with Zod before Prisma filters are constructed.
+
+## Expense Server Actions
+
+- `createExpenseAction` validates the complete payload, rechecks the active `SUPER_ADMIN`/`OWNER`/`MANAGER` role, and transactionally creates the expense plus `EXPENSE_CREATED` activity.
+- `updateExpenseAction` repeats validation and authorization, uses the last-seen `updatedAt` value to reject concurrent edits, and records `EXPENSE_UPDATED`.
+- `deleteExpenseAction` permits only active `SUPER_ADMIN` or `OWNER` accounts, checks the last-seen version, and records `EXPENSE_DELETED` before physically deleting within the same transaction.
+- Action responses contain only constrained success/field/user-safe error messages. Prisma records and database internals are not returned to the browser.
 
 ## Printer settings and receipts
 
