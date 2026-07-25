@@ -9,7 +9,82 @@
 * 🟢 You can import this file directly.
 */
 
+export const UserRole = {
+  SUPER_ADMIN: 'SUPER_ADMIN',
+  OWNER: 'OWNER',
+  MANAGER: 'MANAGER',
+  CASHIER: 'CASHIER',
+  KITCHEN: 'KITCHEN'
+} as const
+
+export type UserRole = (typeof UserRole)[keyof typeof UserRole]
 
 
-// This file is empty because there are no enums in the schema.
-export {}
+export const UserStatus = {
+  ACTIVE: 'ACTIVE',
+  INACTIVE: 'INACTIVE'
+} as const
+
+export type UserStatus = (typeof UserStatus)[keyof typeof UserStatus]
+
+
+export const TableStatus = {
+  AVAILABLE: 'AVAILABLE',
+  OCCUPIED: 'OCCUPIED',
+  RESERVED: 'RESERVED',
+  CLEANING: 'CLEANING'
+} as const
+
+export type TableStatus = (typeof TableStatus)[keyof typeof TableStatus]
+
+
+export const OrderStatus = {
+  PENDING: 'PENDING',
+  CONFIRMED: 'CONFIRMED',
+  PREPARING: 'PREPARING',
+  READY: 'READY',
+  COMPLETED: 'COMPLETED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type OrderStatus = (typeof OrderStatus)[keyof typeof OrderStatus]
+
+
+export const PaymentMethod = {
+  CASH: 'CASH',
+  CARD: 'CARD',
+  BANK_TRANSFER: 'BANK_TRANSFER',
+  QR: 'QR'
+} as const
+
+export type PaymentMethod = (typeof PaymentMethod)[keyof typeof PaymentMethod]
+
+
+export const PaymentStatus = {
+  PENDING: 'PENDING',
+  PAID: 'PAID',
+  REFUNDED: 'REFUNDED'
+} as const
+
+export type PaymentStatus = (typeof PaymentStatus)[keyof typeof PaymentStatus]
+
+
+export const StockMovement = {
+  IN: 'IN',
+  OUT: 'OUT',
+  ADJUSTMENT: 'ADJUSTMENT'
+} as const
+
+export type StockMovement = (typeof StockMovement)[keyof typeof StockMovement]
+
+
+export const ExpenseCategory = {
+  UTILITIES: 'UTILITIES',
+  SALARY: 'SALARY',
+  MARKETING: 'MARKETING',
+  PURCHASE: 'PURCHASE',
+  REPAIR: 'REPAIR',
+  OTHER: 'OTHER'
+} as const
+
+export type ExpenseCategory = (typeof ExpenseCategory)[keyof typeof ExpenseCategory]

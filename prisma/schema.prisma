@@ -6,3 +6,303 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+enum UserRole {
+  SUPER_ADMIN
+  OWNER
+  MANAGER
+  CASHIER
+  KITCHEN
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum TableStatus {
+  AVAILABLE
+  OCCUPIED
+  RESERVED
+  CLEANING
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PREPARING
+  READY
+  COMPLETED
+  CANCELLED
+}
+
+enum PaymentMethod {
+  CASH
+  CARD
+  BANK_TRANSFER
+  QR
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  REFUNDED
+}
+
+enum StockMovement {
+  IN
+  OUT
+  ADJUSTMENT
+}
+
+enum ExpenseCategory {
+  UTILITIES
+  SALARY
+  MARKETING
+  PURCHASE
+  REPAIR
+  OTHER
+}
+
+model Restaurant {
+  id            String   @id @default(uuid()) @db.Uuid
+  name          String
+  address       String
+  phone         String
+  email         String?
+  taxNumber     String?
+  logo          String?
+  currency      String   @default("LKR") @db.VarChar(3)
+  serviceCharge Decimal  @default(0) @db.Decimal(5, 2)
+  taxPercentage Decimal  @default(0) @db.Decimal(5, 2)
+  receiptFooter String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([email])
+  @@index([phone])
+}
+
+model User {
+  id                String             @id @default(uuid()) @db.Uuid
+  fullName          String
+  email             String?            @unique
+  username          String             @unique
+  password          String
+  phone             String?
+  role              UserRole
+  status            UserStatus         @default(ACTIVE)
+  avatar            String?
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  orders            Order[]
+  stockTransactions StockTransaction[]
+  expenses          Expense[]
+  activityLogs      ActivityLog[]
+
+  @@index([phone])
+  @@index([status])
+}
+
+model Category {
+  id           String     @id @default(uuid()) @db.Uuid
+  name         String     @unique
+  description  String?
+  displayOrder Int        @default(0)
+  active       Boolean    @default(true)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  menuItems    MenuItem[]
+
+  @@index([active, displayOrder])
+}
+
+model MenuItem {
+  id              String      @id @default(uuid()) @db.Uuid
+  categoryId      String      @db.Uuid
+  name            String
+  description     String?
+  price           Decimal     @db.Decimal(12, 2)
+  image           String?
+  preparationTime Int         @default(0)
+  available       Boolean     @default(true)
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  category        Category    @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  orderItems      OrderItem[]
+
+  @@unique([categoryId, name])
+  @@index([categoryId])
+  @@index([available])
+}
+
+model RestaurantTable {
+  id          String      @id @default(uuid()) @db.Uuid
+  tableNumber String      @unique
+  capacity    Int         @default(4)
+  status      TableStatus @default(AVAILABLE)
+  active      Boolean     @default(true)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  orders      Order[]
+
+  @@index([status])
+  @@index([active])
+}
+
+model Customer {
+  id            String   @id @default(uuid()) @db.Uuid
+  fullName      String
+  phone         String   @unique
+  email         String?
+  address       String?
+  loyaltyPoints Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  orders        Order[]
+
+  @@index([email])
+}
+
+model Order {
+  id            String           @id @default(uuid()) @db.Uuid
+  orderNumber   String           @unique
+  customerId    String?          @db.Uuid
+  tableId       String?          @db.Uuid
+  cashierId     String           @db.Uuid
+  status        OrderStatus      @default(PENDING)
+  subtotal      Decimal          @db.Decimal(12, 2)
+  discount      Decimal          @default(0) @db.Decimal(12, 2)
+  tax           Decimal          @default(0) @db.Decimal(12, 2)
+  serviceCharge Decimal          @default(0) @db.Decimal(12, 2)
+  grandTotal    Decimal          @db.Decimal(12, 2)
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+  customer      Customer?        @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  table         RestaurantTable? @relation(fields: [tableId], references: [id], onDelete: SetNull)
+  cashier       User             @relation(fields: [cashierId], references: [id], onDelete: Restrict)
+  items         OrderItem[]
+  payments      Payment[]
+
+  @@index([customerId])
+  @@index([tableId])
+  @@index([cashierId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model OrderItem {
+  id         String   @id @default(uuid()) @db.Uuid
+  orderId    String   @db.Uuid
+  menuItemId String   @db.Uuid
+  quantity   Int
+  unitPrice  Decimal  @db.Decimal(12, 2)
+  totalPrice Decimal  @db.Decimal(12, 2)
+  notes      String?
+  order      Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  menuItem   MenuItem @relation(fields: [menuItemId], references: [id], onDelete: Restrict)
+
+  @@index([orderId])
+  @@index([menuItemId])
+}
+
+model Payment {
+  id            String        @id @default(uuid()) @db.Uuid
+  orderId       String        @db.Uuid
+  paymentMethod PaymentMethod
+  paymentStatus PaymentStatus @default(PENDING)
+  amount        Decimal       @db.Decimal(12, 2)
+  reference     String?
+  createdAt     DateTime      @default(now())
+  order         Order         @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
+  @@index([paymentStatus])
+  @@index([reference])
+}
+
+model Supplier {
+  id             String          @id @default(uuid()) @db.Uuid
+  name           String
+  company        String?
+  phone          String?
+  email          String?
+  address        String?
+  active         Boolean         @default(true)
+  inventoryItems InventoryItem[]
+
+  @@index([phone])
+  @@index([email])
+  @@index([active])
+}
+
+model InventoryItem {
+  id                String             @id @default(uuid()) @db.Uuid
+  supplierId        String?            @db.Uuid
+  name              String             @unique
+  unit              String
+  quantity          Decimal            @default(0) @db.Decimal(12, 3)
+  minimumLevel      Decimal            @default(0) @db.Decimal(12, 3)
+  costPrice         Decimal            @default(0) @db.Decimal(12, 2)
+  sellingPrice      Decimal?           @db.Decimal(12, 2)
+  active            Boolean            @default(true)
+  supplier          Supplier?          @relation(fields: [supplierId], references: [id], onDelete: SetNull)
+  stockTransactions StockTransaction[]
+
+  @@index([supplierId])
+  @@index([active])
+}
+
+model StockTransaction {
+  id              String        @id @default(uuid()) @db.Uuid
+  inventoryItemId String        @db.Uuid
+  movementType    StockMovement
+  quantity        Decimal       @db.Decimal(12, 3)
+  remarks         String?
+  userId          String        @db.Uuid
+  createdAt       DateTime      @default(now())
+  inventoryItem   InventoryItem @relation(fields: [inventoryItemId], references: [id], onDelete: Restrict)
+  user            User          @relation(fields: [userId], references: [id], onDelete: Restrict)
+
+  @@index([inventoryItemId])
+  @@index([userId])
+  @@index([movementType])
+  @@index([createdAt])
+}
+
+model Expense {
+  id        String          @id @default(uuid()) @db.Uuid
+  category  ExpenseCategory
+  title     String
+  amount    Decimal         @db.Decimal(12, 2)
+  remarks   String?
+  createdBy String          @db.Uuid
+  createdAt DateTime        @default(now())
+  creator   User            @relation(fields: [createdBy], references: [id], onDelete: Restrict)
+
+  @@index([createdBy])
+  @@index([category])
+  @@index([createdAt])
+}
+
+model ActivityLog {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String?  @db.Uuid
+  action    String
+  ipAddress String?
+  createdAt DateTime @default(now())
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model SystemSetting {
+  id             String  @id @default(uuid()) @db.Uuid
+  restaurantName String
+  logo           String?
+  receiptFooter  String?
+  currency       String  @default("LKR") @db.VarChar(3)
+  timezone       String  @default("Asia/Colombo")
+  language       String  @default("en")
+}
