@@ -10,10 +10,10 @@
 - Auth.js credentials authentication and role-based access control
 - Responsive professional dashboard with mock statistics, charts, orders, expenses, and activity
 - Database-backed menu and category management with validation, role-based writes, filtering, sorting, responsive views, and safe seed data
+- Touch-friendly POS billing with a persisted cart, held orders, validated restaurant pricing, and atomic checkout
 
 ## Deferred
 
-- POS billing workflows and calculations
 - Order management
 - Customer management
 - Reports and expenses

@@ -23,6 +23,15 @@ The product does not include table management, a kitchen display system, invento
 - Item images may use an `http(s)` URL or a local `/menu-items/...` path. Missing images use the built-in food placeholder.
 - Menu operations use validated Server Actions and Prisma services; no business API route is required.
 
+## POS billing
+
+- `/pos` is a protected, touch-friendly restaurant ordering screen with category navigation, instant menu search, product cards, and a live shopping cart.
+- The Zustand cart persists on the cashier device until checkout and supports one held order for fast interruption and resume workflows.
+- Dine-in, takeaway, and delivery orders support notes, percentage or fixed discounts, Cash/Card/QR payment, and automatic cash change.
+- Tax and service charge values are read from the restaurant record and displayed as read-only billing inputs for cashiers.
+- Checkout re-reads product prices and availability, recalculates totals on the server, and atomically creates the completed order, items, payment, and activity entry.
+- Receipt printing is intentionally a placeholder pending printer integration.
+
 ## Authentication
 
 - Active users can authenticate with either username or email and a bcrypt-protected password.

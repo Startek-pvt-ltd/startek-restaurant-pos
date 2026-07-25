@@ -17,9 +17,11 @@ export function Topbar({ onMenuClick, user }: TopbarProps) {
   const [now, setNow] = useState<Date | null>(null);
   const pageMeta = pathname === "/menu/categories"
     ? { title: "Categories", description: "Menu organization" }
+    : pathname.startsWith("/pos")
+      ? { title: "POS Billing", description: "Fast order entry and checkout" }
     : pathname.startsWith("/menu")
       ? { title: "Menu Management", description: "Items, pricing and availability" }
-      : { title: "Dashboard", description: "Business overview" };
+        : { title: "Dashboard", description: "Business overview" };
   const initials = useMemo(
     () =>
       user.fullName

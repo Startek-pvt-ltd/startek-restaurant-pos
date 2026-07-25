@@ -182,7 +182,9 @@ export const OrderScalarFieldEnum = {
   customerId: 'customerId',
   tableId: 'tableId',
   cashierId: 'cashierId',
+  orderType: 'orderType',
   status: 'status',
+  notes: 'notes',
   subtotal: 'subtotal',
   discount: 'discount',
   tax: 'tax',
@@ -214,6 +216,8 @@ export const PaymentScalarFieldEnum = {
   paymentMethod: 'paymentMethod',
   paymentStatus: 'paymentStatus',
   amount: 'amount',
+  receivedAmount: 'receivedAmount',
+  changeAmount: 'changeAmount',
   reference: 'reference',
   createdAt: 'createdAt'
 } as const

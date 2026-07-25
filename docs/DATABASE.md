@@ -12,6 +12,14 @@ The schema covers restaurant configuration, users, menu categories and items, ta
 - The seed creates ten sample menu items only when the menu item table is empty. Existing menu records and edited prices are never overwritten.
 - Images are stored as URL/path strings only. Local files belong in `public/menu-items`; no binary image data is stored in PostgreSQL.
 
+## POS billing records
+
+- `Order.orderType` uses `DINE_IN`, `TAKEAWAY`, or `DELIVERY` and defaults to `TAKEAWAY` for backward compatibility.
+- `Order.notes` stores optional whole-order preparation notes.
+- Completed checkout snapshots menu prices into `OrderItem.unitPrice` and `OrderItem.totalPrice`.
+- `Payment.receivedAmount` and `Payment.changeAmount` preserve cash tender and change while card and QR payments leave them null.
+- Billing writes use a serializable transaction so partial orders or payments are never stored.
+
 ## Commands
 
 - `npm run prisma:generate` regenerates Prisma Client after schema changes.

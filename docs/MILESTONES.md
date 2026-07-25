@@ -35,10 +35,10 @@ Status: Complete
 
 ---
 
-## Milestone 6
+## Milestone 6 ✅
 POS Billing
 
-Status: Pending
+Status: Complete
 
 ---
 

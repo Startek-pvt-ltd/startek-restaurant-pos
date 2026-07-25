@@ -50,6 +50,15 @@ export const OrderStatus = {
 export type OrderStatus = (typeof OrderStatus)[keyof typeof OrderStatus]
 
 
+export const OrderType = {
+  DINE_IN: 'DINE_IN',
+  TAKEAWAY: 'TAKEAWAY',
+  DELIVERY: 'DELIVERY'
+} as const
+
+export type OrderType = (typeof OrderType)[keyof typeof OrderType]
+
+
 export const PaymentMethod = {
   CASH: 'CASH',
   CARD: 'CARD',
