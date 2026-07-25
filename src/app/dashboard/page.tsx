@@ -1,59 +1,122 @@
-import Image from "next/image";
-import { BadgeCheck } from "lucide-react";
+import {
+  BadgeDollarSign,
+  CircleDollarSign,
+  FileChartColumn,
+  Plus,
+  ReceiptText,
+  ShoppingBag,
+  UserPlus,
+  UsersRound,
+  WalletCards,
+} from "lucide-react";
 
+import { BestSellingItems } from "@/components/dashboard/BestSellingItems";
+import { DashboardShell } from "@/components/dashboard/DashboardShell";
+import { PaymentChart } from "@/components/dashboard/PaymentChart";
+import { QuickAction } from "@/components/dashboard/QuickAction";
+import { RecentActivity } from "@/components/dashboard/RecentActivity";
+import { RecentExpenses } from "@/components/dashboard/RecentExpenses";
+import { RecentOrders } from "@/components/dashboard/RecentOrders";
+import { SalesChart } from "@/components/dashboard/SalesChart";
+import { StatCard } from "@/components/dashboard/StatCard";
+import { WelcomeSection } from "@/components/dashboard/WelcomeSection";
 import { requireAuth } from "@/lib/auth-utils";
 
-import { LogoutButton } from "./logout-button";
+const stats = [
+  {
+    title: "Today's Sales",
+    value: "Rs. 48,500.00",
+    detail: "+12.5% from yesterday",
+    tone: "gold" as const,
+    icon: CircleDollarSign,
+  },
+  {
+    title: "Today's Orders",
+    value: "86",
+    detail: "14 orders this hour",
+    tone: "orange" as const,
+    icon: ShoppingBag,
+  },
+  {
+    title: "Monthly Revenue",
+    value: "Rs. 1,284,750.00",
+    detail: "+8.2% from last month",
+    tone: "brown" as const,
+    icon: WalletCards,
+  },
+  {
+    title: "Total Customers",
+    value: "1,248",
+    detail: "+36 new this month",
+    tone: "success" as const,
+    icon: UsersRound,
+  },
+  {
+    title: "Total Expenses",
+    value: "Rs. 186,420.00",
+    detail: "Current month total",
+    tone: "danger" as const,
+    icon: ReceiptText,
+  },
+  {
+    title: "Net Sales",
+    value: "Rs. 1,098,330.00",
+    detail: "+9.4% monthly growth",
+    tone: "success" as const,
+    icon: BadgeDollarSign,
+  },
+];
+
+const quickActions = [
+  { label: "New Order", description: "Start POS billing", icon: Plus, emphasized: true },
+  { label: "Add Menu Item", description: "Create a new dish", icon: ShoppingBag },
+  { label: "Add Customer", description: "Register a customer", icon: UserPlus },
+  { label: "Add Expense", description: "Record a cost", icon: ReceiptText },
+  { label: "View Reports", description: "Open sales reports", icon: FileChartColumn },
+];
 
 export default async function DashboardPage() {
   const session = await requireAuth();
+  const fullName = session.user.name ?? session.user.username;
+  const currentHour = Number(
+    new Intl.DateTimeFormat("en-GB", {
+      hour: "2-digit",
+      hour12: false,
+      timeZone: "Asia/Colombo",
+    }).format(new Date()),
+  );
+  const greeting = currentHour < 12 ? "Good morning" : currentHour < 17 ? "Good afternoon" : "Good evening";
 
   return (
-    <main className="min-h-screen bg-background px-5 py-8 sm:px-8">
-      <div className="mx-auto max-w-5xl">
-        <header className="flex flex-col gap-5 rounded-2xl border border-primary/20 bg-card p-5 shadow-sm sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-4">
-            <Image
-              alt="Rice & Kottu Hut logo"
-              className="h-16 w-16 rounded-xl object-contain"
-              height={256}
-              priority
-              src="/logos/rice-kottu-hut-logo.png"
-              width={256}
-            />
-            <div>
-              <p className="text-xs font-bold uppercase tracking-[0.22em] text-primary">
-                Startek Restaurant POS
-              </p>
-              <h1 className="mt-1 text-xl font-bold text-foreground">Welcome, {session.user.name}</h1>
-            </div>
-          </div>
-          <LogoutButton />
-        </header>
+    <DashboardShell user={{ fullName, role: session.user.role }}>
+      <div className="space-y-7 pb-8">
+        <WelcomeSection fullName={fullName} greeting={greeting} />
 
-        <section className="mt-8 rounded-3xl border border-primary/20 bg-card p-7 shadow-[0_18px_60px_rgba(74,35,16,0.1)] sm:p-10">
-          <div className="flex size-14 items-center justify-center rounded-2xl bg-success/10 text-success">
-            <BadgeCheck aria-hidden="true" className="size-8" />
-          </div>
-          <h2 className="mt-5 text-2xl font-bold text-foreground">Authentication setup successful</h2>
-          <p className="mt-2 max-w-xl text-sm leading-6 text-muted-foreground">
-            Your secure session is active. Dashboard analytics will be introduced in a future milestone.
-          </p>
+        <section aria-label="Quick actions" className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-5">
+          {quickActions.map((action) => (
+            <QuickAction key={action.label} {...action} />
+          ))}
+        </section>
 
-          <dl className="mt-8 grid gap-4 sm:grid-cols-2">
-            <div className="rounded-2xl bg-muted/60 p-5">
-              <dt className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Full name</dt>
-              <dd className="mt-2 text-lg font-semibold text-foreground">{session.user.name}</dd>
-            </div>
-            <div className="rounded-2xl bg-muted/60 p-5">
-              <dt className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Role</dt>
-              <dd className="mt-2 text-lg font-semibold text-foreground">
-                {session.user.role.replaceAll("_", " ")}
-              </dd>
-            </div>
-          </dl>
+        <section aria-label="Business statistics" className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-6">
+          {stats.map((stat, index) => (
+            <StatCard key={stat.title} {...stat} delay={index * 45} />
+          ))}
+        </section>
+
+        <section aria-label="Sales charts" className="grid items-stretch gap-5 xl:grid-cols-[minmax(0,1.55fr)_minmax(320px,0.75fr)]">
+          <SalesChart />
+          <PaymentChart />
+        </section>
+
+        <RecentOrders />
+
+        <section className="grid items-start gap-5 xl:grid-cols-2 2xl:grid-cols-3">
+          <BestSellingItems />
+          <RecentExpenses />
+          <RecentActivity />
         </section>
       </div>
-    </main>
+    </DashboardShell>
   );
 }

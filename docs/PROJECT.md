@@ -1,6 +1,19 @@
 # Project
 
-Startek Restaurant POS is the restaurant management platform for Rice & Kottu Hut. The application includes a maintainable Next.js foundation, PostgreSQL persistence, and Auth.js credential authentication with role-based access control. Operational modules will be implemented in future phases.
+Startek Restaurant POS is the restaurant management platform for Rice & Kottu Hut. The application includes a maintainable Next.js foundation, PostgreSQL persistence, Auth.js credential authentication with role-based access control, and a responsive management dashboard.
+
+## Product scope
+
+Approved application modules are Dashboard, POS Billing, Menu Management, Orders, Customers, Reports, Expenses, Staff, Settings, and Logout.
+
+The product does not include table management, a kitchen display system, inventory management, or supplier management. These excluded areas must not appear in navigation, dashboards, alerts, or future feature planning.
+
+## Dashboard
+
+- The protected `/dashboard` route uses the existing authenticated session.
+- Dashboard statistics, charts, recent orders, best-selling items, expenses, and activity currently use clearly isolated mock presentation data.
+- No sales calculations, business APIs, or dashboard database queries are implemented in TASK-004.
+- Navigation supports a fixed desktop sidebar and a drawer on tablet and mobile screens.
 
 ## Authentication
 

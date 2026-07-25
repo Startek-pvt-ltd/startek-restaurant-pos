@@ -24,7 +24,7 @@ Status: Complete
 ## Milestone 4
 Dashboard
 
-Status: Pending
+Status: Complete
 
 ---
 
@@ -43,21 +43,21 @@ Status: Pending
 ---
 
 ## Milestone 7
-Kitchen Display
+Customers and Expenses
 
 Status: Pending
 
 ---
 
 ## Milestone 8
-Inventory
+Reports
 
 Status: Pending
 
 ---
 
 ## Milestone 9
-Reports
+Staff and Settings
 
 Status: Pending
 

@@ -43,7 +43,7 @@
   --secondary-foreground: #ffffff;
   --muted: #fff1c7;
   --muted-foreground: #79563f;
-  --accent: #f4b400;
+  --accent: #f97316;
   --accent-foreground: #4a2310;
   --destructive: #ef4444;
   --success: #22c55e;
@@ -57,4 +57,49 @@
   * { @apply border-border outline-ring/50; }
   html { @apply font-sans; }
   body { @apply bg-background text-foreground; }
+}
+
+@keyframes dashboard-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@layer components {
+  .dashboard-card {
+    box-shadow: 0 10px 32px rgba(74, 35, 16, 0.07);
+    transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
+  }
+
+  .dashboard-card:hover {
+    border-color: color-mix(in srgb, var(--primary) 45%, var(--border));
+    box-shadow: 0 16px 42px rgba(74, 35, 16, 0.11);
+    transform: translateY(-2px);
+  }
+
+  .dashboard-fade-in {
+    animation: dashboard-fade-up 420ms ease-out both;
+  }
+
+  .dashboard-scrollbar {
+    scrollbar-color: color-mix(in srgb, var(--secondary) 28%, transparent) transparent;
+    scrollbar-width: thin;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dashboard-card,
+  .dashboard-fade-in {
+    animation: none;
+    transition: none;
+  }
+
+  .dashboard-card:hover {
+    transform: none;
+  }
 }

@@ -5,13 +5,19 @@ import { signOut } from "next-auth/react";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
-export function LogoutButton() {
+interface LogoutButtonProps {
+  className?: string;
+  icon?: React.ReactNode;
+}
+
+export function LogoutButton({ className, icon }: LogoutButtonProps) {
   const [isSigningOut, setIsSigningOut] = useState(false);
 
   return (
     <Button
-      className="h-10 px-4"
+      className={cn("h-10 px-4", className)}
       disabled={isSigningOut}
       onClick={async () => {
         setIsSigningOut(true);
@@ -23,7 +29,7 @@ export function LogoutButton() {
       {isSigningOut ? (
         <LoaderCircle aria-hidden="true" className="animate-spin" />
       ) : (
-        <LogOut aria-hidden="true" />
+        icon ?? <LogOut aria-hidden="true" />
       )}
       {isSigningOut ? "Signing out…" : "Logout"}
     </Button>
