@@ -26,14 +26,20 @@ async function main() {
     update: {
       name: "Rice & Kottu Hut",
       address: "No.32 Padukka Road\nMeegoda",
+      addressLine1: "No.32, Padukka Road",
+      city: "Meegoda",
       phone: "0777250493",
+      phone2: "0778375427",
       receiptFooter,
     },
     create: {
       id: restaurantId,
       name: "Rice & Kottu Hut",
       address: "No.32 Padukka Road\nMeegoda",
+      addressLine1: "No.32, Padukka Road",
+      city: "Meegoda",
       phone: "0777250493",
+      phone2: "0778375427",
       receiptFooter,
     },
   });
@@ -51,6 +57,9 @@ async function main() {
       receiptShowServiceCharge: true,
       receiptThankYouMessage: "Thank You!\nPlease Visit Again",
       receiptDeveloperCredit: "Design & Deploy by\nStartek (PVT) LTD",
+      currencySymbol: "Rs.",
+      invoicePrefix: "RKH",
+      invoiceNumberPadding: 4,
     },
     create: {
       id: systemSettingId,
@@ -68,6 +77,9 @@ async function main() {
       receiptShowServiceCharge: true,
       receiptThankYouMessage: "Thank You!\nPlease Visit Again",
       receiptDeveloperCredit: "Design & Deploy by\nStartek (PVT) LTD",
+      currencySymbol: "Rs.",
+      invoicePrefix: "RKH",
+      invoiceNumberPadding: 4,
       openCashDrawer: false,
     },
   });

@@ -2,7 +2,7 @@ import "server-only";
 
 import { Prisma, type UserRole } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
-import { getPrinterSettings } from "@/features/settings/services/printer-settings-service";
+import { getSettingsBundle } from "@/features/settings/services/settings-service";
 
 import { calculateBalance, calculateTotals, toCents } from "../lib/calculate-totals";
 import type { CheckoutInput } from "../types";
@@ -41,7 +41,7 @@ export async function getPosData() {
       },
       orderBy: { createdAt: "asc" },
     }),
-    getPrinterSettings(),
+    getSettingsBundle(),
   ]);
 
   if (!restaurant) throw new Error("Restaurant billing settings are not configured.");
@@ -60,46 +60,55 @@ export async function getPosData() {
       currency: restaurant.currency,
       taxPercentage: Number(restaurant.taxPercentage),
       serviceChargePercentage: Number(restaurant.serviceCharge),
-      printerName: printer.printerName,
-      printerPaperWidth: printer.paperWidth,
-      autoOpenReceiptAfterCheckout: printer.autoOpenReceiptAfterCheckout,
-      autoPrintAfterCheckout: printer.autoPrintAfterCheckout,
-      printLogo: printer.printLogo,
-      receiptCopies: printer.receiptCopies,
+      printerName: printer.printer.printerName,
+      printerPaperWidth: printer.printer.paperWidth,
+      autoOpenReceiptAfterCheckout: printer.printer.autoOpenReceiptAfterCheckout,
+      autoPrintAfterCheckout: printer.printer.autoPrintAfterCheckout,
+      printLogo: printer.printer.printLogo,
+      receiptCopies: printer.printer.receiptCopies,
+      defaultOrderType: printer.billing.defaultOrderType,
+      discountEnabled: printer.billing.discountEnabled,
+      maximumPercentageDiscount: printer.billing.maximumPercentageDiscount,
+      maximumFixedDiscount: printer.billing.maximumFixedDiscount,
+      allowCash: printer.billing.allowCash,
+      allowCard: printer.billing.allowCard,
+      allowQr: printer.billing.allowQr,
+      requireOrderNotes: printer.billing.requireOrderNotes,
     },
   };
 }
 
-function createOrderPrefix() {
+function createOrderPrefix(invoicePrefix: string, timezone: string) {
   const now = new Date();
   const date = new Intl.DateTimeFormat("en-CA", {
-    timeZone: "Asia/Colombo",
+    timeZone: timezone,
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
   })
     .format(now)
     .replaceAll("-", "");
-  return `RKH-${date}-`;
+  return `${invoicePrefix}-${date}-`;
 }
 
-async function createOrderNumber(tx: Prisma.TransactionClient) {
-  const prefix = createOrderPrefix();
+async function createOrderNumber(tx: Prisma.TransactionClient, invoicePrefix: string, padding: number, timezone: string) {
+  const prefix = createOrderPrefix(invoicePrefix, timezone);
+  const pattern = `^${prefix}[0-9]{${padding}}$`;
   const rows = await tx.$queryRaw<Array<{ nextSequence: number }>>(Prisma.sql`
     WITH invoice_lock AS MATERIALIZED (
       SELECT pg_advisory_xact_lock(hashtext(${prefix}))
     )
-    SELECT COALESCE(MAX(CAST(RIGHT(orders."orderNumber", 4) AS INTEGER)), 0) + 1 AS "nextSequence"
+    SELECT COALESCE(MAX(CAST(RIGHT(orders."orderNumber", ${padding}) AS INTEGER)), 0) + 1 AS "nextSequence"
     FROM invoice_lock
     LEFT JOIN "Order" AS orders
-      ON orders."orderNumber" ~ ${`^${prefix}[0-9]{4}$`}
+      ON orders."orderNumber" ~ ${pattern}
   `);
   const nextSequence = Number(rows[0]?.nextSequence ?? 1);
-  if (!Number.isSafeInteger(nextSequence) || nextSequence < 1 || nextSequence > 9999) {
+  if (!Number.isSafeInteger(nextSequence) || nextSequence < 1 || nextSequence >= 10 ** padding) {
     throw new Error("ORDER_NUMBER_FAILED");
   }
 
-  return `${prefix}${nextSequence.toString().padStart(4, "0")}`;
+  return `${prefix}${nextSequence.toString().padStart(padding, "0")}`;
 }
 
 function isPrismaCode(error: unknown, code: string) {
@@ -138,8 +147,9 @@ export async function createCompletedOrder(cashierId: string, input: CheckoutInp
             select: { taxPercentage: true, serviceCharge: true },
             orderBy: { createdAt: "asc" },
           });
+          const system = await tx.systemSetting.findFirst({ orderBy: { id: "asc" } });
 
-          if (!restaurant) throw new Error("SETTINGS_NOT_FOUND");
+          if (!restaurant || !system) throw new Error("SETTINGS_NOT_FOUND");
           if (menuItems.length !== uniqueIds.length) throw new Error("MENU_ITEM_NOT_FOUND");
 
           const menuItemMap = new Map(menuItems.map((item) => [item.id, item]));
@@ -165,6 +175,12 @@ export async function createCompletedOrder(cashierId: string, input: CheckoutInp
             serviceChargePercentage: Number(restaurant.serviceCharge),
           });
 
+          if (!system.discountEnabled && input.discountValue > 0) throw new Error("INVALID_DISCOUNT");
+          if (input.discountType === "PERCENTAGE" && input.discountValue > Number(system.maximumPercentageDiscount)) throw new Error("INVALID_DISCOUNT");
+          if (input.discountType === "FIXED" && input.discountValue > Number(system.maximumFixedDiscount)) throw new Error("INVALID_DISCOUNT");
+          if (system.requireOrderNotes && !input.notes.trim()) throw new Error("ORDER_NOTES_REQUIRED");
+          if ((input.paymentMethod === "CASH" && !system.allowCash) || (input.paymentMethod === "CARD" && !system.allowCard) || (input.paymentMethod === "QR" && !system.allowQr)) throw new Error("PAYMENT_METHOD_DISABLED");
+
           if (!totals.discountValid) throw new Error("INVALID_DISCOUNT");
           if (!totals.totalsValid || totals.grandTotal < 0) throw new Error("INVALID_TOTAL");
 
@@ -175,7 +191,7 @@ export async function createCompletedOrder(cashierId: string, input: CheckoutInp
             throw new Error("INSUFFICIENT_PAYMENT");
           }
 
-          const orderNumber = await createOrderNumber(tx);
+          const orderNumber = await createOrderNumber(tx, system.invoicePrefix, system.invoiceNumberPadding, system.timezone);
           const order = await tx.order.create({
             data: {
               orderNumber,

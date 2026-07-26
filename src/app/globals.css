@@ -109,6 +109,11 @@
   margin: 0;
 }
 
+@page receipt58 {
+  size: 58mm auto;
+  margin: 0;
+}
+
 .thermal-print-page {
   page: receipt;
   color: #000;
@@ -201,6 +206,9 @@
   line-height: 1.35;
 }
 
+.receipt-58 { page: receipt58; width: 52mm; }
+.receipt-80 { page: receipt; width: 72mm; }
+
 .receipt-section { break-inside: avoid; page-break-inside: avoid; }
 .receipt-section + .receipt-section { border-top: 1px dashed #000; margin-top: 2mm; padding-top: 2mm; }
 .receipt-header, .receipt-footer { text-align: center; }
@@ -262,6 +270,9 @@
     background: #fff !important;
     color: #000 !important;
   }
+
+  .receipt-58 { width: 52mm; }
+  .receipt-80 { width: 72mm; }
 
   .receipt:not(:last-child) {
     break-after: page;

@@ -28,6 +28,14 @@ export type RestaurantBillingSettings = {
   autoPrintAfterCheckout: boolean;
   printLogo: boolean;
   receiptCopies: number;
+  defaultOrderType: PosOrderType;
+  discountEnabled: boolean;
+  maximumPercentageDiscount: number;
+  maximumFixedDiscount: number;
+  allowCash: boolean;
+  allowCard: boolean;
+  allowQr: boolean;
+  requireOrderNotes: boolean;
 };
 
 export type CartLine = PosProduct & {

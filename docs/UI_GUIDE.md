@@ -48,3 +48,7 @@ The staff form never offers KITCHEN. Password fields appear only during creation
 - Footer: Thank You! / Please Visit Again / Design & Deploy by / Startek (PVT) LTD.
 
 Users select Xprinter XP-80T and 80 mm paper in the operating-system print dialog. Direct printer/cash-drawer communication is not implemented.
+
+## Settings UI
+
+The responsive settings navigation links overview, restaurant, receipt, billing, printer, system, and profile screens. Forms expose visible focus states, disabled/read-only role states, saving feedback, and toast results. Receipt settings include a live sample; printer settings include a browser print test and five-step system-dialog guide. Both 80 mm (72 mm content) and future 58 mm (52 mm content) styles are available.

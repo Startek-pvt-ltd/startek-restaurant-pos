@@ -82,3 +82,7 @@ Payroll, attendance, shifts, salary calculations, email recovery, forecasting, f
 - Contact: 0777250493 / 0778375427
 - Developer: Startek (PVT) LTD
 - Version: 1.0.0
+
+## TASK-013 settings
+
+The settings hub now covers restaurant identity, billing rules, receipt content, browser printer preferences, system preferences, and the existing self-service profile. SUPER_ADMIN has full access; OWNER manages restaurant/billing/receipt/printer/profile; MANAGER has read-only restaurant/billing/system access and may update receipt/printer operations; CASHIER is restricted to profile. Developer credit and product controls are protected on the server.

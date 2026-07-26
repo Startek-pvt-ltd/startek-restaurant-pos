@@ -77,19 +77,26 @@ enum ExpenseCategory {
 }
 
 model Restaurant {
-  id            String   @id @default(uuid()) @db.Uuid
-  name          String
-  address       String
-  phone         String
-  email         String?
-  taxNumber     String?
-  logo          String?
-  currency      String   @default("LKR") @db.VarChar(3)
-  serviceCharge Decimal  @default(0) @db.Decimal(5, 2)
-  taxPercentage Decimal  @default(0) @db.Decimal(5, 2)
-  receiptFooter String?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id                         String   @id @default(uuid()) @db.Uuid
+  name                       String
+  address                    String
+  addressLine1               String   @default("No.32, Padukka Road")
+  addressLine2               String?
+  city                       String   @default("Meegoda")
+  phone                      String
+  phone2                     String?
+  email                      String?
+  businessRegistrationNumber String?
+  taxNumber                  String?
+  logo                       String?
+  currency                   String   @default("LKR") @db.VarChar(3)
+  serviceCharge              Decimal  @default(0) @db.Decimal(5, 2)
+  taxPercentage              Decimal  @default(0) @db.Decimal(5, 2)
+  receiptFooter              String?
+  timezone                   String   @default("Asia/Colombo")
+  language                   String   @default("en")
+  createdAt                  DateTime @default(now())
+  updatedAt                  DateTime @updatedAt
 
   @@index([email])
   @@index([phone])
@@ -332,23 +339,61 @@ model ActivityLog {
 }
 
 model SystemSetting {
-  id                           String  @id @default(uuid()) @db.Uuid
-  restaurantName               String
-  logo                         String?
-  receiptFooter                String?
-  currency                     String  @default("LKR") @db.VarChar(3)
-  timezone                     String  @default("Asia/Colombo")
-  language                     String  @default("en")
-  printerName                  String  @default("Xprinter XP-80T")
-  printerPaperWidth            Int     @default(80)
-  autoOpenReceiptAfterCheckout Boolean @default(true)
-  autoPrintAfterCheckout       Boolean @default(false)
-  printLogo                    Boolean @default(true)
-  receiptCopies                Int     @default(1)
-  receiptShowCustomerInfo      Boolean @default(true)
-  receiptShowTax               Boolean @default(true)
-  receiptShowServiceCharge     Boolean @default(true)
-  receiptThankYouMessage       String  @default("Thank You!\nPlease Visit Again")
-  receiptDeveloperCredit       String  @default("Design & Deploy by\nStartek (PVT) LTD")
-  openCashDrawer               Boolean @default(false)
+  id                            String    @id @default(uuid()) @db.Uuid
+  restaurantName                String
+  logo                          String?
+  receiptFooter                 String?
+  currency                      String    @default("LKR") @db.VarChar(3)
+  timezone                      String    @default("Asia/Colombo")
+  language                      String    @default("en")
+  printerName                   String    @default("Xprinter XP-80T")
+  printerPaperWidth             Int       @default(80)
+  autoOpenReceiptAfterCheckout  Boolean   @default(true)
+  autoPrintAfterCheckout        Boolean   @default(false)
+  printLogo                     Boolean   @default(true)
+  receiptCopies                 Int       @default(1)
+  receiptShowCustomerInfo       Boolean   @default(true)
+  receiptShowTax                Boolean   @default(true)
+  receiptShowServiceCharge      Boolean   @default(true)
+  receiptThankYouMessage        String    @default("Thank You!\nPlease Visit Again")
+  receiptDeveloperCredit        String    @default("Design & Deploy by\nStartek (PVT) LTD")
+  openCashDrawer                Boolean   @default(false)
+  currencySymbol                String    @default("Rs.") @db.VarChar(8)
+  taxEnabled                    Boolean   @default(false)
+  serviceChargeEnabled          Boolean   @default(false)
+  discountEnabled               Boolean   @default(true)
+  maximumPercentageDiscount     Decimal   @default(100) @db.Decimal(5, 2)
+  maximumFixedDiscount          Decimal   @default(100000) @db.Decimal(12, 2)
+  defaultOrderType              OrderType @default(TAKEAWAY)
+  allowCash                     Boolean   @default(true)
+  allowCard                     Boolean   @default(true)
+  allowQr                       Boolean   @default(true)
+  requireOrderNotes             Boolean   @default(false)
+  allowNegativeBalance          Boolean   @default(false)
+  invoicePrefix                 String    @default("RKH") @db.VarChar(8)
+  invoiceNumberPadding          Int       @default(4)
+  receiptHeaderMessage          String?
+  receiptVisitAgainMessage      String    @default("Please Visit Again")
+  receiptShowDiscountWhenZero   Boolean   @default(false)
+  receiptShowTaxWhenZero        Boolean   @default(false)
+  receiptShowServiceWhenZero    Boolean   @default(false)
+  receiptShowCashReceived       Boolean   @default(true)
+  receiptShowBalance            Boolean   @default(true)
+  receiptShowOrderType          Boolean   @default(true)
+  receiptShowCashier            Boolean   @default(true)
+  receiptShowRestaurantPhone    Boolean   @default(true)
+  receiptFooterText             String?
+  printerScale                  Int       @default(100)
+  printerMargin                 String    @default("NONE") @db.VarChar(12)
+  printerHeadersFootersReminder Boolean   @default(true)
+  printerNotes                  String?
+  applicationName               String    @default("Startek Restaurant POS")
+  applicationVersion            String    @default("1.0.0") @db.VarChar(32)
+  dateFormat                    String    @default("DD/MM/YYYY") @db.VarChar(16)
+  timeFormat                    String    @default("12-hour") @db.VarChar(16)
+  theme                         String    @default("light") @db.VarChar(16)
+  itemsPerPage                  Int       @default(10)
+  activityLoggingEnabled        Boolean   @default(true)
+  maintenanceMode               Boolean   @default(false)
+  updatedAt                     DateTime  @default(now()) @updatedAt
 }

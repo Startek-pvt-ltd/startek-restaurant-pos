@@ -64,3 +64,7 @@ Receipts target the **Xprinter XP-80T** using 80 mm paper and the browser/system
 ## Branding
 
 The interface uses gold `#F4B400`, dark brown `#4A2310`, cream `#FFF8E6`, white `#FFFFFF`, success green `#22C55E`, warning orange `#F97316`, and danger red `#EF4444`. The restaurant logo is stored at `public/logos/rice-kottu-hut-logo.png`.
+
+## Settings
+
+TASK-013 adds protected restaurant, billing, receipt, printer, system, and profile settings under `/settings`. Typed PostgreSQL fields are validated by Zod and enforced again inside server-side transactions. Uploaded restaurant logos are restricted to verified PNG, JPEG, or WebP files up to 2 MB.

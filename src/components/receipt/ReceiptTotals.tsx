@@ -1,11 +1,2 @@
-import type { OrderDetailRecord } from "@/features/orders/types";
-import type { PrinterSettings } from "@/features/settings/types";
-
-import { ReceiptRow } from "./ReceiptRow";
-
-export function ReceiptTotals({ money, order, settings }: { money: (value: string | null | undefined) => string; order: OrderDetailRecord; settings: PrinterSettings }) {
-  const hasDiscount = Number(order.discount) > 0;
-  const hasTax = Number(order.tax) > 0;
-  const hasServiceCharge = Number(order.serviceCharge) > 0;
-  return <section className="receipt-section receipt-summary"><ReceiptRow label="Subtotal" value={money(order.subtotal)} />{hasDiscount && <ReceiptRow label="Discount" value={`-${money(order.discount)}`} />}{settings.showTaxLine && hasTax && <ReceiptRow label="Tax" value={money(order.tax)} />}{settings.showServiceChargeLine && hasServiceCharge && <ReceiptRow label="Service Charge" value={money(order.serviceCharge)} />}<ReceiptRow label="GRAND TOTAL" strong value={money(order.grandTotal)} /></section>;
-}
+import type { OrderDetailRecord } from "@/features/orders/types";import type { ReceiptPrintSettings } from "@/features/settings/types";import { ReceiptRow } from "./ReceiptRow";
+export function ReceiptTotals({money,order,settings}:{money:(v:string|null|undefined)=>string;order:OrderDetailRecord;settings:ReceiptPrintSettings}){const d=Number(order.discount)>0,t=Number(order.tax)>0,s=Number(order.serviceCharge)>0;return <section className="receipt-section receipt-summary"><ReceiptRow label="Subtotal" value={money(order.subtotal)}/>{(d||settings.showDiscountWhenZero)&&<ReceiptRow label="Discount" value={`-${money(order.discount)}`}/>} {(t||settings.showTaxWhenZero)&&<ReceiptRow label="Tax" value={money(order.tax)}/>} {(s||settings.showServiceChargeWhenZero)&&<ReceiptRow label="Service Charge" value={money(order.serviceCharge)}/>}<ReceiptRow label="GRAND TOTAL" strong value={money(order.grandTotal)}/></section>}

@@ -62,3 +62,7 @@ Legacy SystemSetting columns for customer visibility and custom footer copy rema
 - `npx prisma migrate deploy`
 
 Production should apply checked-in migrations with `npx prisma migrate deploy`. Prisma Studio remains available through `npm run prisma:studio`.
+
+## TASK-013 migration
+
+Migration `20260726045700_add_typed_restaurant_system_settings` non-destructively extends `Restaurant` with structured address/contact/locale fields and `SystemSetting` with typed billing, receipt, printer, and system preferences. Existing identifiers and historical order monetary snapshots are unchanged. Legacy receipt columns remain for compatibility; new explicit zero-line flags drive receipt rendering.

@@ -151,3 +151,16 @@ Executed on 2026-07-26 in the local `feature/staff` workspace.
 - [x] Browser QA verified the four approved form roles, no KITCHEN option, profile link/page, safe staff details, mobile cards at 390 px, and no console warnings/errors
 - [x] All 14 temporary staff accounts and associated targeted/login activity were removed; original financial/order/expense data was untouched
 - [x] Physical staff deletion is intentionally unavailable; account deactivation preserves historical records
+## TASK-013 settings verification
+
+- [x] Typed Prisma migration applied without deleting existing orders
+- [x] Restaurant/billing/receipt/printer/system schemas reject invalid values
+- [x] At least one payment method and safe invoice prefix/padding are required
+- [x] SUPER_ADMIN/OWNER/MANAGER/CASHIER permission boundaries are enforced server-side
+- [x] Developer credit changes are accepted only for SUPER_ADMIN
+- [x] Logo upload uses a generated path, 2 MB limit, allowlisted MIME, and magic-byte verification
+- [x] Receipt zero-line and cash-only tender rules are wired to rendering
+- [x] Browser print test and Xprinter XP-80T setup guide are present
+- [x] Current settings feed new POS checkouts; completed order monetary snapshots remain intact
+- [x] Prisma validate, seed, migration status, lint, type-check, and production build pass
+- [ ] Cross-browser visual/mobile pass and physical Xprinter output require a cashier workstation

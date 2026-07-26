@@ -57,3 +57,9 @@ CSV uses UTF-8 with safe escaping. Excel is a genuine SpreadsheetML `.xlsx` pack
 Printer settings use a protected Server Action. Managers can configure printer display name, fixed 80 mm width, auto-open/auto-print preferences, logo, copies, and optional non-zero tax/service display. Customer printing and custom receipt identity/footer copy are not exposed.
 
 Receipt pages are server-rendered from stored snapshots and use the browser/system print dialog. No direct USB, network, or cash-drawer API exists.
+
+## Settings Server Actions
+
+`updateRestaurantSettingsAction`, `updateBillingSettingsAction`, `updateReceiptSettingsAction`, `updatePrinterSettingsAction`, and `updateSystemSettingsAction` accept constrained payloads, re-check the active actor in the database transaction, record an `ActivityLog`, and revalidate settings/POS/order paths. Restaurant logo uploads use generated filenames and server-side size, MIME, and file-signature checks. No REST API routes were added.
+
+POS checkout reloads current typed settings on the server, enforces enabled payment methods, notes and discount limits, and generates invoices from the validated prefix/padding. Browser totals remain untrusted.

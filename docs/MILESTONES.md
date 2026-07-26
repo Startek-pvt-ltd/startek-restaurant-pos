@@ -14,6 +14,7 @@
 | TASK-010 Expenses Management | Complete |
 | TASK-011 Reports and Analytics | Complete |
 | TASK-012 Staff Management and Role Administration | Complete |
+| TASK-013 Restaurant and System Settings | Complete |
 | Production deployment | Pending |
 
 Customer management, table management, kitchen display, inventory, and supplier management are excluded rather than pending milestones.

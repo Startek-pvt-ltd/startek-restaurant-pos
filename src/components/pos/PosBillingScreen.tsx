@@ -1,7 +1,7 @@
 "use client";
 
 import { Search, ShoppingCart, Sparkles } from "lucide-react";
-import { useCallback, useMemo, useRef, useState, useTransition } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { toast } from "sonner";
 
 import { completeOrderAction } from "@/features/pos/actions/checkout-actions";
@@ -54,6 +54,12 @@ export function PosBillingScreen({ categories, products, settings }: PosBillingS
   const setDiscount = usePosStore((state) => state.setDiscount);
   const setPaymentMethod = usePosStore((state) => state.setPaymentMethod);
   const setAmountReceived = usePosStore((state) => state.setAmountReceived);
+  const enabledMethods = useMemo(() => ([...(settings.allowCash ? ["CASH" as const] : []), ...(settings.allowCard ? ["CARD" as const] : []), ...(settings.allowQr ? ["QR" as const] : [])]), [settings.allowCard, settings.allowCash, settings.allowQr]);
+
+  useEffect(() => {
+    if (items.length === 0) setOrderType(settings.defaultOrderType);
+    if (!enabledMethods.includes(paymentMethod)) setPaymentMethod(enabledMethods[0] ?? "CASH");
+  }, [enabledMethods, items.length, paymentMethod, setOrderType, setPaymentMethod, settings.defaultOrderType]);
 
   const filteredProducts = useMemo(() => {
     const query = search.trim().toLocaleLowerCase();
@@ -87,13 +93,17 @@ export function PosBillingScreen({ categories, products, settings }: PosBillingS
   const balance = calculateBalance(amountReceived, totals.grandTotal);
   const cartQuantity = items.reduce((sum, item) => sum + item.quantity, 0);
   const paymentSufficient = paymentMethod !== "CASH" || balance >= 0;
-  const canComplete = items.length > 0 && !cartHasInvalidItem && totals.discountValid && totals.totalsValid && paymentSufficient;
+  const discountWithinPolicy = settings.discountEnabled ? (discountType === "PERCENTAGE" ? discountValue <= settings.maximumPercentageDiscount : discountValue <= settings.maximumFixedDiscount) : discountValue === 0;
+  const notesValid = !settings.requireOrderNotes || notes.trim().length > 0;
+  const canComplete = items.length > 0 && !cartHasInvalidItem && totals.discountValid && discountWithinPolicy && notesValid && totals.totalsValid && paymentSufficient;
   const checkoutIssue = items.length === 0
     ? "Add an item to begin the order."
     : cartHasInvalidItem
       ? "Remove unavailable or deleted items before checkout."
-      : !totals.discountValid
+      : !totals.discountValid || !discountWithinPolicy
         ? "Discount cannot exceed the subtotal."
+        : !notesValid
+          ? "Order notes are required."
         : !totals.totalsValid
           ? "Order total cannot be negative."
           : !paymentSufficient
@@ -174,7 +184,7 @@ export function PosBillingScreen({ categories, products, settings }: PosBillingS
             <OrderNotes onChange={setNotes} value={notes} />
             <DiscountPanel onChange={setDiscount} type={discountType} valid={totals.discountValid} value={discountValue} />
             <CartSummary currency={settings.currency} discount={totals.discount} grandTotal={totals.grandTotal} serviceCharge={totals.serviceCharge} serviceChargePercentage={settings.serviceChargePercentage} subtotal={totals.subtotal} tax={totals.tax} taxPercentage={settings.taxPercentage} />
-            <PaymentPanel amountReceived={amountReceived} currency={settings.currency} grandTotal={totals.grandTotal} method={paymentMethod} onAmountChange={setAmountReceived} onMethodChange={setPaymentMethod} />
+            <PaymentPanel amountReceived={amountReceived} currency={settings.currency} enabledMethods={enabledMethods} grandTotal={totals.grandTotal} method={paymentMethod} onAmountChange={setAmountReceived} onMethodChange={setPaymentMethod} />
             {checkoutIssue && <p className="rounded-xl bg-amber-50 px-3 py-2 text-xs font-bold text-amber-800" role="status">{checkoutIssue}</p>}
             <CheckoutFooter canComplete={canComplete} canPrint={Boolean(lastOrder)} cartEmpty={items.length === 0} hasHeldOrder={Boolean(heldOrder)} onClear={() => { if (window.confirm("Clear every item from the current cart?")) { clearCart(); toast.success("Cart cleared."); } }} onComplete={handleComplete} onHold={() => { holdOrder(); toast.success("Order held on this device."); }} onPrint={() => { if (lastOrder) window.open(`/orders/${lastOrder.id}/receipt`, "_blank", "noopener,noreferrer"); }} onResume={() => { resumeOrder(); toast.success("Held order resumed."); }} pending={pending} />
           </div>

@@ -1,3 +1,2 @@
-export function ReceiptFooter({ copy }: { copy: number }) {
-  return <footer className="receipt-section receipt-footer"><p className="receipt-message receipt-thanks">Thank You!<br />Please Visit Again</p><div className="receipt-spacer" /><p className="receipt-message">Design &amp; Deploy by<br />Startek (PVT) LTD</p>{copy > 1 && <p className="receipt-copy-label">COPY {copy}</p>}</footer>;
-}
+import type { ReceiptPrintSettings } from "@/features/settings/types";
+export function ReceiptFooter({copy,settings}:{copy:number;settings:ReceiptPrintSettings}){return <footer className="receipt-section receipt-footer"><p className="receipt-message receipt-thanks">{settings.thankYouMessage}<br/>{settings.visitAgainMessage}</p>{settings.footerText&&<p className="receipt-message">{settings.footerText}</p>}<div className="receipt-spacer"/><p className="receipt-message">{settings.developerCredit}</p>{copy>1&&<p className="receipt-copy-label">COPY {copy}</p>}</footer>}

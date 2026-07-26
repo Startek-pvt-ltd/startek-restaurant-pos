@@ -40,14 +40,21 @@ export type RestaurantMinAggregateOutputType = {
   id: string | null
   name: string | null
   address: string | null
+  addressLine1: string | null
+  addressLine2: string | null
+  city: string | null
   phone: string | null
+  phone2: string | null
   email: string | null
+  businessRegistrationNumber: string | null
   taxNumber: string | null
   logo: string | null
   currency: string | null
   serviceCharge: runtime.Decimal | null
   taxPercentage: runtime.Decimal | null
   receiptFooter: string | null
+  timezone: string | null
+  language: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -56,14 +63,21 @@ export type RestaurantMaxAggregateOutputType = {
   id: string | null
   name: string | null
   address: string | null
+  addressLine1: string | null
+  addressLine2: string | null
+  city: string | null
   phone: string | null
+  phone2: string | null
   email: string | null
+  businessRegistrationNumber: string | null
   taxNumber: string | null
   logo: string | null
   currency: string | null
   serviceCharge: runtime.Decimal | null
   taxPercentage: runtime.Decimal | null
   receiptFooter: string | null
+  timezone: string | null
+  language: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -72,14 +86,21 @@ export type RestaurantCountAggregateOutputType = {
   id: number
   name: number
   address: number
+  addressLine1: number
+  addressLine2: number
+  city: number
   phone: number
+  phone2: number
   email: number
+  businessRegistrationNumber: number
   taxNumber: number
   logo: number
   currency: number
   serviceCharge: number
   taxPercentage: number
   receiptFooter: number
+  timezone: number
+  language: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -100,14 +121,21 @@ export type RestaurantMinAggregateInputType = {
   id?: true
   name?: true
   address?: true
+  addressLine1?: true
+  addressLine2?: true
+  city?: true
   phone?: true
+  phone2?: true
   email?: true
+  businessRegistrationNumber?: true
   taxNumber?: true
   logo?: true
   currency?: true
   serviceCharge?: true
   taxPercentage?: true
   receiptFooter?: true
+  timezone?: true
+  language?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -116,14 +144,21 @@ export type RestaurantMaxAggregateInputType = {
   id?: true
   name?: true
   address?: true
+  addressLine1?: true
+  addressLine2?: true
+  city?: true
   phone?: true
+  phone2?: true
   email?: true
+  businessRegistrationNumber?: true
   taxNumber?: true
   logo?: true
   currency?: true
   serviceCharge?: true
   taxPercentage?: true
   receiptFooter?: true
+  timezone?: true
+  language?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -132,14 +167,21 @@ export type RestaurantCountAggregateInputType = {
   id?: true
   name?: true
   address?: true
+  addressLine1?: true
+  addressLine2?: true
+  city?: true
   phone?: true
+  phone2?: true
   email?: true
+  businessRegistrationNumber?: true
   taxNumber?: true
   logo?: true
   currency?: true
   serviceCharge?: true
   taxPercentage?: true
   receiptFooter?: true
+  timezone?: true
+  language?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -235,14 +277,21 @@ export type RestaurantGroupByOutputType = {
   id: string
   name: string
   address: string
+  addressLine1: string
+  addressLine2: string | null
+  city: string
   phone: string
+  phone2: string | null
   email: string | null
+  businessRegistrationNumber: string | null
   taxNumber: string | null
   logo: string | null
   currency: string
   serviceCharge: runtime.Decimal
   taxPercentage: runtime.Decimal
   receiptFooter: string | null
+  timezone: string
+  language: string
   createdAt: Date
   updatedAt: Date
   _count: RestaurantCountAggregateOutputType | null
@@ -274,14 +323,21 @@ export type RestaurantWhereInput = {
   id?: Prisma.UuidFilter<"Restaurant"> | string
   name?: Prisma.StringFilter<"Restaurant"> | string
   address?: Prisma.StringFilter<"Restaurant"> | string
+  addressLine1?: Prisma.StringFilter<"Restaurant"> | string
+  addressLine2?: Prisma.StringNullableFilter<"Restaurant"> | string | null
+  city?: Prisma.StringFilter<"Restaurant"> | string
   phone?: Prisma.StringFilter<"Restaurant"> | string
+  phone2?: Prisma.StringNullableFilter<"Restaurant"> | string | null
   email?: Prisma.StringNullableFilter<"Restaurant"> | string | null
+  businessRegistrationNumber?: Prisma.StringNullableFilter<"Restaurant"> | string | null
   taxNumber?: Prisma.StringNullableFilter<"Restaurant"> | string | null
   logo?: Prisma.StringNullableFilter<"Restaurant"> | string | null
   currency?: Prisma.StringFilter<"Restaurant"> | string
   serviceCharge?: Prisma.DecimalFilter<"Restaurant"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   taxPercentage?: Prisma.DecimalFilter<"Restaurant"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   receiptFooter?: Prisma.StringNullableFilter<"Restaurant"> | string | null
+  timezone?: Prisma.StringFilter<"Restaurant"> | string
+  language?: Prisma.StringFilter<"Restaurant"> | string
   createdAt?: Prisma.DateTimeFilter<"Restaurant"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Restaurant"> | Date | string
 }
@@ -290,14 +346,21 @@ export type RestaurantOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   address?: Prisma.SortOrder
+  addressLine1?: Prisma.SortOrder
+  addressLine2?: Prisma.SortOrderInput | Prisma.SortOrder
+  city?: Prisma.SortOrder
   phone?: Prisma.SortOrder
+  phone2?: Prisma.SortOrderInput | Prisma.SortOrder
   email?: Prisma.SortOrderInput | Prisma.SortOrder
+  businessRegistrationNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   taxNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   logo?: Prisma.SortOrderInput | Prisma.SortOrder
   currency?: Prisma.SortOrder
   serviceCharge?: Prisma.SortOrder
   taxPercentage?: Prisma.SortOrder
   receiptFooter?: Prisma.SortOrderInput | Prisma.SortOrder
+  timezone?: Prisma.SortOrder
+  language?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -309,14 +372,21 @@ export type RestaurantWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.RestaurantWhereInput | Prisma.RestaurantWhereInput[]
   name?: Prisma.StringFilter<"Restaurant"> | string
   address?: Prisma.StringFilter<"Restaurant"> | string
+  addressLine1?: Prisma.StringFilter<"Restaurant"> | string
+  addressLine2?: Prisma.StringNullableFilter<"Restaurant"> | string | null
+  city?: Prisma.StringFilter<"Restaurant"> | string
   phone?: Prisma.StringFilter<"Restaurant"> | string
+  phone2?: Prisma.StringNullableFilter<"Restaurant"> | string | null
   email?: Prisma.StringNullableFilter<"Restaurant"> | string | null
+  businessRegistrationNumber?: Prisma.StringNullableFilter<"Restaurant"> | string | null
   taxNumber?: Prisma.StringNullableFilter<"Restaurant"> | string | null
   logo?: Prisma.StringNullableFilter<"Restaurant"> | string | null
   currency?: Prisma.StringFilter<"Restaurant"> | string
   serviceCharge?: Prisma.DecimalFilter<"Restaurant"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   taxPercentage?: Prisma.DecimalFilter<"Restaurant"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   receiptFooter?: Prisma.StringNullableFilter<"Restaurant"> | string | null
+  timezone?: Prisma.StringFilter<"Restaurant"> | string
+  language?: Prisma.StringFilter<"Restaurant"> | string
   createdAt?: Prisma.DateTimeFilter<"Restaurant"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Restaurant"> | Date | string
 }, "id">
@@ -325,14 +395,21 @@ export type RestaurantOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   address?: Prisma.SortOrder
+  addressLine1?: Prisma.SortOrder
+  addressLine2?: Prisma.SortOrderInput | Prisma.SortOrder
+  city?: Prisma.SortOrder
   phone?: Prisma.SortOrder
+  phone2?: Prisma.SortOrderInput | Prisma.SortOrder
   email?: Prisma.SortOrderInput | Prisma.SortOrder
+  businessRegistrationNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   taxNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   logo?: Prisma.SortOrderInput | Prisma.SortOrder
   currency?: Prisma.SortOrder
   serviceCharge?: Prisma.SortOrder
   taxPercentage?: Prisma.SortOrder
   receiptFooter?: Prisma.SortOrderInput | Prisma.SortOrder
+  timezone?: Prisma.SortOrder
+  language?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.RestaurantCountOrderByAggregateInput
@@ -349,14 +426,21 @@ export type RestaurantScalarWhereWithAggregatesInput = {
   id?: Prisma.UuidWithAggregatesFilter<"Restaurant"> | string
   name?: Prisma.StringWithAggregatesFilter<"Restaurant"> | string
   address?: Prisma.StringWithAggregatesFilter<"Restaurant"> | string
+  addressLine1?: Prisma.StringWithAggregatesFilter<"Restaurant"> | string
+  addressLine2?: Prisma.StringNullableWithAggregatesFilter<"Restaurant"> | string | null
+  city?: Prisma.StringWithAggregatesFilter<"Restaurant"> | string
   phone?: Prisma.StringWithAggregatesFilter<"Restaurant"> | string
+  phone2?: Prisma.StringNullableWithAggregatesFilter<"Restaurant"> | string | null
   email?: Prisma.StringNullableWithAggregatesFilter<"Restaurant"> | string | null
+  businessRegistrationNumber?: Prisma.StringNullableWithAggregatesFilter<"Restaurant"> | string | null
   taxNumber?: Prisma.StringNullableWithAggregatesFilter<"Restaurant"> | string | null
   logo?: Prisma.StringNullableWithAggregatesFilter<"Restaurant"> | string | null
   currency?: Prisma.StringWithAggregatesFilter<"Restaurant"> | string
   serviceCharge?: Prisma.DecimalWithAggregatesFilter<"Restaurant"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   taxPercentage?: Prisma.DecimalWithAggregatesFilter<"Restaurant"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   receiptFooter?: Prisma.StringNullableWithAggregatesFilter<"Restaurant"> | string | null
+  timezone?: Prisma.StringWithAggregatesFilter<"Restaurant"> | string
+  language?: Prisma.StringWithAggregatesFilter<"Restaurant"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Restaurant"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Restaurant"> | Date | string
 }
@@ -365,14 +449,21 @@ export type RestaurantCreateInput = {
   id?: string
   name: string
   address: string
+  addressLine1?: string
+  addressLine2?: string | null
+  city?: string
   phone: string
+  phone2?: string | null
   email?: string | null
+  businessRegistrationNumber?: string | null
   taxNumber?: string | null
   logo?: string | null
   currency?: string
   serviceCharge?: runtime.Decimal | runtime.DecimalJsLike | number | string
   taxPercentage?: runtime.Decimal | runtime.DecimalJsLike | number | string
   receiptFooter?: string | null
+  timezone?: string
+  language?: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -381,14 +472,21 @@ export type RestaurantUncheckedCreateInput = {
   id?: string
   name: string
   address: string
+  addressLine1?: string
+  addressLine2?: string | null
+  city?: string
   phone: string
+  phone2?: string | null
   email?: string | null
+  businessRegistrationNumber?: string | null
   taxNumber?: string | null
   logo?: string | null
   currency?: string
   serviceCharge?: runtime.Decimal | runtime.DecimalJsLike | number | string
   taxPercentage?: runtime.Decimal | runtime.DecimalJsLike | number | string
   receiptFooter?: string | null
+  timezone?: string
+  language?: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -397,14 +495,21 @@ export type RestaurantUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.StringFieldUpdateOperationsInput | string
+  addressLine1?: Prisma.StringFieldUpdateOperationsInput | string
+  addressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
+  phone2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessRegistrationNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   taxNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   serviceCharge?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   taxPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   receiptFooter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string
+  language?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -413,14 +518,21 @@ export type RestaurantUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.StringFieldUpdateOperationsInput | string
+  addressLine1?: Prisma.StringFieldUpdateOperationsInput | string
+  addressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
+  phone2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessRegistrationNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   taxNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   serviceCharge?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   taxPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   receiptFooter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string
+  language?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -429,14 +541,21 @@ export type RestaurantCreateManyInput = {
   id?: string
   name: string
   address: string
+  addressLine1?: string
+  addressLine2?: string | null
+  city?: string
   phone: string
+  phone2?: string | null
   email?: string | null
+  businessRegistrationNumber?: string | null
   taxNumber?: string | null
   logo?: string | null
   currency?: string
   serviceCharge?: runtime.Decimal | runtime.DecimalJsLike | number | string
   taxPercentage?: runtime.Decimal | runtime.DecimalJsLike | number | string
   receiptFooter?: string | null
+  timezone?: string
+  language?: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -445,14 +564,21 @@ export type RestaurantUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.StringFieldUpdateOperationsInput | string
+  addressLine1?: Prisma.StringFieldUpdateOperationsInput | string
+  addressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
+  phone2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessRegistrationNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   taxNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   serviceCharge?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   taxPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   receiptFooter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string
+  language?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -461,14 +587,21 @@ export type RestaurantUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.StringFieldUpdateOperationsInput | string
+  addressLine1?: Prisma.StringFieldUpdateOperationsInput | string
+  addressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
+  phone2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessRegistrationNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   taxNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   serviceCharge?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   taxPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   receiptFooter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string
+  language?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -477,14 +610,21 @@ export type RestaurantCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   address?: Prisma.SortOrder
+  addressLine1?: Prisma.SortOrder
+  addressLine2?: Prisma.SortOrder
+  city?: Prisma.SortOrder
   phone?: Prisma.SortOrder
+  phone2?: Prisma.SortOrder
   email?: Prisma.SortOrder
+  businessRegistrationNumber?: Prisma.SortOrder
   taxNumber?: Prisma.SortOrder
   logo?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   serviceCharge?: Prisma.SortOrder
   taxPercentage?: Prisma.SortOrder
   receiptFooter?: Prisma.SortOrder
+  timezone?: Prisma.SortOrder
+  language?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -498,14 +638,21 @@ export type RestaurantMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   address?: Prisma.SortOrder
+  addressLine1?: Prisma.SortOrder
+  addressLine2?: Prisma.SortOrder
+  city?: Prisma.SortOrder
   phone?: Prisma.SortOrder
+  phone2?: Prisma.SortOrder
   email?: Prisma.SortOrder
+  businessRegistrationNumber?: Prisma.SortOrder
   taxNumber?: Prisma.SortOrder
   logo?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   serviceCharge?: Prisma.SortOrder
   taxPercentage?: Prisma.SortOrder
   receiptFooter?: Prisma.SortOrder
+  timezone?: Prisma.SortOrder
+  language?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -514,14 +661,21 @@ export type RestaurantMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   address?: Prisma.SortOrder
+  addressLine1?: Prisma.SortOrder
+  addressLine2?: Prisma.SortOrder
+  city?: Prisma.SortOrder
   phone?: Prisma.SortOrder
+  phone2?: Prisma.SortOrder
   email?: Prisma.SortOrder
+  businessRegistrationNumber?: Prisma.SortOrder
   taxNumber?: Prisma.SortOrder
   logo?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   serviceCharge?: Prisma.SortOrder
   taxPercentage?: Prisma.SortOrder
   receiptFooter?: Prisma.SortOrder
+  timezone?: Prisma.SortOrder
+  language?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -557,14 +711,21 @@ export type RestaurantSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   id?: boolean
   name?: boolean
   address?: boolean
+  addressLine1?: boolean
+  addressLine2?: boolean
+  city?: boolean
   phone?: boolean
+  phone2?: boolean
   email?: boolean
+  businessRegistrationNumber?: boolean
   taxNumber?: boolean
   logo?: boolean
   currency?: boolean
   serviceCharge?: boolean
   taxPercentage?: boolean
   receiptFooter?: boolean
+  timezone?: boolean
+  language?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["restaurant"]>
@@ -573,14 +734,21 @@ export type RestaurantSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   id?: boolean
   name?: boolean
   address?: boolean
+  addressLine1?: boolean
+  addressLine2?: boolean
+  city?: boolean
   phone?: boolean
+  phone2?: boolean
   email?: boolean
+  businessRegistrationNumber?: boolean
   taxNumber?: boolean
   logo?: boolean
   currency?: boolean
   serviceCharge?: boolean
   taxPercentage?: boolean
   receiptFooter?: boolean
+  timezone?: boolean
+  language?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["restaurant"]>
@@ -589,14 +757,21 @@ export type RestaurantSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   id?: boolean
   name?: boolean
   address?: boolean
+  addressLine1?: boolean
+  addressLine2?: boolean
+  city?: boolean
   phone?: boolean
+  phone2?: boolean
   email?: boolean
+  businessRegistrationNumber?: boolean
   taxNumber?: boolean
   logo?: boolean
   currency?: boolean
   serviceCharge?: boolean
   taxPercentage?: boolean
   receiptFooter?: boolean
+  timezone?: boolean
+  language?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["restaurant"]>
@@ -605,19 +780,26 @@ export type RestaurantSelectScalar = {
   id?: boolean
   name?: boolean
   address?: boolean
+  addressLine1?: boolean
+  addressLine2?: boolean
+  city?: boolean
   phone?: boolean
+  phone2?: boolean
   email?: boolean
+  businessRegistrationNumber?: boolean
   taxNumber?: boolean
   logo?: boolean
   currency?: boolean
   serviceCharge?: boolean
   taxPercentage?: boolean
   receiptFooter?: boolean
+  timezone?: boolean
+  language?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type RestaurantOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "address" | "phone" | "email" | "taxNumber" | "logo" | "currency" | "serviceCharge" | "taxPercentage" | "receiptFooter" | "createdAt" | "updatedAt", ExtArgs["result"]["restaurant"]>
+export type RestaurantOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "address" | "addressLine1" | "addressLine2" | "city" | "phone" | "phone2" | "email" | "businessRegistrationNumber" | "taxNumber" | "logo" | "currency" | "serviceCharge" | "taxPercentage" | "receiptFooter" | "timezone" | "language" | "createdAt" | "updatedAt", ExtArgs["result"]["restaurant"]>
 
 export type $RestaurantPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Restaurant"
@@ -626,14 +808,21 @@ export type $RestaurantPayload<ExtArgs extends runtime.Types.Extensions.Internal
     id: string
     name: string
     address: string
+    addressLine1: string
+    addressLine2: string | null
+    city: string
     phone: string
+    phone2: string | null
     email: string | null
+    businessRegistrationNumber: string | null
     taxNumber: string | null
     logo: string | null
     currency: string
     serviceCharge: runtime.Decimal
     taxPercentage: runtime.Decimal
     receiptFooter: string | null
+    timezone: string
+    language: string
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["restaurant"]>
@@ -1062,14 +1251,21 @@ export interface RestaurantFieldRefs {
   readonly id: Prisma.FieldRef<"Restaurant", 'String'>
   readonly name: Prisma.FieldRef<"Restaurant", 'String'>
   readonly address: Prisma.FieldRef<"Restaurant", 'String'>
+  readonly addressLine1: Prisma.FieldRef<"Restaurant", 'String'>
+  readonly addressLine2: Prisma.FieldRef<"Restaurant", 'String'>
+  readonly city: Prisma.FieldRef<"Restaurant", 'String'>
   readonly phone: Prisma.FieldRef<"Restaurant", 'String'>
+  readonly phone2: Prisma.FieldRef<"Restaurant", 'String'>
   readonly email: Prisma.FieldRef<"Restaurant", 'String'>
+  readonly businessRegistrationNumber: Prisma.FieldRef<"Restaurant", 'String'>
   readonly taxNumber: Prisma.FieldRef<"Restaurant", 'String'>
   readonly logo: Prisma.FieldRef<"Restaurant", 'String'>
   readonly currency: Prisma.FieldRef<"Restaurant", 'String'>
   readonly serviceCharge: Prisma.FieldRef<"Restaurant", 'Decimal'>
   readonly taxPercentage: Prisma.FieldRef<"Restaurant", 'Decimal'>
   readonly receiptFooter: Prisma.FieldRef<"Restaurant", 'String'>
+  readonly timezone: Prisma.FieldRef<"Restaurant", 'String'>
+  readonly language: Prisma.FieldRef<"Restaurant", 'String'>
   readonly createdAt: Prisma.FieldRef<"Restaurant", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Restaurant", 'DateTime'>
 }

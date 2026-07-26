@@ -29,11 +29,21 @@ export type AggregateSystemSetting = {
 export type SystemSettingAvgAggregateOutputType = {
   printerPaperWidth: number | null
   receiptCopies: number | null
+  maximumPercentageDiscount: runtime.Decimal | null
+  maximumFixedDiscount: runtime.Decimal | null
+  invoiceNumberPadding: number | null
+  printerScale: number | null
+  itemsPerPage: number | null
 }
 
 export type SystemSettingSumAggregateOutputType = {
   printerPaperWidth: number | null
   receiptCopies: number | null
+  maximumPercentageDiscount: runtime.Decimal | null
+  maximumFixedDiscount: runtime.Decimal | null
+  invoiceNumberPadding: number | null
+  printerScale: number | null
+  itemsPerPage: number | null
 }
 
 export type SystemSettingMinAggregateOutputType = {
@@ -56,6 +66,44 @@ export type SystemSettingMinAggregateOutputType = {
   receiptThankYouMessage: string | null
   receiptDeveloperCredit: string | null
   openCashDrawer: boolean | null
+  currencySymbol: string | null
+  taxEnabled: boolean | null
+  serviceChargeEnabled: boolean | null
+  discountEnabled: boolean | null
+  maximumPercentageDiscount: runtime.Decimal | null
+  maximumFixedDiscount: runtime.Decimal | null
+  defaultOrderType: $Enums.OrderType | null
+  allowCash: boolean | null
+  allowCard: boolean | null
+  allowQr: boolean | null
+  requireOrderNotes: boolean | null
+  allowNegativeBalance: boolean | null
+  invoicePrefix: string | null
+  invoiceNumberPadding: number | null
+  receiptHeaderMessage: string | null
+  receiptVisitAgainMessage: string | null
+  receiptShowDiscountWhenZero: boolean | null
+  receiptShowTaxWhenZero: boolean | null
+  receiptShowServiceWhenZero: boolean | null
+  receiptShowCashReceived: boolean | null
+  receiptShowBalance: boolean | null
+  receiptShowOrderType: boolean | null
+  receiptShowCashier: boolean | null
+  receiptShowRestaurantPhone: boolean | null
+  receiptFooterText: string | null
+  printerScale: number | null
+  printerMargin: string | null
+  printerHeadersFootersReminder: boolean | null
+  printerNotes: string | null
+  applicationName: string | null
+  applicationVersion: string | null
+  dateFormat: string | null
+  timeFormat: string | null
+  theme: string | null
+  itemsPerPage: number | null
+  activityLoggingEnabled: boolean | null
+  maintenanceMode: boolean | null
+  updatedAt: Date | null
 }
 
 export type SystemSettingMaxAggregateOutputType = {
@@ -78,6 +126,44 @@ export type SystemSettingMaxAggregateOutputType = {
   receiptThankYouMessage: string | null
   receiptDeveloperCredit: string | null
   openCashDrawer: boolean | null
+  currencySymbol: string | null
+  taxEnabled: boolean | null
+  serviceChargeEnabled: boolean | null
+  discountEnabled: boolean | null
+  maximumPercentageDiscount: runtime.Decimal | null
+  maximumFixedDiscount: runtime.Decimal | null
+  defaultOrderType: $Enums.OrderType | null
+  allowCash: boolean | null
+  allowCard: boolean | null
+  allowQr: boolean | null
+  requireOrderNotes: boolean | null
+  allowNegativeBalance: boolean | null
+  invoicePrefix: string | null
+  invoiceNumberPadding: number | null
+  receiptHeaderMessage: string | null
+  receiptVisitAgainMessage: string | null
+  receiptShowDiscountWhenZero: boolean | null
+  receiptShowTaxWhenZero: boolean | null
+  receiptShowServiceWhenZero: boolean | null
+  receiptShowCashReceived: boolean | null
+  receiptShowBalance: boolean | null
+  receiptShowOrderType: boolean | null
+  receiptShowCashier: boolean | null
+  receiptShowRestaurantPhone: boolean | null
+  receiptFooterText: string | null
+  printerScale: number | null
+  printerMargin: string | null
+  printerHeadersFootersReminder: boolean | null
+  printerNotes: string | null
+  applicationName: string | null
+  applicationVersion: string | null
+  dateFormat: string | null
+  timeFormat: string | null
+  theme: string | null
+  itemsPerPage: number | null
+  activityLoggingEnabled: boolean | null
+  maintenanceMode: boolean | null
+  updatedAt: Date | null
 }
 
 export type SystemSettingCountAggregateOutputType = {
@@ -100,6 +186,44 @@ export type SystemSettingCountAggregateOutputType = {
   receiptThankYouMessage: number
   receiptDeveloperCredit: number
   openCashDrawer: number
+  currencySymbol: number
+  taxEnabled: number
+  serviceChargeEnabled: number
+  discountEnabled: number
+  maximumPercentageDiscount: number
+  maximumFixedDiscount: number
+  defaultOrderType: number
+  allowCash: number
+  allowCard: number
+  allowQr: number
+  requireOrderNotes: number
+  allowNegativeBalance: number
+  invoicePrefix: number
+  invoiceNumberPadding: number
+  receiptHeaderMessage: number
+  receiptVisitAgainMessage: number
+  receiptShowDiscountWhenZero: number
+  receiptShowTaxWhenZero: number
+  receiptShowServiceWhenZero: number
+  receiptShowCashReceived: number
+  receiptShowBalance: number
+  receiptShowOrderType: number
+  receiptShowCashier: number
+  receiptShowRestaurantPhone: number
+  receiptFooterText: number
+  printerScale: number
+  printerMargin: number
+  printerHeadersFootersReminder: number
+  printerNotes: number
+  applicationName: number
+  applicationVersion: number
+  dateFormat: number
+  timeFormat: number
+  theme: number
+  itemsPerPage: number
+  activityLoggingEnabled: number
+  maintenanceMode: number
+  updatedAt: number
   _all: number
 }
 
@@ -107,11 +231,21 @@ export type SystemSettingCountAggregateOutputType = {
 export type SystemSettingAvgAggregateInputType = {
   printerPaperWidth?: true
   receiptCopies?: true
+  maximumPercentageDiscount?: true
+  maximumFixedDiscount?: true
+  invoiceNumberPadding?: true
+  printerScale?: true
+  itemsPerPage?: true
 }
 
 export type SystemSettingSumAggregateInputType = {
   printerPaperWidth?: true
   receiptCopies?: true
+  maximumPercentageDiscount?: true
+  maximumFixedDiscount?: true
+  invoiceNumberPadding?: true
+  printerScale?: true
+  itemsPerPage?: true
 }
 
 export type SystemSettingMinAggregateInputType = {
@@ -134,6 +268,44 @@ export type SystemSettingMinAggregateInputType = {
   receiptThankYouMessage?: true
   receiptDeveloperCredit?: true
   openCashDrawer?: true
+  currencySymbol?: true
+  taxEnabled?: true
+  serviceChargeEnabled?: true
+  discountEnabled?: true
+  maximumPercentageDiscount?: true
+  maximumFixedDiscount?: true
+  defaultOrderType?: true
+  allowCash?: true
+  allowCard?: true
+  allowQr?: true
+  requireOrderNotes?: true
+  allowNegativeBalance?: true
+  invoicePrefix?: true
+  invoiceNumberPadding?: true
+  receiptHeaderMessage?: true
+  receiptVisitAgainMessage?: true
+  receiptShowDiscountWhenZero?: true
+  receiptShowTaxWhenZero?: true
+  receiptShowServiceWhenZero?: true
+  receiptShowCashReceived?: true
+  receiptShowBalance?: true
+  receiptShowOrderType?: true
+  receiptShowCashier?: true
+  receiptShowRestaurantPhone?: true
+  receiptFooterText?: true
+  printerScale?: true
+  printerMargin?: true
+  printerHeadersFootersReminder?: true
+  printerNotes?: true
+  applicationName?: true
+  applicationVersion?: true
+  dateFormat?: true
+  timeFormat?: true
+  theme?: true
+  itemsPerPage?: true
+  activityLoggingEnabled?: true
+  maintenanceMode?: true
+  updatedAt?: true
 }
 
 export type SystemSettingMaxAggregateInputType = {
@@ -156,6 +328,44 @@ export type SystemSettingMaxAggregateInputType = {
   receiptThankYouMessage?: true
   receiptDeveloperCredit?: true
   openCashDrawer?: true
+  currencySymbol?: true
+  taxEnabled?: true
+  serviceChargeEnabled?: true
+  discountEnabled?: true
+  maximumPercentageDiscount?: true
+  maximumFixedDiscount?: true
+  defaultOrderType?: true
+  allowCash?: true
+  allowCard?: true
+  allowQr?: true
+  requireOrderNotes?: true
+  allowNegativeBalance?: true
+  invoicePrefix?: true
+  invoiceNumberPadding?: true
+  receiptHeaderMessage?: true
+  receiptVisitAgainMessage?: true
+  receiptShowDiscountWhenZero?: true
+  receiptShowTaxWhenZero?: true
+  receiptShowServiceWhenZero?: true
+  receiptShowCashReceived?: true
+  receiptShowBalance?: true
+  receiptShowOrderType?: true
+  receiptShowCashier?: true
+  receiptShowRestaurantPhone?: true
+  receiptFooterText?: true
+  printerScale?: true
+  printerMargin?: true
+  printerHeadersFootersReminder?: true
+  printerNotes?: true
+  applicationName?: true
+  applicationVersion?: true
+  dateFormat?: true
+  timeFormat?: true
+  theme?: true
+  itemsPerPage?: true
+  activityLoggingEnabled?: true
+  maintenanceMode?: true
+  updatedAt?: true
 }
 
 export type SystemSettingCountAggregateInputType = {
@@ -178,6 +388,44 @@ export type SystemSettingCountAggregateInputType = {
   receiptThankYouMessage?: true
   receiptDeveloperCredit?: true
   openCashDrawer?: true
+  currencySymbol?: true
+  taxEnabled?: true
+  serviceChargeEnabled?: true
+  discountEnabled?: true
+  maximumPercentageDiscount?: true
+  maximumFixedDiscount?: true
+  defaultOrderType?: true
+  allowCash?: true
+  allowCard?: true
+  allowQr?: true
+  requireOrderNotes?: true
+  allowNegativeBalance?: true
+  invoicePrefix?: true
+  invoiceNumberPadding?: true
+  receiptHeaderMessage?: true
+  receiptVisitAgainMessage?: true
+  receiptShowDiscountWhenZero?: true
+  receiptShowTaxWhenZero?: true
+  receiptShowServiceWhenZero?: true
+  receiptShowCashReceived?: true
+  receiptShowBalance?: true
+  receiptShowOrderType?: true
+  receiptShowCashier?: true
+  receiptShowRestaurantPhone?: true
+  receiptFooterText?: true
+  printerScale?: true
+  printerMargin?: true
+  printerHeadersFootersReminder?: true
+  printerNotes?: true
+  applicationName?: true
+  applicationVersion?: true
+  dateFormat?: true
+  timeFormat?: true
+  theme?: true
+  itemsPerPage?: true
+  activityLoggingEnabled?: true
+  maintenanceMode?: true
+  updatedAt?: true
   _all?: true
 }
 
@@ -287,6 +535,44 @@ export type SystemSettingGroupByOutputType = {
   receiptThankYouMessage: string
   receiptDeveloperCredit: string
   openCashDrawer: boolean
+  currencySymbol: string
+  taxEnabled: boolean
+  serviceChargeEnabled: boolean
+  discountEnabled: boolean
+  maximumPercentageDiscount: runtime.Decimal
+  maximumFixedDiscount: runtime.Decimal
+  defaultOrderType: $Enums.OrderType
+  allowCash: boolean
+  allowCard: boolean
+  allowQr: boolean
+  requireOrderNotes: boolean
+  allowNegativeBalance: boolean
+  invoicePrefix: string
+  invoiceNumberPadding: number
+  receiptHeaderMessage: string | null
+  receiptVisitAgainMessage: string
+  receiptShowDiscountWhenZero: boolean
+  receiptShowTaxWhenZero: boolean
+  receiptShowServiceWhenZero: boolean
+  receiptShowCashReceived: boolean
+  receiptShowBalance: boolean
+  receiptShowOrderType: boolean
+  receiptShowCashier: boolean
+  receiptShowRestaurantPhone: boolean
+  receiptFooterText: string | null
+  printerScale: number
+  printerMargin: string
+  printerHeadersFootersReminder: boolean
+  printerNotes: string | null
+  applicationName: string
+  applicationVersion: string
+  dateFormat: string
+  timeFormat: string
+  theme: string
+  itemsPerPage: number
+  activityLoggingEnabled: boolean
+  maintenanceMode: boolean
+  updatedAt: Date
   _count: SystemSettingCountAggregateOutputType | null
   _avg: SystemSettingAvgAggregateOutputType | null
   _sum: SystemSettingSumAggregateOutputType | null
@@ -332,6 +618,44 @@ export type SystemSettingWhereInput = {
   receiptThankYouMessage?: Prisma.StringFilter<"SystemSetting"> | string
   receiptDeveloperCredit?: Prisma.StringFilter<"SystemSetting"> | string
   openCashDrawer?: Prisma.BoolFilter<"SystemSetting"> | boolean
+  currencySymbol?: Prisma.StringFilter<"SystemSetting"> | string
+  taxEnabled?: Prisma.BoolFilter<"SystemSetting"> | boolean
+  serviceChargeEnabled?: Prisma.BoolFilter<"SystemSetting"> | boolean
+  discountEnabled?: Prisma.BoolFilter<"SystemSetting"> | boolean
+  maximumPercentageDiscount?: Prisma.DecimalFilter<"SystemSetting"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  maximumFixedDiscount?: Prisma.DecimalFilter<"SystemSetting"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  defaultOrderType?: Prisma.EnumOrderTypeFilter<"SystemSetting"> | $Enums.OrderType
+  allowCash?: Prisma.BoolFilter<"SystemSetting"> | boolean
+  allowCard?: Prisma.BoolFilter<"SystemSetting"> | boolean
+  allowQr?: Prisma.BoolFilter<"SystemSetting"> | boolean
+  requireOrderNotes?: Prisma.BoolFilter<"SystemSetting"> | boolean
+  allowNegativeBalance?: Prisma.BoolFilter<"SystemSetting"> | boolean
+  invoicePrefix?: Prisma.StringFilter<"SystemSetting"> | string
+  invoiceNumberPadding?: Prisma.IntFilter<"SystemSetting"> | number
+  receiptHeaderMessage?: Prisma.StringNullableFilter<"SystemSetting"> | string | null
+  receiptVisitAgainMessage?: Prisma.StringFilter<"SystemSetting"> | string
+  receiptShowDiscountWhenZero?: Prisma.BoolFilter<"SystemSetting"> | boolean
+  receiptShowTaxWhenZero?: Prisma.BoolFilter<"SystemSetting"> | boolean
+  receiptShowServiceWhenZero?: Prisma.BoolFilter<"SystemSetting"> | boolean
+  receiptShowCashReceived?: Prisma.BoolFilter<"SystemSetting"> | boolean
+  receiptShowBalance?: Prisma.BoolFilter<"SystemSetting"> | boolean
+  receiptShowOrderType?: Prisma.BoolFilter<"SystemSetting"> | boolean
+  receiptShowCashier?: Prisma.BoolFilter<"SystemSetting"> | boolean
+  receiptShowRestaurantPhone?: Prisma.BoolFilter<"SystemSetting"> | boolean
+  receiptFooterText?: Prisma.StringNullableFilter<"SystemSetting"> | string | null
+  printerScale?: Prisma.IntFilter<"SystemSetting"> | number
+  printerMargin?: Prisma.StringFilter<"SystemSetting"> | string
+  printerHeadersFootersReminder?: Prisma.BoolFilter<"SystemSetting"> | boolean
+  printerNotes?: Prisma.StringNullableFilter<"SystemSetting"> | string | null
+  applicationName?: Prisma.StringFilter<"SystemSetting"> | string
+  applicationVersion?: Prisma.StringFilter<"SystemSetting"> | string
+  dateFormat?: Prisma.StringFilter<"SystemSetting"> | string
+  timeFormat?: Prisma.StringFilter<"SystemSetting"> | string
+  theme?: Prisma.StringFilter<"SystemSetting"> | string
+  itemsPerPage?: Prisma.IntFilter<"SystemSetting"> | number
+  activityLoggingEnabled?: Prisma.BoolFilter<"SystemSetting"> | boolean
+  maintenanceMode?: Prisma.BoolFilter<"SystemSetting"> | boolean
+  updatedAt?: Prisma.DateTimeFilter<"SystemSetting"> | Date | string
 }
 
 export type SystemSettingOrderByWithRelationInput = {
@@ -354,6 +678,44 @@ export type SystemSettingOrderByWithRelationInput = {
   receiptThankYouMessage?: Prisma.SortOrder
   receiptDeveloperCredit?: Prisma.SortOrder
   openCashDrawer?: Prisma.SortOrder
+  currencySymbol?: Prisma.SortOrder
+  taxEnabled?: Prisma.SortOrder
+  serviceChargeEnabled?: Prisma.SortOrder
+  discountEnabled?: Prisma.SortOrder
+  maximumPercentageDiscount?: Prisma.SortOrder
+  maximumFixedDiscount?: Prisma.SortOrder
+  defaultOrderType?: Prisma.SortOrder
+  allowCash?: Prisma.SortOrder
+  allowCard?: Prisma.SortOrder
+  allowQr?: Prisma.SortOrder
+  requireOrderNotes?: Prisma.SortOrder
+  allowNegativeBalance?: Prisma.SortOrder
+  invoicePrefix?: Prisma.SortOrder
+  invoiceNumberPadding?: Prisma.SortOrder
+  receiptHeaderMessage?: Prisma.SortOrderInput | Prisma.SortOrder
+  receiptVisitAgainMessage?: Prisma.SortOrder
+  receiptShowDiscountWhenZero?: Prisma.SortOrder
+  receiptShowTaxWhenZero?: Prisma.SortOrder
+  receiptShowServiceWhenZero?: Prisma.SortOrder
+  receiptShowCashReceived?: Prisma.SortOrder
+  receiptShowBalance?: Prisma.SortOrder
+  receiptShowOrderType?: Prisma.SortOrder
+  receiptShowCashier?: Prisma.SortOrder
+  receiptShowRestaurantPhone?: Prisma.SortOrder
+  receiptFooterText?: Prisma.SortOrderInput | Prisma.SortOrder
+  printerScale?: Prisma.SortOrder
+  printerMargin?: Prisma.SortOrder
+  printerHeadersFootersReminder?: Prisma.SortOrder
+  printerNotes?: Prisma.SortOrderInput | Prisma.SortOrder
+  applicationName?: Prisma.SortOrder
+  applicationVersion?: Prisma.SortOrder
+  dateFormat?: Prisma.SortOrder
+  timeFormat?: Prisma.SortOrder
+  theme?: Prisma.SortOrder
+  itemsPerPage?: Prisma.SortOrder
+  activityLoggingEnabled?: Prisma.SortOrder
+  maintenanceMode?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type SystemSettingWhereUniqueInput = Prisma.AtLeast<{
@@ -379,6 +741,44 @@ export type SystemSettingWhereUniqueInput = Prisma.AtLeast<{
   receiptThankYouMessage?: Prisma.StringFilter<"SystemSetting"> | string
   receiptDeveloperCredit?: Prisma.StringFilter<"SystemSetting"> | string
   openCashDrawer?: Prisma.BoolFilter<"SystemSetting"> | boolean
+  currencySymbol?: Prisma.StringFilter<"SystemSetting"> | string
+  taxEnabled?: Prisma.BoolFilter<"SystemSetting"> | boolean
+  serviceChargeEnabled?: Prisma.BoolFilter<"SystemSetting"> | boolean
+  discountEnabled?: Prisma.BoolFilter<"SystemSetting"> | boolean
+  maximumPercentageDiscount?: Prisma.DecimalFilter<"SystemSetting"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  maximumFixedDiscount?: Prisma.DecimalFilter<"SystemSetting"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  defaultOrderType?: Prisma.EnumOrderTypeFilter<"SystemSetting"> | $Enums.OrderType
+  allowCash?: Prisma.BoolFilter<"SystemSetting"> | boolean
+  allowCard?: Prisma.BoolFilter<"SystemSetting"> | boolean
+  allowQr?: Prisma.BoolFilter<"SystemSetting"> | boolean
+  requireOrderNotes?: Prisma.BoolFilter<"SystemSetting"> | boolean
+  allowNegativeBalance?: Prisma.BoolFilter<"SystemSetting"> | boolean
+  invoicePrefix?: Prisma.StringFilter<"SystemSetting"> | string
+  invoiceNumberPadding?: Prisma.IntFilter<"SystemSetting"> | number
+  receiptHeaderMessage?: Prisma.StringNullableFilter<"SystemSetting"> | string | null
+  receiptVisitAgainMessage?: Prisma.StringFilter<"SystemSetting"> | string
+  receiptShowDiscountWhenZero?: Prisma.BoolFilter<"SystemSetting"> | boolean
+  receiptShowTaxWhenZero?: Prisma.BoolFilter<"SystemSetting"> | boolean
+  receiptShowServiceWhenZero?: Prisma.BoolFilter<"SystemSetting"> | boolean
+  receiptShowCashReceived?: Prisma.BoolFilter<"SystemSetting"> | boolean
+  receiptShowBalance?: Prisma.BoolFilter<"SystemSetting"> | boolean
+  receiptShowOrderType?: Prisma.BoolFilter<"SystemSetting"> | boolean
+  receiptShowCashier?: Prisma.BoolFilter<"SystemSetting"> | boolean
+  receiptShowRestaurantPhone?: Prisma.BoolFilter<"SystemSetting"> | boolean
+  receiptFooterText?: Prisma.StringNullableFilter<"SystemSetting"> | string | null
+  printerScale?: Prisma.IntFilter<"SystemSetting"> | number
+  printerMargin?: Prisma.StringFilter<"SystemSetting"> | string
+  printerHeadersFootersReminder?: Prisma.BoolFilter<"SystemSetting"> | boolean
+  printerNotes?: Prisma.StringNullableFilter<"SystemSetting"> | string | null
+  applicationName?: Prisma.StringFilter<"SystemSetting"> | string
+  applicationVersion?: Prisma.StringFilter<"SystemSetting"> | string
+  dateFormat?: Prisma.StringFilter<"SystemSetting"> | string
+  timeFormat?: Prisma.StringFilter<"SystemSetting"> | string
+  theme?: Prisma.StringFilter<"SystemSetting"> | string
+  itemsPerPage?: Prisma.IntFilter<"SystemSetting"> | number
+  activityLoggingEnabled?: Prisma.BoolFilter<"SystemSetting"> | boolean
+  maintenanceMode?: Prisma.BoolFilter<"SystemSetting"> | boolean
+  updatedAt?: Prisma.DateTimeFilter<"SystemSetting"> | Date | string
 }, "id">
 
 export type SystemSettingOrderByWithAggregationInput = {
@@ -401,6 +801,44 @@ export type SystemSettingOrderByWithAggregationInput = {
   receiptThankYouMessage?: Prisma.SortOrder
   receiptDeveloperCredit?: Prisma.SortOrder
   openCashDrawer?: Prisma.SortOrder
+  currencySymbol?: Prisma.SortOrder
+  taxEnabled?: Prisma.SortOrder
+  serviceChargeEnabled?: Prisma.SortOrder
+  discountEnabled?: Prisma.SortOrder
+  maximumPercentageDiscount?: Prisma.SortOrder
+  maximumFixedDiscount?: Prisma.SortOrder
+  defaultOrderType?: Prisma.SortOrder
+  allowCash?: Prisma.SortOrder
+  allowCard?: Prisma.SortOrder
+  allowQr?: Prisma.SortOrder
+  requireOrderNotes?: Prisma.SortOrder
+  allowNegativeBalance?: Prisma.SortOrder
+  invoicePrefix?: Prisma.SortOrder
+  invoiceNumberPadding?: Prisma.SortOrder
+  receiptHeaderMessage?: Prisma.SortOrderInput | Prisma.SortOrder
+  receiptVisitAgainMessage?: Prisma.SortOrder
+  receiptShowDiscountWhenZero?: Prisma.SortOrder
+  receiptShowTaxWhenZero?: Prisma.SortOrder
+  receiptShowServiceWhenZero?: Prisma.SortOrder
+  receiptShowCashReceived?: Prisma.SortOrder
+  receiptShowBalance?: Prisma.SortOrder
+  receiptShowOrderType?: Prisma.SortOrder
+  receiptShowCashier?: Prisma.SortOrder
+  receiptShowRestaurantPhone?: Prisma.SortOrder
+  receiptFooterText?: Prisma.SortOrderInput | Prisma.SortOrder
+  printerScale?: Prisma.SortOrder
+  printerMargin?: Prisma.SortOrder
+  printerHeadersFootersReminder?: Prisma.SortOrder
+  printerNotes?: Prisma.SortOrderInput | Prisma.SortOrder
+  applicationName?: Prisma.SortOrder
+  applicationVersion?: Prisma.SortOrder
+  dateFormat?: Prisma.SortOrder
+  timeFormat?: Prisma.SortOrder
+  theme?: Prisma.SortOrder
+  itemsPerPage?: Prisma.SortOrder
+  activityLoggingEnabled?: Prisma.SortOrder
+  maintenanceMode?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   _count?: Prisma.SystemSettingCountOrderByAggregateInput
   _avg?: Prisma.SystemSettingAvgOrderByAggregateInput
   _max?: Prisma.SystemSettingMaxOrderByAggregateInput
@@ -431,6 +869,44 @@ export type SystemSettingScalarWhereWithAggregatesInput = {
   receiptThankYouMessage?: Prisma.StringWithAggregatesFilter<"SystemSetting"> | string
   receiptDeveloperCredit?: Prisma.StringWithAggregatesFilter<"SystemSetting"> | string
   openCashDrawer?: Prisma.BoolWithAggregatesFilter<"SystemSetting"> | boolean
+  currencySymbol?: Prisma.StringWithAggregatesFilter<"SystemSetting"> | string
+  taxEnabled?: Prisma.BoolWithAggregatesFilter<"SystemSetting"> | boolean
+  serviceChargeEnabled?: Prisma.BoolWithAggregatesFilter<"SystemSetting"> | boolean
+  discountEnabled?: Prisma.BoolWithAggregatesFilter<"SystemSetting"> | boolean
+  maximumPercentageDiscount?: Prisma.DecimalWithAggregatesFilter<"SystemSetting"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  maximumFixedDiscount?: Prisma.DecimalWithAggregatesFilter<"SystemSetting"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  defaultOrderType?: Prisma.EnumOrderTypeWithAggregatesFilter<"SystemSetting"> | $Enums.OrderType
+  allowCash?: Prisma.BoolWithAggregatesFilter<"SystemSetting"> | boolean
+  allowCard?: Prisma.BoolWithAggregatesFilter<"SystemSetting"> | boolean
+  allowQr?: Prisma.BoolWithAggregatesFilter<"SystemSetting"> | boolean
+  requireOrderNotes?: Prisma.BoolWithAggregatesFilter<"SystemSetting"> | boolean
+  allowNegativeBalance?: Prisma.BoolWithAggregatesFilter<"SystemSetting"> | boolean
+  invoicePrefix?: Prisma.StringWithAggregatesFilter<"SystemSetting"> | string
+  invoiceNumberPadding?: Prisma.IntWithAggregatesFilter<"SystemSetting"> | number
+  receiptHeaderMessage?: Prisma.StringNullableWithAggregatesFilter<"SystemSetting"> | string | null
+  receiptVisitAgainMessage?: Prisma.StringWithAggregatesFilter<"SystemSetting"> | string
+  receiptShowDiscountWhenZero?: Prisma.BoolWithAggregatesFilter<"SystemSetting"> | boolean
+  receiptShowTaxWhenZero?: Prisma.BoolWithAggregatesFilter<"SystemSetting"> | boolean
+  receiptShowServiceWhenZero?: Prisma.BoolWithAggregatesFilter<"SystemSetting"> | boolean
+  receiptShowCashReceived?: Prisma.BoolWithAggregatesFilter<"SystemSetting"> | boolean
+  receiptShowBalance?: Prisma.BoolWithAggregatesFilter<"SystemSetting"> | boolean
+  receiptShowOrderType?: Prisma.BoolWithAggregatesFilter<"SystemSetting"> | boolean
+  receiptShowCashier?: Prisma.BoolWithAggregatesFilter<"SystemSetting"> | boolean
+  receiptShowRestaurantPhone?: Prisma.BoolWithAggregatesFilter<"SystemSetting"> | boolean
+  receiptFooterText?: Prisma.StringNullableWithAggregatesFilter<"SystemSetting"> | string | null
+  printerScale?: Prisma.IntWithAggregatesFilter<"SystemSetting"> | number
+  printerMargin?: Prisma.StringWithAggregatesFilter<"SystemSetting"> | string
+  printerHeadersFootersReminder?: Prisma.BoolWithAggregatesFilter<"SystemSetting"> | boolean
+  printerNotes?: Prisma.StringNullableWithAggregatesFilter<"SystemSetting"> | string | null
+  applicationName?: Prisma.StringWithAggregatesFilter<"SystemSetting"> | string
+  applicationVersion?: Prisma.StringWithAggregatesFilter<"SystemSetting"> | string
+  dateFormat?: Prisma.StringWithAggregatesFilter<"SystemSetting"> | string
+  timeFormat?: Prisma.StringWithAggregatesFilter<"SystemSetting"> | string
+  theme?: Prisma.StringWithAggregatesFilter<"SystemSetting"> | string
+  itemsPerPage?: Prisma.IntWithAggregatesFilter<"SystemSetting"> | number
+  activityLoggingEnabled?: Prisma.BoolWithAggregatesFilter<"SystemSetting"> | boolean
+  maintenanceMode?: Prisma.BoolWithAggregatesFilter<"SystemSetting"> | boolean
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"SystemSetting"> | Date | string
 }
 
 export type SystemSettingCreateInput = {
@@ -453,6 +929,44 @@ export type SystemSettingCreateInput = {
   receiptThankYouMessage?: string
   receiptDeveloperCredit?: string
   openCashDrawer?: boolean
+  currencySymbol?: string
+  taxEnabled?: boolean
+  serviceChargeEnabled?: boolean
+  discountEnabled?: boolean
+  maximumPercentageDiscount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  maximumFixedDiscount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  defaultOrderType?: $Enums.OrderType
+  allowCash?: boolean
+  allowCard?: boolean
+  allowQr?: boolean
+  requireOrderNotes?: boolean
+  allowNegativeBalance?: boolean
+  invoicePrefix?: string
+  invoiceNumberPadding?: number
+  receiptHeaderMessage?: string | null
+  receiptVisitAgainMessage?: string
+  receiptShowDiscountWhenZero?: boolean
+  receiptShowTaxWhenZero?: boolean
+  receiptShowServiceWhenZero?: boolean
+  receiptShowCashReceived?: boolean
+  receiptShowBalance?: boolean
+  receiptShowOrderType?: boolean
+  receiptShowCashier?: boolean
+  receiptShowRestaurantPhone?: boolean
+  receiptFooterText?: string | null
+  printerScale?: number
+  printerMargin?: string
+  printerHeadersFootersReminder?: boolean
+  printerNotes?: string | null
+  applicationName?: string
+  applicationVersion?: string
+  dateFormat?: string
+  timeFormat?: string
+  theme?: string
+  itemsPerPage?: number
+  activityLoggingEnabled?: boolean
+  maintenanceMode?: boolean
+  updatedAt?: Date | string
 }
 
 export type SystemSettingUncheckedCreateInput = {
@@ -475,6 +989,44 @@ export type SystemSettingUncheckedCreateInput = {
   receiptThankYouMessage?: string
   receiptDeveloperCredit?: string
   openCashDrawer?: boolean
+  currencySymbol?: string
+  taxEnabled?: boolean
+  serviceChargeEnabled?: boolean
+  discountEnabled?: boolean
+  maximumPercentageDiscount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  maximumFixedDiscount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  defaultOrderType?: $Enums.OrderType
+  allowCash?: boolean
+  allowCard?: boolean
+  allowQr?: boolean
+  requireOrderNotes?: boolean
+  allowNegativeBalance?: boolean
+  invoicePrefix?: string
+  invoiceNumberPadding?: number
+  receiptHeaderMessage?: string | null
+  receiptVisitAgainMessage?: string
+  receiptShowDiscountWhenZero?: boolean
+  receiptShowTaxWhenZero?: boolean
+  receiptShowServiceWhenZero?: boolean
+  receiptShowCashReceived?: boolean
+  receiptShowBalance?: boolean
+  receiptShowOrderType?: boolean
+  receiptShowCashier?: boolean
+  receiptShowRestaurantPhone?: boolean
+  receiptFooterText?: string | null
+  printerScale?: number
+  printerMargin?: string
+  printerHeadersFootersReminder?: boolean
+  printerNotes?: string | null
+  applicationName?: string
+  applicationVersion?: string
+  dateFormat?: string
+  timeFormat?: string
+  theme?: string
+  itemsPerPage?: number
+  activityLoggingEnabled?: boolean
+  maintenanceMode?: boolean
+  updatedAt?: Date | string
 }
 
 export type SystemSettingUpdateInput = {
@@ -497,6 +1049,44 @@ export type SystemSettingUpdateInput = {
   receiptThankYouMessage?: Prisma.StringFieldUpdateOperationsInput | string
   receiptDeveloperCredit?: Prisma.StringFieldUpdateOperationsInput | string
   openCashDrawer?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  currencySymbol?: Prisma.StringFieldUpdateOperationsInput | string
+  taxEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  serviceChargeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  discountEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  maximumPercentageDiscount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  maximumFixedDiscount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  defaultOrderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  allowCash?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  allowCard?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  allowQr?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  requireOrderNotes?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  allowNegativeBalance?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  invoicePrefix?: Prisma.StringFieldUpdateOperationsInput | string
+  invoiceNumberPadding?: Prisma.IntFieldUpdateOperationsInput | number
+  receiptHeaderMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receiptVisitAgainMessage?: Prisma.StringFieldUpdateOperationsInput | string
+  receiptShowDiscountWhenZero?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiptShowTaxWhenZero?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiptShowServiceWhenZero?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiptShowCashReceived?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiptShowBalance?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiptShowOrderType?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiptShowCashier?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiptShowRestaurantPhone?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiptFooterText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  printerScale?: Prisma.IntFieldUpdateOperationsInput | number
+  printerMargin?: Prisma.StringFieldUpdateOperationsInput | string
+  printerHeadersFootersReminder?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  printerNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  applicationName?: Prisma.StringFieldUpdateOperationsInput | string
+  applicationVersion?: Prisma.StringFieldUpdateOperationsInput | string
+  dateFormat?: Prisma.StringFieldUpdateOperationsInput | string
+  timeFormat?: Prisma.StringFieldUpdateOperationsInput | string
+  theme?: Prisma.StringFieldUpdateOperationsInput | string
+  itemsPerPage?: Prisma.IntFieldUpdateOperationsInput | number
+  activityLoggingEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  maintenanceMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type SystemSettingUncheckedUpdateInput = {
@@ -519,6 +1109,44 @@ export type SystemSettingUncheckedUpdateInput = {
   receiptThankYouMessage?: Prisma.StringFieldUpdateOperationsInput | string
   receiptDeveloperCredit?: Prisma.StringFieldUpdateOperationsInput | string
   openCashDrawer?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  currencySymbol?: Prisma.StringFieldUpdateOperationsInput | string
+  taxEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  serviceChargeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  discountEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  maximumPercentageDiscount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  maximumFixedDiscount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  defaultOrderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  allowCash?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  allowCard?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  allowQr?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  requireOrderNotes?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  allowNegativeBalance?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  invoicePrefix?: Prisma.StringFieldUpdateOperationsInput | string
+  invoiceNumberPadding?: Prisma.IntFieldUpdateOperationsInput | number
+  receiptHeaderMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receiptVisitAgainMessage?: Prisma.StringFieldUpdateOperationsInput | string
+  receiptShowDiscountWhenZero?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiptShowTaxWhenZero?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiptShowServiceWhenZero?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiptShowCashReceived?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiptShowBalance?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiptShowOrderType?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiptShowCashier?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiptShowRestaurantPhone?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiptFooterText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  printerScale?: Prisma.IntFieldUpdateOperationsInput | number
+  printerMargin?: Prisma.StringFieldUpdateOperationsInput | string
+  printerHeadersFootersReminder?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  printerNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  applicationName?: Prisma.StringFieldUpdateOperationsInput | string
+  applicationVersion?: Prisma.StringFieldUpdateOperationsInput | string
+  dateFormat?: Prisma.StringFieldUpdateOperationsInput | string
+  timeFormat?: Prisma.StringFieldUpdateOperationsInput | string
+  theme?: Prisma.StringFieldUpdateOperationsInput | string
+  itemsPerPage?: Prisma.IntFieldUpdateOperationsInput | number
+  activityLoggingEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  maintenanceMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type SystemSettingCreateManyInput = {
@@ -541,6 +1169,44 @@ export type SystemSettingCreateManyInput = {
   receiptThankYouMessage?: string
   receiptDeveloperCredit?: string
   openCashDrawer?: boolean
+  currencySymbol?: string
+  taxEnabled?: boolean
+  serviceChargeEnabled?: boolean
+  discountEnabled?: boolean
+  maximumPercentageDiscount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  maximumFixedDiscount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  defaultOrderType?: $Enums.OrderType
+  allowCash?: boolean
+  allowCard?: boolean
+  allowQr?: boolean
+  requireOrderNotes?: boolean
+  allowNegativeBalance?: boolean
+  invoicePrefix?: string
+  invoiceNumberPadding?: number
+  receiptHeaderMessage?: string | null
+  receiptVisitAgainMessage?: string
+  receiptShowDiscountWhenZero?: boolean
+  receiptShowTaxWhenZero?: boolean
+  receiptShowServiceWhenZero?: boolean
+  receiptShowCashReceived?: boolean
+  receiptShowBalance?: boolean
+  receiptShowOrderType?: boolean
+  receiptShowCashier?: boolean
+  receiptShowRestaurantPhone?: boolean
+  receiptFooterText?: string | null
+  printerScale?: number
+  printerMargin?: string
+  printerHeadersFootersReminder?: boolean
+  printerNotes?: string | null
+  applicationName?: string
+  applicationVersion?: string
+  dateFormat?: string
+  timeFormat?: string
+  theme?: string
+  itemsPerPage?: number
+  activityLoggingEnabled?: boolean
+  maintenanceMode?: boolean
+  updatedAt?: Date | string
 }
 
 export type SystemSettingUpdateManyMutationInput = {
@@ -563,6 +1229,44 @@ export type SystemSettingUpdateManyMutationInput = {
   receiptThankYouMessage?: Prisma.StringFieldUpdateOperationsInput | string
   receiptDeveloperCredit?: Prisma.StringFieldUpdateOperationsInput | string
   openCashDrawer?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  currencySymbol?: Prisma.StringFieldUpdateOperationsInput | string
+  taxEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  serviceChargeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  discountEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  maximumPercentageDiscount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  maximumFixedDiscount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  defaultOrderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  allowCash?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  allowCard?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  allowQr?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  requireOrderNotes?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  allowNegativeBalance?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  invoicePrefix?: Prisma.StringFieldUpdateOperationsInput | string
+  invoiceNumberPadding?: Prisma.IntFieldUpdateOperationsInput | number
+  receiptHeaderMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receiptVisitAgainMessage?: Prisma.StringFieldUpdateOperationsInput | string
+  receiptShowDiscountWhenZero?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiptShowTaxWhenZero?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiptShowServiceWhenZero?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiptShowCashReceived?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiptShowBalance?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiptShowOrderType?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiptShowCashier?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiptShowRestaurantPhone?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiptFooterText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  printerScale?: Prisma.IntFieldUpdateOperationsInput | number
+  printerMargin?: Prisma.StringFieldUpdateOperationsInput | string
+  printerHeadersFootersReminder?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  printerNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  applicationName?: Prisma.StringFieldUpdateOperationsInput | string
+  applicationVersion?: Prisma.StringFieldUpdateOperationsInput | string
+  dateFormat?: Prisma.StringFieldUpdateOperationsInput | string
+  timeFormat?: Prisma.StringFieldUpdateOperationsInput | string
+  theme?: Prisma.StringFieldUpdateOperationsInput | string
+  itemsPerPage?: Prisma.IntFieldUpdateOperationsInput | number
+  activityLoggingEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  maintenanceMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type SystemSettingUncheckedUpdateManyInput = {
@@ -585,6 +1289,44 @@ export type SystemSettingUncheckedUpdateManyInput = {
   receiptThankYouMessage?: Prisma.StringFieldUpdateOperationsInput | string
   receiptDeveloperCredit?: Prisma.StringFieldUpdateOperationsInput | string
   openCashDrawer?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  currencySymbol?: Prisma.StringFieldUpdateOperationsInput | string
+  taxEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  serviceChargeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  discountEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  maximumPercentageDiscount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  maximumFixedDiscount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  defaultOrderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  allowCash?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  allowCard?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  allowQr?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  requireOrderNotes?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  allowNegativeBalance?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  invoicePrefix?: Prisma.StringFieldUpdateOperationsInput | string
+  invoiceNumberPadding?: Prisma.IntFieldUpdateOperationsInput | number
+  receiptHeaderMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receiptVisitAgainMessage?: Prisma.StringFieldUpdateOperationsInput | string
+  receiptShowDiscountWhenZero?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiptShowTaxWhenZero?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiptShowServiceWhenZero?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiptShowCashReceived?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiptShowBalance?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiptShowOrderType?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiptShowCashier?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiptShowRestaurantPhone?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiptFooterText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  printerScale?: Prisma.IntFieldUpdateOperationsInput | number
+  printerMargin?: Prisma.StringFieldUpdateOperationsInput | string
+  printerHeadersFootersReminder?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  printerNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  applicationName?: Prisma.StringFieldUpdateOperationsInput | string
+  applicationVersion?: Prisma.StringFieldUpdateOperationsInput | string
+  dateFormat?: Prisma.StringFieldUpdateOperationsInput | string
+  timeFormat?: Prisma.StringFieldUpdateOperationsInput | string
+  theme?: Prisma.StringFieldUpdateOperationsInput | string
+  itemsPerPage?: Prisma.IntFieldUpdateOperationsInput | number
+  activityLoggingEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  maintenanceMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type SystemSettingCountOrderByAggregateInput = {
@@ -607,11 +1349,54 @@ export type SystemSettingCountOrderByAggregateInput = {
   receiptThankYouMessage?: Prisma.SortOrder
   receiptDeveloperCredit?: Prisma.SortOrder
   openCashDrawer?: Prisma.SortOrder
+  currencySymbol?: Prisma.SortOrder
+  taxEnabled?: Prisma.SortOrder
+  serviceChargeEnabled?: Prisma.SortOrder
+  discountEnabled?: Prisma.SortOrder
+  maximumPercentageDiscount?: Prisma.SortOrder
+  maximumFixedDiscount?: Prisma.SortOrder
+  defaultOrderType?: Prisma.SortOrder
+  allowCash?: Prisma.SortOrder
+  allowCard?: Prisma.SortOrder
+  allowQr?: Prisma.SortOrder
+  requireOrderNotes?: Prisma.SortOrder
+  allowNegativeBalance?: Prisma.SortOrder
+  invoicePrefix?: Prisma.SortOrder
+  invoiceNumberPadding?: Prisma.SortOrder
+  receiptHeaderMessage?: Prisma.SortOrder
+  receiptVisitAgainMessage?: Prisma.SortOrder
+  receiptShowDiscountWhenZero?: Prisma.SortOrder
+  receiptShowTaxWhenZero?: Prisma.SortOrder
+  receiptShowServiceWhenZero?: Prisma.SortOrder
+  receiptShowCashReceived?: Prisma.SortOrder
+  receiptShowBalance?: Prisma.SortOrder
+  receiptShowOrderType?: Prisma.SortOrder
+  receiptShowCashier?: Prisma.SortOrder
+  receiptShowRestaurantPhone?: Prisma.SortOrder
+  receiptFooterText?: Prisma.SortOrder
+  printerScale?: Prisma.SortOrder
+  printerMargin?: Prisma.SortOrder
+  printerHeadersFootersReminder?: Prisma.SortOrder
+  printerNotes?: Prisma.SortOrder
+  applicationName?: Prisma.SortOrder
+  applicationVersion?: Prisma.SortOrder
+  dateFormat?: Prisma.SortOrder
+  timeFormat?: Prisma.SortOrder
+  theme?: Prisma.SortOrder
+  itemsPerPage?: Prisma.SortOrder
+  activityLoggingEnabled?: Prisma.SortOrder
+  maintenanceMode?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type SystemSettingAvgOrderByAggregateInput = {
   printerPaperWidth?: Prisma.SortOrder
   receiptCopies?: Prisma.SortOrder
+  maximumPercentageDiscount?: Prisma.SortOrder
+  maximumFixedDiscount?: Prisma.SortOrder
+  invoiceNumberPadding?: Prisma.SortOrder
+  printerScale?: Prisma.SortOrder
+  itemsPerPage?: Prisma.SortOrder
 }
 
 export type SystemSettingMaxOrderByAggregateInput = {
@@ -634,6 +1419,44 @@ export type SystemSettingMaxOrderByAggregateInput = {
   receiptThankYouMessage?: Prisma.SortOrder
   receiptDeveloperCredit?: Prisma.SortOrder
   openCashDrawer?: Prisma.SortOrder
+  currencySymbol?: Prisma.SortOrder
+  taxEnabled?: Prisma.SortOrder
+  serviceChargeEnabled?: Prisma.SortOrder
+  discountEnabled?: Prisma.SortOrder
+  maximumPercentageDiscount?: Prisma.SortOrder
+  maximumFixedDiscount?: Prisma.SortOrder
+  defaultOrderType?: Prisma.SortOrder
+  allowCash?: Prisma.SortOrder
+  allowCard?: Prisma.SortOrder
+  allowQr?: Prisma.SortOrder
+  requireOrderNotes?: Prisma.SortOrder
+  allowNegativeBalance?: Prisma.SortOrder
+  invoicePrefix?: Prisma.SortOrder
+  invoiceNumberPadding?: Prisma.SortOrder
+  receiptHeaderMessage?: Prisma.SortOrder
+  receiptVisitAgainMessage?: Prisma.SortOrder
+  receiptShowDiscountWhenZero?: Prisma.SortOrder
+  receiptShowTaxWhenZero?: Prisma.SortOrder
+  receiptShowServiceWhenZero?: Prisma.SortOrder
+  receiptShowCashReceived?: Prisma.SortOrder
+  receiptShowBalance?: Prisma.SortOrder
+  receiptShowOrderType?: Prisma.SortOrder
+  receiptShowCashier?: Prisma.SortOrder
+  receiptShowRestaurantPhone?: Prisma.SortOrder
+  receiptFooterText?: Prisma.SortOrder
+  printerScale?: Prisma.SortOrder
+  printerMargin?: Prisma.SortOrder
+  printerHeadersFootersReminder?: Prisma.SortOrder
+  printerNotes?: Prisma.SortOrder
+  applicationName?: Prisma.SortOrder
+  applicationVersion?: Prisma.SortOrder
+  dateFormat?: Prisma.SortOrder
+  timeFormat?: Prisma.SortOrder
+  theme?: Prisma.SortOrder
+  itemsPerPage?: Prisma.SortOrder
+  activityLoggingEnabled?: Prisma.SortOrder
+  maintenanceMode?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type SystemSettingMinOrderByAggregateInput = {
@@ -656,11 +1479,54 @@ export type SystemSettingMinOrderByAggregateInput = {
   receiptThankYouMessage?: Prisma.SortOrder
   receiptDeveloperCredit?: Prisma.SortOrder
   openCashDrawer?: Prisma.SortOrder
+  currencySymbol?: Prisma.SortOrder
+  taxEnabled?: Prisma.SortOrder
+  serviceChargeEnabled?: Prisma.SortOrder
+  discountEnabled?: Prisma.SortOrder
+  maximumPercentageDiscount?: Prisma.SortOrder
+  maximumFixedDiscount?: Prisma.SortOrder
+  defaultOrderType?: Prisma.SortOrder
+  allowCash?: Prisma.SortOrder
+  allowCard?: Prisma.SortOrder
+  allowQr?: Prisma.SortOrder
+  requireOrderNotes?: Prisma.SortOrder
+  allowNegativeBalance?: Prisma.SortOrder
+  invoicePrefix?: Prisma.SortOrder
+  invoiceNumberPadding?: Prisma.SortOrder
+  receiptHeaderMessage?: Prisma.SortOrder
+  receiptVisitAgainMessage?: Prisma.SortOrder
+  receiptShowDiscountWhenZero?: Prisma.SortOrder
+  receiptShowTaxWhenZero?: Prisma.SortOrder
+  receiptShowServiceWhenZero?: Prisma.SortOrder
+  receiptShowCashReceived?: Prisma.SortOrder
+  receiptShowBalance?: Prisma.SortOrder
+  receiptShowOrderType?: Prisma.SortOrder
+  receiptShowCashier?: Prisma.SortOrder
+  receiptShowRestaurantPhone?: Prisma.SortOrder
+  receiptFooterText?: Prisma.SortOrder
+  printerScale?: Prisma.SortOrder
+  printerMargin?: Prisma.SortOrder
+  printerHeadersFootersReminder?: Prisma.SortOrder
+  printerNotes?: Prisma.SortOrder
+  applicationName?: Prisma.SortOrder
+  applicationVersion?: Prisma.SortOrder
+  dateFormat?: Prisma.SortOrder
+  timeFormat?: Prisma.SortOrder
+  theme?: Prisma.SortOrder
+  itemsPerPage?: Prisma.SortOrder
+  activityLoggingEnabled?: Prisma.SortOrder
+  maintenanceMode?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type SystemSettingSumOrderByAggregateInput = {
   printerPaperWidth?: Prisma.SortOrder
   receiptCopies?: Prisma.SortOrder
+  maximumPercentageDiscount?: Prisma.SortOrder
+  maximumFixedDiscount?: Prisma.SortOrder
+  invoiceNumberPadding?: Prisma.SortOrder
+  printerScale?: Prisma.SortOrder
+  itemsPerPage?: Prisma.SortOrder
 }
 
 
@@ -685,6 +1551,44 @@ export type SystemSettingSelect<ExtArgs extends runtime.Types.Extensions.Interna
   receiptThankYouMessage?: boolean
   receiptDeveloperCredit?: boolean
   openCashDrawer?: boolean
+  currencySymbol?: boolean
+  taxEnabled?: boolean
+  serviceChargeEnabled?: boolean
+  discountEnabled?: boolean
+  maximumPercentageDiscount?: boolean
+  maximumFixedDiscount?: boolean
+  defaultOrderType?: boolean
+  allowCash?: boolean
+  allowCard?: boolean
+  allowQr?: boolean
+  requireOrderNotes?: boolean
+  allowNegativeBalance?: boolean
+  invoicePrefix?: boolean
+  invoiceNumberPadding?: boolean
+  receiptHeaderMessage?: boolean
+  receiptVisitAgainMessage?: boolean
+  receiptShowDiscountWhenZero?: boolean
+  receiptShowTaxWhenZero?: boolean
+  receiptShowServiceWhenZero?: boolean
+  receiptShowCashReceived?: boolean
+  receiptShowBalance?: boolean
+  receiptShowOrderType?: boolean
+  receiptShowCashier?: boolean
+  receiptShowRestaurantPhone?: boolean
+  receiptFooterText?: boolean
+  printerScale?: boolean
+  printerMargin?: boolean
+  printerHeadersFootersReminder?: boolean
+  printerNotes?: boolean
+  applicationName?: boolean
+  applicationVersion?: boolean
+  dateFormat?: boolean
+  timeFormat?: boolean
+  theme?: boolean
+  itemsPerPage?: boolean
+  activityLoggingEnabled?: boolean
+  maintenanceMode?: boolean
+  updatedAt?: boolean
 }, ExtArgs["result"]["systemSetting"]>
 
 export type SystemSettingSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -707,6 +1611,44 @@ export type SystemSettingSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   receiptThankYouMessage?: boolean
   receiptDeveloperCredit?: boolean
   openCashDrawer?: boolean
+  currencySymbol?: boolean
+  taxEnabled?: boolean
+  serviceChargeEnabled?: boolean
+  discountEnabled?: boolean
+  maximumPercentageDiscount?: boolean
+  maximumFixedDiscount?: boolean
+  defaultOrderType?: boolean
+  allowCash?: boolean
+  allowCard?: boolean
+  allowQr?: boolean
+  requireOrderNotes?: boolean
+  allowNegativeBalance?: boolean
+  invoicePrefix?: boolean
+  invoiceNumberPadding?: boolean
+  receiptHeaderMessage?: boolean
+  receiptVisitAgainMessage?: boolean
+  receiptShowDiscountWhenZero?: boolean
+  receiptShowTaxWhenZero?: boolean
+  receiptShowServiceWhenZero?: boolean
+  receiptShowCashReceived?: boolean
+  receiptShowBalance?: boolean
+  receiptShowOrderType?: boolean
+  receiptShowCashier?: boolean
+  receiptShowRestaurantPhone?: boolean
+  receiptFooterText?: boolean
+  printerScale?: boolean
+  printerMargin?: boolean
+  printerHeadersFootersReminder?: boolean
+  printerNotes?: boolean
+  applicationName?: boolean
+  applicationVersion?: boolean
+  dateFormat?: boolean
+  timeFormat?: boolean
+  theme?: boolean
+  itemsPerPage?: boolean
+  activityLoggingEnabled?: boolean
+  maintenanceMode?: boolean
+  updatedAt?: boolean
 }, ExtArgs["result"]["systemSetting"]>
 
 export type SystemSettingSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -729,6 +1671,44 @@ export type SystemSettingSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   receiptThankYouMessage?: boolean
   receiptDeveloperCredit?: boolean
   openCashDrawer?: boolean
+  currencySymbol?: boolean
+  taxEnabled?: boolean
+  serviceChargeEnabled?: boolean
+  discountEnabled?: boolean
+  maximumPercentageDiscount?: boolean
+  maximumFixedDiscount?: boolean
+  defaultOrderType?: boolean
+  allowCash?: boolean
+  allowCard?: boolean
+  allowQr?: boolean
+  requireOrderNotes?: boolean
+  allowNegativeBalance?: boolean
+  invoicePrefix?: boolean
+  invoiceNumberPadding?: boolean
+  receiptHeaderMessage?: boolean
+  receiptVisitAgainMessage?: boolean
+  receiptShowDiscountWhenZero?: boolean
+  receiptShowTaxWhenZero?: boolean
+  receiptShowServiceWhenZero?: boolean
+  receiptShowCashReceived?: boolean
+  receiptShowBalance?: boolean
+  receiptShowOrderType?: boolean
+  receiptShowCashier?: boolean
+  receiptShowRestaurantPhone?: boolean
+  receiptFooterText?: boolean
+  printerScale?: boolean
+  printerMargin?: boolean
+  printerHeadersFootersReminder?: boolean
+  printerNotes?: boolean
+  applicationName?: boolean
+  applicationVersion?: boolean
+  dateFormat?: boolean
+  timeFormat?: boolean
+  theme?: boolean
+  itemsPerPage?: boolean
+  activityLoggingEnabled?: boolean
+  maintenanceMode?: boolean
+  updatedAt?: boolean
 }, ExtArgs["result"]["systemSetting"]>
 
 export type SystemSettingSelectScalar = {
@@ -751,9 +1731,47 @@ export type SystemSettingSelectScalar = {
   receiptThankYouMessage?: boolean
   receiptDeveloperCredit?: boolean
   openCashDrawer?: boolean
+  currencySymbol?: boolean
+  taxEnabled?: boolean
+  serviceChargeEnabled?: boolean
+  discountEnabled?: boolean
+  maximumPercentageDiscount?: boolean
+  maximumFixedDiscount?: boolean
+  defaultOrderType?: boolean
+  allowCash?: boolean
+  allowCard?: boolean
+  allowQr?: boolean
+  requireOrderNotes?: boolean
+  allowNegativeBalance?: boolean
+  invoicePrefix?: boolean
+  invoiceNumberPadding?: boolean
+  receiptHeaderMessage?: boolean
+  receiptVisitAgainMessage?: boolean
+  receiptShowDiscountWhenZero?: boolean
+  receiptShowTaxWhenZero?: boolean
+  receiptShowServiceWhenZero?: boolean
+  receiptShowCashReceived?: boolean
+  receiptShowBalance?: boolean
+  receiptShowOrderType?: boolean
+  receiptShowCashier?: boolean
+  receiptShowRestaurantPhone?: boolean
+  receiptFooterText?: boolean
+  printerScale?: boolean
+  printerMargin?: boolean
+  printerHeadersFootersReminder?: boolean
+  printerNotes?: boolean
+  applicationName?: boolean
+  applicationVersion?: boolean
+  dateFormat?: boolean
+  timeFormat?: boolean
+  theme?: boolean
+  itemsPerPage?: boolean
+  activityLoggingEnabled?: boolean
+  maintenanceMode?: boolean
+  updatedAt?: boolean
 }
 
-export type SystemSettingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "restaurantName" | "logo" | "receiptFooter" | "currency" | "timezone" | "language" | "printerName" | "printerPaperWidth" | "autoOpenReceiptAfterCheckout" | "autoPrintAfterCheckout" | "printLogo" | "receiptCopies" | "receiptShowCustomerInfo" | "receiptShowTax" | "receiptShowServiceCharge" | "receiptThankYouMessage" | "receiptDeveloperCredit" | "openCashDrawer", ExtArgs["result"]["systemSetting"]>
+export type SystemSettingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "restaurantName" | "logo" | "receiptFooter" | "currency" | "timezone" | "language" | "printerName" | "printerPaperWidth" | "autoOpenReceiptAfterCheckout" | "autoPrintAfterCheckout" | "printLogo" | "receiptCopies" | "receiptShowCustomerInfo" | "receiptShowTax" | "receiptShowServiceCharge" | "receiptThankYouMessage" | "receiptDeveloperCredit" | "openCashDrawer" | "currencySymbol" | "taxEnabled" | "serviceChargeEnabled" | "discountEnabled" | "maximumPercentageDiscount" | "maximumFixedDiscount" | "defaultOrderType" | "allowCash" | "allowCard" | "allowQr" | "requireOrderNotes" | "allowNegativeBalance" | "invoicePrefix" | "invoiceNumberPadding" | "receiptHeaderMessage" | "receiptVisitAgainMessage" | "receiptShowDiscountWhenZero" | "receiptShowTaxWhenZero" | "receiptShowServiceWhenZero" | "receiptShowCashReceived" | "receiptShowBalance" | "receiptShowOrderType" | "receiptShowCashier" | "receiptShowRestaurantPhone" | "receiptFooterText" | "printerScale" | "printerMargin" | "printerHeadersFootersReminder" | "printerNotes" | "applicationName" | "applicationVersion" | "dateFormat" | "timeFormat" | "theme" | "itemsPerPage" | "activityLoggingEnabled" | "maintenanceMode" | "updatedAt", ExtArgs["result"]["systemSetting"]>
 
 export type $SystemSettingPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "SystemSetting"
@@ -778,6 +1796,44 @@ export type $SystemSettingPayload<ExtArgs extends runtime.Types.Extensions.Inter
     receiptThankYouMessage: string
     receiptDeveloperCredit: string
     openCashDrawer: boolean
+    currencySymbol: string
+    taxEnabled: boolean
+    serviceChargeEnabled: boolean
+    discountEnabled: boolean
+    maximumPercentageDiscount: runtime.Decimal
+    maximumFixedDiscount: runtime.Decimal
+    defaultOrderType: $Enums.OrderType
+    allowCash: boolean
+    allowCard: boolean
+    allowQr: boolean
+    requireOrderNotes: boolean
+    allowNegativeBalance: boolean
+    invoicePrefix: string
+    invoiceNumberPadding: number
+    receiptHeaderMessage: string | null
+    receiptVisitAgainMessage: string
+    receiptShowDiscountWhenZero: boolean
+    receiptShowTaxWhenZero: boolean
+    receiptShowServiceWhenZero: boolean
+    receiptShowCashReceived: boolean
+    receiptShowBalance: boolean
+    receiptShowOrderType: boolean
+    receiptShowCashier: boolean
+    receiptShowRestaurantPhone: boolean
+    receiptFooterText: string | null
+    printerScale: number
+    printerMargin: string
+    printerHeadersFootersReminder: boolean
+    printerNotes: string | null
+    applicationName: string
+    applicationVersion: string
+    dateFormat: string
+    timeFormat: string
+    theme: string
+    itemsPerPage: number
+    activityLoggingEnabled: boolean
+    maintenanceMode: boolean
+    updatedAt: Date
   }, ExtArgs["result"]["systemSetting"]>
   composites: {}
 }
@@ -1220,6 +2276,44 @@ export interface SystemSettingFieldRefs {
   readonly receiptThankYouMessage: Prisma.FieldRef<"SystemSetting", 'String'>
   readonly receiptDeveloperCredit: Prisma.FieldRef<"SystemSetting", 'String'>
   readonly openCashDrawer: Prisma.FieldRef<"SystemSetting", 'Boolean'>
+  readonly currencySymbol: Prisma.FieldRef<"SystemSetting", 'String'>
+  readonly taxEnabled: Prisma.FieldRef<"SystemSetting", 'Boolean'>
+  readonly serviceChargeEnabled: Prisma.FieldRef<"SystemSetting", 'Boolean'>
+  readonly discountEnabled: Prisma.FieldRef<"SystemSetting", 'Boolean'>
+  readonly maximumPercentageDiscount: Prisma.FieldRef<"SystemSetting", 'Decimal'>
+  readonly maximumFixedDiscount: Prisma.FieldRef<"SystemSetting", 'Decimal'>
+  readonly defaultOrderType: Prisma.FieldRef<"SystemSetting", 'OrderType'>
+  readonly allowCash: Prisma.FieldRef<"SystemSetting", 'Boolean'>
+  readonly allowCard: Prisma.FieldRef<"SystemSetting", 'Boolean'>
+  readonly allowQr: Prisma.FieldRef<"SystemSetting", 'Boolean'>
+  readonly requireOrderNotes: Prisma.FieldRef<"SystemSetting", 'Boolean'>
+  readonly allowNegativeBalance: Prisma.FieldRef<"SystemSetting", 'Boolean'>
+  readonly invoicePrefix: Prisma.FieldRef<"SystemSetting", 'String'>
+  readonly invoiceNumberPadding: Prisma.FieldRef<"SystemSetting", 'Int'>
+  readonly receiptHeaderMessage: Prisma.FieldRef<"SystemSetting", 'String'>
+  readonly receiptVisitAgainMessage: Prisma.FieldRef<"SystemSetting", 'String'>
+  readonly receiptShowDiscountWhenZero: Prisma.FieldRef<"SystemSetting", 'Boolean'>
+  readonly receiptShowTaxWhenZero: Prisma.FieldRef<"SystemSetting", 'Boolean'>
+  readonly receiptShowServiceWhenZero: Prisma.FieldRef<"SystemSetting", 'Boolean'>
+  readonly receiptShowCashReceived: Prisma.FieldRef<"SystemSetting", 'Boolean'>
+  readonly receiptShowBalance: Prisma.FieldRef<"SystemSetting", 'Boolean'>
+  readonly receiptShowOrderType: Prisma.FieldRef<"SystemSetting", 'Boolean'>
+  readonly receiptShowCashier: Prisma.FieldRef<"SystemSetting", 'Boolean'>
+  readonly receiptShowRestaurantPhone: Prisma.FieldRef<"SystemSetting", 'Boolean'>
+  readonly receiptFooterText: Prisma.FieldRef<"SystemSetting", 'String'>
+  readonly printerScale: Prisma.FieldRef<"SystemSetting", 'Int'>
+  readonly printerMargin: Prisma.FieldRef<"SystemSetting", 'String'>
+  readonly printerHeadersFootersReminder: Prisma.FieldRef<"SystemSetting", 'Boolean'>
+  readonly printerNotes: Prisma.FieldRef<"SystemSetting", 'String'>
+  readonly applicationName: Prisma.FieldRef<"SystemSetting", 'String'>
+  readonly applicationVersion: Prisma.FieldRef<"SystemSetting", 'String'>
+  readonly dateFormat: Prisma.FieldRef<"SystemSetting", 'String'>
+  readonly timeFormat: Prisma.FieldRef<"SystemSetting", 'String'>
+  readonly theme: Prisma.FieldRef<"SystemSetting", 'String'>
+  readonly itemsPerPage: Prisma.FieldRef<"SystemSetting", 'Int'>
+  readonly activityLoggingEnabled: Prisma.FieldRef<"SystemSetting", 'Boolean'>
+  readonly maintenanceMode: Prisma.FieldRef<"SystemSetting", 'Boolean'>
+  readonly updatedAt: Prisma.FieldRef<"SystemSetting", 'DateTime'>
 }
     
 

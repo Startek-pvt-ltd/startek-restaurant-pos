@@ -19,6 +19,8 @@ function checkoutError(error: unknown): CheckoutResult {
     SETTINGS_NOT_FOUND: "Restaurant billing settings are not configured.",
     INVALID_DISCOUNT: "The discount cannot exceed the order subtotal.",
     INVALID_TOTAL: "The calculated order total is invalid.",
+    ORDER_NOTES_REQUIRED: "Order notes are required by the billing settings.",
+    PAYMENT_METHOD_DISABLED: "That payment method is currently disabled.",
     INSUFFICIENT_PAYMENT: "The cash received is less than the amount due.",
     ORDER_NUMBER_FAILED: "A unique order number could not be created. Please try again.",
   };
