@@ -21,6 +21,7 @@ export function ExpenseDetailsDialog({ expense, onClose }: { expense: ExpenseRec
           </div>
           <dl className="grid gap-4 text-sm sm:grid-cols-2">
             <div><dt className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Expense date</dt><dd className="mt-1 font-bold text-secondary">{expense.expenseDate}</dd></div>
+            <div><dt className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Payment method</dt><dd className="mt-1 font-bold text-secondary">{expense.paymentMethod}</dd></div>
             <div><dt className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Reference</dt><dd className="mt-1 break-words font-bold text-secondary">{expense.referenceNumber || "Not provided"}</dd></div>
             <div><dt className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Created by</dt><dd className="mt-1 font-bold text-secondary">{expense.creatorName}</dd></div>
             <div><dt className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Created</dt><dd className="mt-1 font-bold text-secondary">{formatDateTime(expense.createdAt)}</dd></div>

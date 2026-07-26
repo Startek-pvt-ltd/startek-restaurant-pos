@@ -1,0 +1,2 @@
+"use client";
+export default function ErrorPage({reset}:{reset:()=>void}){return <div className="rounded-2xl border border-destructive/20 bg-card p-8 text-center"><h1 className="text-xl font-black">Cash closing is temporarily unavailable</h1><p className="mt-2 text-muted-foreground">No data was changed. Please try again.</p><button className="mt-5 rounded-xl bg-secondary px-5 py-3 font-bold text-white" onClick={reset}>Try again</button></div>}

@@ -2,6 +2,7 @@
 
 import {
   ChartNoAxesCombined,
+  Banknote,
   CircleDollarSign,
   ClipboardList,
   ContactRound,
@@ -29,6 +30,7 @@ const navigation = [
   { label: "Orders", href: "/orders", icon: ClipboardList },
   { label: "Reports", href: "/reports", icon: ChartNoAxesCombined },
   { label: "Expenses", href: "/expenses", icon: CircleDollarSign },
+  { label: "Cash Closing", href: "/cash-closing", icon: Banknote },
   { label: "Staff", href: "/staff", icon: ContactRound },
   { label: "Settings", href: "/settings", icon: Settings },
 ];

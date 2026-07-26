@@ -178,3 +178,8 @@ Executed on 2026-07-26 in the local `feature/staff` workspace.
 - [x] Sensitive-field scan found no password, session, auth secret, database URL, or backup path keys
 - [x] Invalid date ranges were rejected
 - [ ] Authenticated browser visual/mobile checks require interactive role sessions
+# TASK-016 cash closing
+
+- Validate register opening, global single-open enforcement, role access, and the POS open-session gate.
+- Validate the expected-cash formula, password-confirmed close, immutable snapshots, and audit events.
+- Validate history filters, detail report, browser print, responsive overflow, and empty/loading/error states.

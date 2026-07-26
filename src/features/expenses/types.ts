@@ -1,4 +1,4 @@
-import type { ExpenseCategory } from "@/generated/prisma/client";
+import type { ExpenseCategory, ExpensePaymentMethod } from "@/generated/prisma/client";
 
 export const EXPENSE_ACCESS_ROLES = ["SUPER_ADMIN", "OWNER", "MANAGER", "CASHIER"] as const;
 export const EXPENSE_EDIT_ALL_ROLES = ["SUPER_ADMIN", "OWNER", "MANAGER"] as const;
@@ -18,6 +18,8 @@ export const EXPENSE_CATEGORIES = [
   "STAFF_MEALS",
   "OTHER",
 ] as const satisfies readonly ExpenseCategory[];
+
+export const EXPENSE_PAYMENT_METHODS = ["CASH", "CARD", "BANK", "OTHER"] as const satisfies readonly ExpensePaymentMethod[];
 
 export const EXPENSE_CATEGORY_LABELS: Record<ExpenseCategory, string> = {
   INGREDIENTS: "Ingredients",
@@ -51,6 +53,7 @@ export type ExpenseRecord = {
   title: string;
   category: ExpenseCategory;
   amount: string;
+  paymentMethod: ExpensePaymentMethod;
   expenseDate: string;
   remarks: string | null;
   referenceNumber: string | null;

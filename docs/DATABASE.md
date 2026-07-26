@@ -69,6 +69,12 @@ Legacy SystemSetting columns for customer visibility and custom footer copy rema
 
 Production should apply checked-in migrations with `npx prisma migrate deploy`. Prisma Studio remains available through `npm run prisma:studio`.
 
+## Cash closing
+
+Migration `20260727100000_add_cash_sessions` adds `CashSessionStatus`, `ExpensePaymentMethod`, the `CashSession` table, audit foreign keys, filter indexes, and a PostgreSQL partial unique index allowing only one global `OPEN` session. Existing expenses receive the conservative `OTHER` default, preventing historical unclassified expenses from incorrectly reducing a cash drawer.
+
+POS checkout and closing use serializable transactions and row locks. Expected cash is opening cash plus completed paid cash sales minus `CASH` expenses. Card/QR sales, non-cash expenses, and cancelled orders are excluded from the physical drawer calculation.
+
 ## TASK-013 migration
 
 Migration `20260726045700_add_typed_restaurant_system_settings` non-destructively extends `Restaurant` with structured address/contact/locale fields and `SystemSetting` with typed billing, receipt, printer, and system preferences. Existing identifiers and historical order monetary snapshots are unchanged. Legacy receipt columns remain for compatibility; new explicit zero-line flags drive receipt rendering.

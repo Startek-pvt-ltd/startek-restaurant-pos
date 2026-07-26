@@ -8,33 +8,40 @@ import {
   Tags,
   TrendingUp,
   WalletCards,
+  Banknote,
 } from "lucide-react";
 
 import { BestSellingItems } from "@/components/dashboard/BestSellingItems";
+import { CashDrawerSummary } from "@/components/dashboard/CashDrawerSummary";
+import { DashboardNotifications } from "@/components/dashboard/DashboardNotifications";
 import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { PaymentChart } from "@/components/dashboard/PaymentChart";
+import { OrderSummary } from "@/components/dashboard/OrderSummary";
 import { QuickAction } from "@/components/dashboard/QuickAction";
 import { RecentActivity } from "@/components/dashboard/RecentActivity";
 import { RecentExpenses } from "@/components/dashboard/RecentExpenses";
 import { RecentOrders } from "@/components/dashboard/RecentOrders";
 import { SalesChart } from "@/components/dashboard/SalesChart";
 import { StatCard } from "@/components/dashboard/StatCard";
+import { SystemHealth } from "@/components/dashboard/SystemHealth";
 import { WelcomeSection } from "@/components/dashboard/WelcomeSection";
 import { requireAuth } from "@/lib/auth-utils";
-import { getDashboardAnalytics } from "@/features/reports/services/dashboard-analytics-service";
+import { getProductionDashboard } from "@/features/dashboard/services/dashboard-service";
 import { formatReportMoney } from "@/features/reports/utils/report-formatters";
 
-const quickActions = [
-  { label: "New Order", description: "Start POS billing", icon: Plus, emphasized: true, href: "/pos" },
-  { label: "Add Menu Item", description: "Create a new dish", icon: ShoppingBag, href: "/menu?action=new" },
-  { label: "Manage Categories", description: "Organize the menu", icon: Tags, href: "/menu/categories" },
-  { label: "Add Expense", description: "Open expense workspace", icon: ReceiptText, href: "/expenses" },
-  { label: "View Reports", description: "Open report workspace", icon: FileChartColumn, href: "/reports" },
-];
-
 export default async function DashboardPage() {
-  const [session, analytics] = await Promise.all([requireAuth(), getDashboardAnalytics()]);
+  const session = await requireAuth();
+  const analytics = await getProductionDashboard(session.user.id);
   const fullName = session.user.name ?? session.user.username;
+  const management = ["SUPER_ADMIN", "OWNER", "MANAGER"].includes(session.user.role);
+  const quickActions = [
+    { label: "New Order", description: "Start POS billing", icon: Plus, emphasized: true, href: "/pos", visible: session.user.role !== "KITCHEN" },
+    { label: "Add Menu Item", description: "Create a new dish", icon: ShoppingBag, href: "/menu?action=new", visible: management },
+    { label: "Manage Categories", description: "Organize the menu", icon: Tags, href: "/menu/categories", visible: management },
+    { label: "Add Expense", description: "Record operating cost", icon: ReceiptText, href: "/expenses", visible: session.user.role !== "KITCHEN" },
+    { label: "Cash Closing", description: "Open or reconcile register", icon: Banknote, href: "/cash-closing", visible: session.user.role !== "KITCHEN" },
+    { label: "View Reports", description: "Open report workspace", icon: FileChartColumn, href: "/reports", visible: management },
+  ].filter((action) => action.visible);
   const currentHour = Number(
     new Intl.DateTimeFormat("en-GB", {
       hour: "2-digit",
@@ -74,12 +81,18 @@ export default async function DashboardPage() {
           <PaymentChart data={analytics.payments} />
         </section>
 
-        <RecentOrders />
+        <section className="grid items-start gap-5 xl:grid-cols-[minmax(0,1.45fr)_minmax(280px,0.55fr)]">
+          <RecentOrders orders={analytics.recentOrders} />
+          <OrderSummary data={analytics.orderSummary} />
+        </section>
 
         <section className="grid items-start gap-5 xl:grid-cols-2 2xl:grid-cols-3">
-          <BestSellingItems />
-          <RecentExpenses />
-          <RecentActivity />
+          <BestSellingItems items={analytics.bestSellingItems} />
+          <CashDrawerSummary data={analytics.cashSession} />
+          <RecentExpenses expenses={analytics.recentExpenses} />
+          <RecentActivity activities={analytics.recentActivity} />
+          <DashboardNotifications items={analytics.notifications.items} unreadCount={analytics.notifications.unreadCount} />
+          <SystemHealth data={analytics.health} />
         </section>
       </div>
     </DashboardShell>

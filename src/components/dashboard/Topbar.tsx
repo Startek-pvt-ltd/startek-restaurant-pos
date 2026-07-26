@@ -24,6 +24,8 @@ export function Topbar({ onMenuClick, user }: TopbarProps) {
       ? { title: "Reports", description: "Reporting workspace" }
     : pathname.startsWith("/expenses")
       ? { title: "Expenses", description: "Expense management workspace" }
+    : pathname.startsWith("/cash-closing")
+      ? { title: "Cash Closing", description: "Register sessions and drawer reconciliation" }
     : pathname.startsWith("/staff")
       ? { title: "Staff", description: "Staff management workspace" }
     : pathname === "/settings/profile"

@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { EXPENSE_CATEGORIES } from "../types";
+import { EXPENSE_CATEGORIES, EXPENSE_PAYMENT_METHODS } from "../types";
 
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 
@@ -41,6 +41,7 @@ export const expenseSchema = z.object({
     .regex(/^\d+(?:\.\d{1,2})?$/, "Enter a valid amount with up to 2 decimal places.")
     .refine((value) => Number(value) > 0, "Amount must be greater than zero.")
     .refine((value) => Number(value) <= 9_999_999_999.99, "Amount is too large."),
+  paymentMethod: z.enum(EXPENSE_PAYMENT_METHODS, { error: "Select an expense payment method." }),
   expenseDate: expenseDateSchema,
   referenceNumber: z
     .string()

@@ -1,6 +1,9 @@
 "use client";
 
 import { Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
+import { CreditCard } from "lucide-react";
+
+import { DashboardEmptyState } from "@/components/dashboard/DashboardEmptyState";
 
 export function PaymentChart({ data }: { data: Array<{ name: string; value: string; count: number }> }) {
   const palette = ["#F4B400", "#4A2310", "#F97316"];
@@ -13,7 +16,7 @@ export function PaymentChart({ data }: { data: Array<{ name: string; value: stri
         <p className="mt-1 text-xs text-muted-foreground">Today&apos;s completed payment revenue</p>
       </div>
 
-      <div aria-label="Payment method distribution chart" className="relative mt-2 h-72 w-full" role="img">
+      {paymentCount === 0 ? <div className="mt-5"><DashboardEmptyState icon={CreditCard} message="No paid transactions have been recorded today." /></div> : <div aria-label="Payment method distribution chart" className="relative mt-2 h-72 w-full" role="img">
         <div className="pointer-events-none absolute inset-x-0 top-[6.3rem] z-10 text-center">
           <p className="text-2xl font-bold text-foreground">{paymentCount}</p>
           <p className="text-[0.65rem] font-semibold uppercase tracking-wide text-muted-foreground">Payments</p>
@@ -35,7 +38,9 @@ export function PaymentChart({ data }: { data: Array<{ name: string; value: stri
             </Pie>
             <Tooltip
               contentStyle={{
-                border: "1px solid #f0dfbd",
+                border: "1px solid var(--border)",
+                background: "var(--popover)",
+                color: "var(--popover-foreground)",
                 borderRadius: "12px",
                 boxShadow: "0 10px 30px rgba(74,35,16,0.12)",
                 fontSize: "12px",
@@ -45,7 +50,7 @@ export function PaymentChart({ data }: { data: Array<{ name: string; value: stri
             <Legend iconSize={9} iconType="circle" wrapperStyle={{ fontSize: "11px" }} />
           </PieChart>
         </ResponsiveContainer>
-      </div>
+      </div>}
     </article>
   );
 }

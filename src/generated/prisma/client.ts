@@ -52,6 +52,11 @@ export type Restaurant = Prisma.RestaurantModel
  */
 export type User = Prisma.UserModel
 /**
+ * Model CashSession
+ * 
+ */
+export type CashSession = Prisma.CashSessionModel
+/**
  * Model Notification
  * 
  */

@@ -125,6 +125,11 @@ export async function createCompletedOrder(cashierId: string, input: CheckoutInp
             throw new Error("POS_ACCESS_DENIED");
           }
 
+          const cashSession = await tx.$queryRaw<Array<{ id: string }>>(Prisma.sql`
+            SELECT id FROM "CashSession" WHERE status = 'OPEN' FOR UPDATE
+          `);
+          if (!cashSession.length) throw new Error("CASH_SESSION_REQUIRED");
+
           const uniqueIds = [...new Set(input.items.map((item) => item.menuItemId))];
           if (uniqueIds.length !== input.items.length) throw new Error("DUPLICATE_CART_ITEM");
 

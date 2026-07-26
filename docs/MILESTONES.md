@@ -16,7 +16,9 @@
 | TASK-012 Staff Management and Role Administration | Complete |
 | TASK-013 Restaurant and System Settings | Complete |
 | TASK-014 Backup, Restore Preparation, and Data Export | Complete |
+| TASK-016 Daily Cash Closing and Shift Summary | Complete |
 | POS UX and Receipt Printing Upgrades | Complete |
+| Milestone 11 — Production Dashboard | Complete |
 | Production deployment | Pending |
 
 Customer management, table management, kitchen display, inventory, and supplier management are excluded rather than pending milestones.

@@ -13,6 +13,7 @@ function checkoutError(error: unknown): CheckoutResult {
   const message = error instanceof Error ? error.message : "";
   const knownErrors: Record<string, string> = {
     POS_ACCESS_DENIED: "Your account does not have permission to complete orders.",
+    CASH_SESSION_REQUIRED: "Open the cash register before processing orders.",
     DUPLICATE_CART_ITEM: "The cart contains a duplicate item. Clear the cart and try again.",
     MENU_ITEM_NOT_FOUND: "One or more menu items no longer exist. Refresh the POS and try again.",
     MENU_ITEM_UNAVAILABLE: "One or more items are no longer available. Refresh the POS and update the cart.",

@@ -53,6 +53,7 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   Restaurant: 'Restaurant',
   User: 'User',
+  CashSession: 'CashSession',
   Notification: 'Notification',
   BackupRecord: 'BackupRecord',
   Category: 'Category',
@@ -129,6 +130,32 @@ export const UserScalarFieldEnum = {
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const CashSessionScalarFieldEnum = {
+  id: 'id',
+  openedById: 'openedById',
+  closedById: 'closedById',
+  openingCash: 'openingCash',
+  openingNote: 'openingNote',
+  openedAt: 'openedAt',
+  closedAt: 'closedAt',
+  status: 'status',
+  expectedCash: 'expectedCash',
+  actualCash: 'actualCash',
+  cashDifference: 'cashDifference',
+  cashSales: 'cashSales',
+  cardSales: 'cardSales',
+  qrSales: 'qrSales',
+  totalSales: 'totalSales',
+  cashExpenses: 'cashExpenses',
+  totalExpenses: 'totalExpenses',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CashSessionScalarFieldEnum = (typeof CashSessionScalarFieldEnum)[keyof typeof CashSessionScalarFieldEnum]
 
 
 export const NotificationScalarFieldEnum = {
@@ -319,6 +346,7 @@ export const ExpenseScalarFieldEnum = {
   category: 'category',
   title: 'title',
   amount: 'amount',
+  paymentMethod: 'paymentMethod',
   expenseDate: 'expenseDate',
   remarks: 'remarks',
   referenceNumber: 'referenceNumber',

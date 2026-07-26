@@ -30,6 +30,12 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
+@media print {
+  .cash-closing-report { width: 100%; max-width: 190mm; margin: 0 auto; color: #000 !important; background: #fff !important; }
+  .cash-closing-report * { color: #000 !important; }
+  .cash-closing-report section, .cash-closing-report dl, .cash-closing-report footer { break-inside: avoid; }
+}
+
 :root {
   --background: #fff8e6;
   --foreground: #4a2310;
@@ -51,6 +57,28 @@
   --input: #e8d4aa;
   --ring: #f4b400;
   --radius: 0.75rem;
+}
+
+.dark {
+  --background: #1b110c;
+  --foreground: #fff8e6;
+  --card: #271711;
+  --card-foreground: #fff8e6;
+  --popover: #2f1c14;
+  --popover-foreground: #fff8e6;
+  --primary: #f4b400;
+  --primary-foreground: #24130c;
+  --secondary: #f4b400;
+  --secondary-foreground: #24130c;
+  --muted: #3a2419;
+  --muted-foreground: #d9bfae;
+  --accent: #fb923c;
+  --accent-foreground: #24130c;
+  --destructive: #f87171;
+  --success: #4ade80;
+  --border: #543629;
+  --input: #684536;
+  --ring: #f4b400;
 }
 
 @layer base {

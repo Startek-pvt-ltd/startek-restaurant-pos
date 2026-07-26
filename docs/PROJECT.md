@@ -96,3 +96,7 @@ The settings hub now covers restaurant identity, billing rules, receipt content,
 ## TASK-014 backup and export
 
 The protected settings area now provides native PostgreSQL backup creation/history/download/deletion, guarded restore preparation, and filtered CSV/Excel/JSON exports. Backup files are private and checksummed. Customer, table, kitchen, inventory, supplier, PickMe, and Uber data are excluded. Automated destructive restore and scheduled/cloud backups remain outside scope.
+
+## TASK-016 daily cash closing
+
+Cashiers and management can open the single restaurant register at `/cash-closing`, monitor database-derived totals, and close it with an actual count, password re-authentication, and explicit confirmation. Managers can close any session; cashiers can close only their own. Immutable history and printable reports live under `/cash-closing/history`.

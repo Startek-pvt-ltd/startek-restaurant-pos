@@ -1,5 +1,9 @@
 # API and Server Boundaries
 
+## Cash-closing server actions
+
+`openCashSessionAction` and `closeCashSessionAction` are authenticated server actions, not public REST endpoints. Both validate with Zod, re-check active database roles, transact through Prisma, and return safe errors. POS checkout rejects order creation when no register session is open.
+
 ## Auth.js
 
 Auth.js exposes its standard GET/POST handlers at `/api/auth/[...nextauth]` for credentials sign-in, session handling, CSRF protection, and sign-out. Use Auth.js clients rather than sending unvalidated application payloads directly.

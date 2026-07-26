@@ -1,0 +1,7 @@
+function Skeleton({ className }: { className: string }) {
+  return <div aria-hidden="true" className={`animate-pulse rounded-xl bg-muted ${className}`} />;
+}
+
+export default function DashboardLoading() {
+  return <div aria-busy="true" aria-label="Loading dashboard" className="min-h-screen bg-background md:pl-72"><div className="h-20 border-b border-border bg-card" /><main className="space-y-7 px-4 py-6 sm:px-6 lg:px-8"><section className="rounded-2xl border border-border bg-card p-6"><Skeleton className="h-4 w-28" /><Skeleton className="mt-4 h-10 w-72 max-w-full" /><Skeleton className="mt-3 h-4 w-96 max-w-full" /></section><section className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-5">{Array.from({ length: 5 }, (_, index) => <Skeleton className="h-16" key={index} />)}</section><section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-6">{Array.from({ length: 6 }, (_, index) => <div className="rounded-2xl border border-border bg-card p-5" key={index}><Skeleton className="h-3 w-24" /><Skeleton className="mt-4 h-8 w-32" /><Skeleton className="mt-5 h-3 w-36" /></div>)}</section><section className="grid gap-5 xl:grid-cols-2"><Skeleton className="h-80" /><Skeleton className="h-80" /></section><Skeleton className="h-96" /><section className="grid gap-5 xl:grid-cols-2 2xl:grid-cols-3">{Array.from({ length: 6 }, (_, index) => <Skeleton className="h-80" key={index} />)}</section></main></div>;
+}

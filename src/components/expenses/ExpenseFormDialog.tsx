@@ -15,6 +15,7 @@ import {
 import {
   EXPENSE_CATEGORIES,
   EXPENSE_CATEGORY_LABELS,
+  EXPENSE_PAYMENT_METHODS,
   type ExpenseRecord,
 } from "@/features/expenses/types";
 import {
@@ -31,6 +32,7 @@ function defaults(): ExpenseInput {
     title: "",
     category: "INGREDIENTS",
     amount: "",
+    paymentMethod: "CASH",
     expenseDate: todayInColombo(),
     referenceNumber: "",
     remarks: "",
@@ -64,6 +66,7 @@ export function ExpenseFormDialog({
             title: expense.title,
             category: expense.category,
             amount: expense.amount,
+            paymentMethod: expense.paymentMethod,
             expenseDate: expense.expenseDate,
             referenceNumber: expense.referenceNumber ?? "",
             remarks: expense.remarks ?? "",
@@ -136,6 +139,11 @@ export function ExpenseFormDialog({
             Expense date <span className="text-destructive">*</span>
             <input className={inputClass} max={todayInColombo()} type="date" {...register("expenseDate")} />
             {errors.expenseDate && <span className="block text-xs font-medium text-destructive">{errors.expenseDate.message}</span>}
+          </label>
+          <label className="space-y-2 text-sm font-bold text-secondary">
+            Payment method <span className="text-destructive">*</span>
+            <select className={inputClass} {...register("paymentMethod")}>{EXPENSE_PAYMENT_METHODS.map((method) => <option key={method} value={method}>{method === "BANK" ? "Bank" : method.charAt(0) + method.slice(1).toLowerCase()}</option>)}</select>
+            {errors.paymentMethod && <span className="block text-xs font-medium text-destructive">{errors.paymentMethod.message}</span>}
           </label>
         </div>
         <label className="space-y-2 text-sm font-bold text-secondary">
