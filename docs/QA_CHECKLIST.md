@@ -133,3 +133,21 @@ Executed on 2026-07-26 in the local `feature/reports` workspace.
 - [x] Authenticated CSV and Excel downloads returned HTTP 200; Excel passed ZIP integrity and MIME checks; invalid custom export ranges returned HTTP 400
 - [x] Unauthenticated report access redirected to login; an authenticated temporary CASHIER redirected to `/dashboard?error=forbidden` for both report pages and exports, then was removed with its login activity
 - [ ] Direct PDF generation is intentionally not included; the tested A4 print stylesheet uses the browser's Print / Save PDF workflow
+
+## TASK-012 Staff Management and Role Administration
+
+Executed on 2026-07-26 in the local `feature/staff` workspace.
+
+- [x] Safe migrations added `lastLogin`, `sessionVersion`, role/last-login indexes, and case-insensitive username/email uniqueness without changing existing users
+- [x] Prisma Client regenerated; schema validation and all nine migrations passed
+- [x] Database-backed suite passed 24 role, validation, hash, CRUD, filtering, pagination, revocation, profile, audit, and sensitive-field assertions
+- [x] SUPER_ADMIN created OWNER, MANAGER, and CASHIER; OWNER created MANAGER/CASHIER; MANAGER created CASHIER and was denied OWNER creation
+- [x] Duplicate username/email casing, weak passwords, self-deactivation, final-owner deactivation, and final-super-admin protection logic were rejected
+- [x] Password reset and self-service password change stored bcrypt hashes and incremented session versions
+- [x] HTTP role tests returned 200 for SUPER_ADMIN/OWNER/MANAGER, redirected CASHIER to forbidden, and rejected an inactive user's login session
+- [x] Staff search, role/status filtering, last-login sorting support, and two-page pagination were exercised
+- [x] Staff list/details/profile payloads contain no password or session-version fields
+- [x] Activity logs covered STAFF_CREATED, STAFF_UPDATED, STAFF_DEACTIVATED, STAFF_PASSWORD_RESET, PROFILE_UPDATED, and PASSWORD_CHANGED
+- [x] Browser QA verified the four approved form roles, no KITCHEN option, profile link/page, safe staff details, mobile cards at 390 px, and no console warnings/errors
+- [x] All 14 temporary staff accounts and associated targeted/login activity were removed; original financial/order/expense data was untouched
+- [x] Physical staff deletion is intentionally unavailable; account deactivation preserves historical records

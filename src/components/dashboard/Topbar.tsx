@@ -2,6 +2,7 @@
 
 import { Bell, Menu, Search } from "lucide-react";
 import { usePathname } from "next/navigation";
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
 interface TopbarProps {
@@ -23,6 +24,8 @@ export function Topbar({ onMenuClick, user }: TopbarProps) {
       ? { title: "Expenses", description: "Expense management workspace" }
     : pathname.startsWith("/staff")
       ? { title: "Staff", description: "Staff management workspace" }
+    : pathname === "/settings/profile"
+      ? { title: "My Profile", description: "Account and password settings" }
     : pathname.startsWith("/settings")
       ? { title: "Settings", description: "System and receipt printing preferences" }
     : pathname.startsWith("/orders/")
@@ -102,7 +105,7 @@ export function Topbar({ onMenuClick, user }: TopbarProps) {
         <span className="absolute right-2 top-2 size-2 rounded-full bg-destructive ring-2 ring-card" />
       </button>
 
-      <div className="flex shrink-0 items-center gap-3 border-l border-border pl-3">
+      <Link aria-label="Open my profile" className="flex shrink-0 items-center gap-3 rounded-xl border-l border-border pl-3 transition hover:bg-muted/60 focus-visible:ring-2 focus-visible:ring-primary" href="/settings/profile">
         <div className="flex size-10 items-center justify-center rounded-xl bg-secondary text-xs font-bold text-white shadow-sm">
           {initials}
         </div>
@@ -112,7 +115,7 @@ export function Topbar({ onMenuClick, user }: TopbarProps) {
             {user.role.replaceAll("_", " ")}
           </p>
         </div>
-      </div>
+      </Link>
     </header>
   );
 }

@@ -13,12 +13,7 @@
 - TASK-009 — Scope cleanup, audit, bug fixes, manual QA, and stabilization documentation
 - TASK-010 — PostgreSQL-backed expenses management, role enforcement, audit logging, filtering, totals, and responsive workflows
 - TASK-011 — Real-data reports, financial formulas, charts, URL filters, CSV/Excel exports, A4 printing, and report RBAC
-
-## Placeholder routes only
-
-- Staff
-
-These routes contain no business calculations, exports, data-entry workflows, or new APIs.
+- TASK-012 — Staff CRUD administration, role hierarchy, session revocation, password reset, audit logging, staff details, and self-service profile
 
 ## Excluded product scope
 

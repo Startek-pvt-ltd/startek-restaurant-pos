@@ -8,7 +8,7 @@ There are no unauthenticated public business APIs. Existing mutations use Server
 
 ## Authorization contract
 
-- `requireAuth` verifies the encrypted Auth.js session and rechecks the current user status/role in PostgreSQL.
+- `requireAuth` verifies the encrypted Auth.js session and rechecks the current user status/role in PostgreSQL. The JWT callback also compares `User.sessionVersion`, invalidating revoked sessions.
 - `requireRole` adds route-level role enforcement.
 - `hasRole` supports UI and server permission decisions.
 - Approved application roles are `SUPER_ADMIN`, `OWNER`, `MANAGER`, and `CASHIER`; inactive accounts and `KITCHEN` are rejected.
@@ -44,6 +44,13 @@ The service reloads the active cashier, menu prices/availability/category status
 Supported report names are `overview`, `sales`, `items`, `payments`, `cashiers`, and `expenses`. Responses are private/non-cacheable attachments with safe filenames. Invalid filters return `400`, unknown reports return `404`, and unexpected export failures return a generic `500` without exposing Prisma/PostgreSQL details.
 
 CSV uses UTF-8 with safe escaping. Excel is a genuine SpreadsheetML `.xlsx` package with typed numeric cells, LKR formats, calculated column widths, frozen headers, filters, metadata, and totals. Direct PDF generation is intentionally omitted; the A4 print layout uses the operating-system Print/Save as PDF dialog.
+
+## Staff and profile Server Actions
+
+- `createStaffAction`, `updateStaffAction`, `changeStaffStatusAction`, and `resetStaffPasswordAction` validate constrained payloads, reload the active actor inside the transaction, enforce the role hierarchy, return safe messages, and revalidate affected staff routes.
+- `updateProfileAction` accepts only full name, email, phone, and avatar. `changeOwnPasswordAction` requires the current password and revokes sessions after a successful bcrypt update.
+- Client-provided roles never grant authority. SUPER_ADMIN may manage approved roles; OWNER may manage MANAGER/CASHIER; MANAGER may manage CASHIER; CASHIER is denied at the route and mutation boundaries.
+- No staff endpoint returns password hashes, session versions, tokens, or auth secrets. Physical user deletion is intentionally not exposed.
 
 ## Printer settings and receipts
 

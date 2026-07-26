@@ -29,9 +29,11 @@ Summary cards stack on mobile, charts remain within responsive containers, and w
 
 Management printing uses a named A4 landscape page, black text, visible restaurant/report/date metadata, summary cards, report tables, and a Startek footer. Sidebar, topbar, filters, export buttons, pagination, and interactive charts are hidden. The separate named receipt page retains its 80 mm Xprinter layout.
 
-## Module placeholders
+## Staff and profile
 
-Staff uses the authenticated dashboard shell and a clear future-task state. It must not imply implemented staff administration or payroll.
+Staff uses the authenticated dashboard shell with a branded header, statistics, URL-backed search/filter/sort controls, desktop table, mobile cards, and accessible focus-trapped dialogs. Role/status badges include text and do not rely on color alone. Create/edit/reset/status controls appear only when the current role can manage the target, while the server independently repeats every permission check.
+
+The staff form never offers KITCHEN. Password fields appear only during creation/reset/change and are never preloaded. Deactivation confirmations state that sessions are revoked and historical records remain. `/settings/profile` is linked from the topbar identity control and provides separate profile and current-password-verified password forms.
 
 ## Thermal receipt
 

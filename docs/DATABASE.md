@@ -18,6 +18,13 @@ PostgreSQL is accessed through Prisma ORM 7 and the PostgreSQL driver adapter. `
 - Order cancellation is a status/audit update, never a physical delete.
 - Foreign keys restrict deletion of users/menu items needed by history; child order items/payments cascade only with an order, although runtime code never deletes orders.
 - Expense money uses `Decimal(12,2)`. `expenseDate` is a PostgreSQL `DATE`; `updatedAt` supports optimistic concurrency checks. Expense create/update/delete and the corresponding activity entry share a database transaction.
+- Staff create/update/status/password operations and their activity entries use transactions. `User.sessionVersion` increments to revoke issued JWTs after deactivation, activation, password reset, or self-service password change; `User.lastLogin` records successful sign-in activity.
+
+## Staff identity and session migrations
+
+- `20260726164000_add_staff_session_fields` adds nullable `lastLogin`, non-null `sessionVersion` defaulting to zero, and indexes for role and last-login queries without changing existing users.
+- `20260726164500_add_staff_case_insensitive_uniques` adds PostgreSQL unique functional indexes on lowercase username and lowercase non-null email. This matches case-insensitive authentication and prevents ambiguous case-only duplicate accounts.
+- Prisma `@unique` constraints remain on username/email. The User status index already existed; KITCHEN remains only for migration compatibility and is excluded from staff queries/forms.
 
 ## Report query strategy
 

@@ -13,7 +13,7 @@
 | TASK-009 System Audit, Bug Fixing, and Stabilization | Complete |
 | TASK-010 Expenses Management | Complete |
 | TASK-011 Reports and Analytics | Complete |
-| Staff business module | Pending; placeholder only |
+| TASK-012 Staff Management and Role Administration | Complete |
 | Production deployment | Pending |
 
 Customer management, table management, kitchen display, inventory, and supplier management are excluded rather than pending milestones.

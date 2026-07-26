@@ -18,7 +18,14 @@ async function writeActivity(userId: string | undefined, action: "LOGIN" | "LOGO
   if (!userId) return;
 
   try {
-    await prisma.activityLog.create({ data: { userId, action } });
+    if (action === "LOGIN") {
+      await prisma.$transaction([
+        prisma.user.update({ where: { id: userId }, data: { lastLogin: new Date() } }),
+        prisma.activityLog.create({ data: { userId, action } }),
+      ]);
+    } else {
+      await prisma.activityLog.create({ data: { userId, action } });
+    }
   } catch (error) {
     // Audit logging should not leave a valid user unable to start or end a session.
     console.error(`Unable to record ${action.toLowerCase()} activity.`, error);
@@ -61,6 +68,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
             password: true,
             role: true,
             status: true,
+            sessionVersion: true,
           },
         });
 
@@ -82,6 +90,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           email: user.email,
           username: user.username,
           role: user.role,
+          sessionVersion: user.sessionVersion,
           rememberMe,
         };
       },
@@ -102,19 +111,44 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 
       return isLoginPage || isAuthenticated;
     },
-    jwt({ token, user }) {
+    async jwt({ token, user }) {
       if (user) {
         token.sub = user.id;
         token.name = user.name;
         token.email = user.email;
         token.username = user.username;
         token.role = user.role;
+        token.sessionVersion = user.sessionVersion;
         token.sessionExpiresAt =
           Date.now() +
           (user.rememberMe ? REMEMBERED_SESSION_AGE : DEFAULT_SESSION_AGE) * 1000;
       }
 
       if (token.sessionExpiresAt <= Date.now()) return null;
+
+      if (!token.sub) return null;
+      const currentUser = await prisma.user.findUnique({
+        where: { id: token.sub },
+        select: {
+          email: true,
+          fullName: true,
+          role: true,
+          sessionVersion: true,
+          status: true,
+          username: true,
+        },
+      });
+      if (
+        !currentUser ||
+        currentUser.status !== "ACTIVE" ||
+        !APPLICATION_ROLES.includes(currentUser.role as (typeof APPLICATION_ROLES)[number]) ||
+        currentUser.sessionVersion !== token.sessionVersion
+      ) return null;
+
+      token.name = currentUser.fullName;
+      token.email = currentUser.email;
+      token.username = currentUser.username;
+      token.role = currentUser.role;
 
       return token;
     },

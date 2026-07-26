@@ -15,11 +15,11 @@ The following are excluded: Customer Management, Table Management, Kitchen Displ
 - Active `SUPER_ADMIN`, `OWNER`, `MANAGER`, and `CASHIER` accounts may authenticate by username or email.
 - `KITCHEN` remains a historical enum value but cannot authenticate into application workflows.
 - Protected routes use an optimistic Auth.js Proxy check and a database-backed `requireAuth` check close to server data access.
-- Successful login/logout activity is recorded when audit logging is available. Password hashes are selected only for server-side bcrypt comparison and never added to the session.
+- Successful login/logout activity and `lastLogin` are recorded when audit logging is available. A database-backed session version revokes existing JWT sessions after deactivation or password changes. Password hashes are selected only for server-side bcrypt comparison and never added to the session.
 
 ### Dashboard
 
-- `/dashboard` uses the authenticated shell and clearly isolated mock metrics/charts.
+- `/dashboard` uses the authenticated shell with real summary/card charts where implemented and clearly isolated mock secondary presentation data.
 - Customer/table/inventory/kitchen/supplier references are absent.
 - Quick actions link only to approved working routes.
 
@@ -57,6 +57,14 @@ The following are excluded: Customer Management, Table Management, Kitchen Displ
 - Super admins and owners have full access; managers may create/view/edit; cashiers are denied at the protected route and every mutation boundary.
 - Create, update, and deletion events are recorded in `ActivityLog`. Physical deletion requires explicit confirmation and writes its audit record in the same transaction before removal.
 
+### Staff Management
+
+- `/staff` provides safe PostgreSQL-backed search, approved-role/status filters, sorting, pagination, responsive account cards/table, and create/edit/status/password-reset dialogs.
+- `/staff/[id]` shows contact/account metadata, last login, recent safe activity, order counts, completed sales, and expense counts without selecting password or session secrets.
+- Super admins manage all approved roles; owners manage managers/cashiers; managers manage cashiers only; cashiers are denied. Every mutation repeats authorization against the active database account.
+- Deactivation is preferred to deletion. Self-deactivation, privilege escalation, the final active super admin, and the final active owner are protected. Referenced users are never physically deleted by this module.
+- `/settings/profile` lets any active application user update safe profile fields and change their password after current-password verification.
+
 ### Thermal receipts
 
 - `/orders/[id]/receipt` is authenticated and renders stored order/payment snapshots for 80 mm paper.
@@ -64,9 +72,9 @@ The following are excluded: Customer Management, Table Management, Kitchen Displ
 - Zero discount, tax, and service-charge lines are hidden. Tendered amount/change appear only for cash payments.
 - The browser/system print dialog remains responsible for selecting Xprinter XP-80T.
 
-### Placeholders
+### Out of scope
 
-`/staff` remains a protected, responsive placeholder only. Payroll, forecasting, full accounting, tax-return calculations, and excluded operational modules are not part of TASK-011.
+Payroll, attendance, shifts, salary calculations, email recovery, forecasting, full accounting, tax-return calculations, and excluded operational modules are not implemented.
 
 ## Stakeholders
 

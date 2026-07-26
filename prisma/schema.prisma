@@ -105,6 +105,8 @@ model User {
   role              UserRole
   status            UserStatus         @default(ACTIVE)
   avatar            String?
+  lastLogin         DateTime?
+  sessionVersion    Int                @default(0)
   createdAt         DateTime           @default(now())
   updatedAt         DateTime           @updatedAt
   orders            Order[]            @relation("CashierOrders")
@@ -114,7 +116,9 @@ model User {
   cancelledOrders   Order[]            @relation("CancelledOrders")
 
   @@index([phone])
+  @@index([role])
   @@index([status])
+  @@index([lastLogin])
 }
 
 model Category {
