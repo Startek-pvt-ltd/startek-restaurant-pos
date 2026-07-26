@@ -55,6 +55,7 @@ export type OrderDetailRecord = {
   items: Array<{
     id: string;
     name: string;
+    variantName: string | null;
     quantity: number;
     unitPrice: string;
     totalPrice: string;

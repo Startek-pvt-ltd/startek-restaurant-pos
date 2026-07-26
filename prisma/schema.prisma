@@ -90,6 +90,18 @@ enum BackupStatus {
   RESTORED
 }
 
+enum CashSessionStatus {
+  OPEN
+  CLOSED
+}
+
+enum ExpensePaymentMethod {
+  CASH
+  CARD
+  BANK
+  OTHER
+}
+
 enum NotificationType {
   ORDER_COMPLETED
   ORDER_CANCELLED
@@ -129,31 +141,64 @@ model Restaurant {
 }
 
 model User {
-  id                String             @id @default(uuid()) @db.Uuid
-  fullName          String
-  email             String?            @unique
-  username          String             @unique
-  password          String
-  phone             String?
-  role              UserRole
-  status            UserStatus         @default(ACTIVE)
-  avatar            String?
-  lastLogin         DateTime?
-  sessionVersion    Int                @default(0)
-  createdAt         DateTime           @default(now())
-  updatedAt         DateTime           @updatedAt
-  orders            Order[]            @relation("CashierOrders")
-  stockTransactions StockTransaction[]
-  expenses          Expense[]
-  activityLogs      ActivityLog[]
-  cancelledOrders   Order[]            @relation("CancelledOrders")
-  backupRecords     BackupRecord[]
-  notifications     Notification[]
+  id                 String             @id @default(uuid()) @db.Uuid
+  fullName           String
+  email              String?            @unique
+  username           String             @unique
+  password           String
+  phone              String?
+  role               UserRole
+  status             UserStatus         @default(ACTIVE)
+  avatar             String?
+  lastLogin          DateTime?
+  sessionVersion     Int                @default(0)
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+  orders             Order[]            @relation("CashierOrders")
+  stockTransactions  StockTransaction[]
+  expenses           Expense[]
+  activityLogs       ActivityLog[]
+  cancelledOrders    Order[]            @relation("CancelledOrders")
+  backupRecords      BackupRecord[]
+  notifications      Notification[]
+  openedCashSessions CashSession[]      @relation("CashSessionOpenedBy")
+  closedCashSessions CashSession[]      @relation("CashSessionClosedBy")
 
   @@index([phone])
   @@index([role])
   @@index([status])
   @@index([lastLogin])
+}
+
+model CashSession {
+  id             String            @id @default(uuid()) @db.Uuid
+  openedById     String            @db.Uuid
+  closedById     String?           @db.Uuid
+  openingCash    Decimal           @db.Decimal(12, 2)
+  openingNote    String?
+  openedAt       DateTime          @default(now())
+  closedAt       DateTime?
+  status         CashSessionStatus @default(OPEN)
+  expectedCash   Decimal           @default(0) @db.Decimal(12, 2)
+  actualCash     Decimal?          @db.Decimal(12, 2)
+  cashDifference Decimal?          @db.Decimal(12, 2)
+  cashSales      Decimal           @default(0) @db.Decimal(12, 2)
+  cardSales      Decimal           @default(0) @db.Decimal(12, 2)
+  qrSales        Decimal           @default(0) @db.Decimal(12, 2)
+  totalSales     Decimal           @default(0) @db.Decimal(12, 2)
+  cashExpenses   Decimal           @default(0) @db.Decimal(12, 2)
+  totalExpenses  Decimal           @default(0) @db.Decimal(12, 2)
+  notes          String?
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+  openedBy       User              @relation("CashSessionOpenedBy", fields: [openedById], references: [id], onDelete: Restrict)
+  closedBy       User?             @relation("CashSessionClosedBy", fields: [closedById], references: [id], onDelete: Restrict)
+
+  @@index([status])
+  @@index([openedAt])
+  @@index([closedAt])
+  @@index([openedById])
+  @@index([closedById])
 }
 
 model Notification {
@@ -207,22 +252,40 @@ model Category {
 }
 
 model MenuItem {
-  id              String      @id @default(uuid()) @db.Uuid
-  categoryId      String      @db.Uuid
+  id              String            @id @default(uuid()) @db.Uuid
+  categoryId      String            @db.Uuid
   name            String
   description     String?
-  price           Decimal     @db.Decimal(12, 2)
+  price           Decimal           @db.Decimal(12, 2)
   image           String?
-  preparationTime Int         @default(0)
-  available       Boolean     @default(true)
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
-  category        Category    @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  preparationTime Int               @default(0)
+  available       Boolean           @default(true)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  category        Category          @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  variants        MenuItemVariant[]
   orderItems      OrderItem[]
 
   @@unique([categoryId, name])
   @@index([categoryId])
   @@index([available])
+}
+
+model MenuItemVariant {
+  id           String      @id @default(uuid()) @db.Uuid
+  menuItemId   String      @db.Uuid
+  name         String      @db.VarChar(32)
+  price        Decimal     @db.Decimal(12, 2)
+  displayOrder Int         @default(0)
+  active       Boolean     @default(true)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  menuItem     MenuItem    @relation(fields: [menuItemId], references: [id], onDelete: Cascade)
+  orderItems   OrderItem[]
+
+  @@unique([menuItemId, name])
+  @@index([menuItemId])
+  @@index([active])
 }
 
 model RestaurantTable {
@@ -256,6 +319,7 @@ model Customer {
 model Order {
   id                 String           @id @default(uuid()) @db.Uuid
   orderNumber        String           @unique
+  checkoutToken      String?          @unique @db.Uuid
   customerId         String?          @db.Uuid
   tableId            String?          @db.Uuid
   cashierId          String           @db.Uuid
@@ -290,18 +354,22 @@ model Order {
 }
 
 model OrderItem {
-  id         String   @id @default(uuid()) @db.Uuid
-  orderId    String   @db.Uuid
-  menuItemId String   @db.Uuid
-  quantity   Int
-  unitPrice  Decimal  @db.Decimal(12, 2)
-  totalPrice Decimal  @db.Decimal(12, 2)
-  notes      String?
-  order      Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  menuItem   MenuItem @relation(fields: [menuItemId], references: [id], onDelete: Restrict)
+  id                String           @id @default(uuid()) @db.Uuid
+  orderId           String           @db.Uuid
+  menuItemId        String           @db.Uuid
+  menuItemVariantId String?          @db.Uuid
+  variantName       String?          @db.VarChar(32)
+  quantity          Int
+  unitPrice         Decimal          @db.Decimal(12, 2)
+  totalPrice        Decimal          @db.Decimal(12, 2)
+  notes             String?
+  order             Order            @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  menuItem          MenuItem         @relation(fields: [menuItemId], references: [id], onDelete: Restrict)
+  menuItemVariant   MenuItemVariant? @relation(fields: [menuItemVariantId], references: [id], onDelete: SetNull)
 
   @@index([orderId])
   @@index([menuItemId])
+  @@index([menuItemVariantId])
 }
 
 model Payment {
@@ -372,20 +440,22 @@ model StockTransaction {
 }
 
 model Expense {
-  id              String          @id @default(uuid()) @db.Uuid
+  id              String               @id @default(uuid()) @db.Uuid
   category        ExpenseCategory
-  title           String          @db.VarChar(150)
-  amount          Decimal         @db.Decimal(12, 2)
-  expenseDate     DateTime        @db.Date
+  title           String               @db.VarChar(150)
+  amount          Decimal              @db.Decimal(12, 2)
+  paymentMethod   ExpensePaymentMethod @default(OTHER)
+  expenseDate     DateTime             @db.Date
   remarks         String?
-  referenceNumber String?         @db.VarChar(100)
-  createdBy       String          @db.Uuid
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
-  creator         User            @relation(fields: [createdBy], references: [id], onDelete: Restrict)
+  referenceNumber String?              @db.VarChar(100)
+  createdBy       String               @db.Uuid
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
+  creator         User                 @relation(fields: [createdBy], references: [id], onDelete: Restrict)
 
   @@index([createdBy])
   @@index([category])
+  @@index([paymentMethod])
   @@index([category, expenseDate])
   @@index([expenseDate])
   @@index([createdAt])

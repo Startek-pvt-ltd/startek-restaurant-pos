@@ -10,10 +10,12 @@
  */
 export type * from './models/Restaurant'
 export type * from './models/User'
+export type * from './models/CashSession'
 export type * from './models/Notification'
 export type * from './models/BackupRecord'
 export type * from './models/Category'
 export type * from './models/MenuItem'
+export type * from './models/MenuItemVariant'
 export type * from './models/RestaurantTable'
 export type * from './models/Customer'
 export type * from './models/Order'

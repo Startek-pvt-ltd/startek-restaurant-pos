@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint src next.config.ts prisma.config.ts prisma/seed.ts",
+    "lint": "eslint src next.config.ts prisma.config.ts prisma/*.ts",
     "typecheck": "tsc --noEmit",
     "test": "tsx --test tests/**/*.test.ts",
     "env:check": "node --env-file-if-exists=.env scripts/validate-env.mjs",
@@ -16,6 +16,7 @@
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:seed": "prisma db seed",
+    "prisma:seed-menu-sizes": "tsx prisma/seed-menu-sizes.ts",
     "prisma:studio": "prisma studio"
   },
   "dependencies": {
