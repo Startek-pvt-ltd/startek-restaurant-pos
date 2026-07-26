@@ -23,15 +23,7 @@ const categoryNames = ["Rice", "Kottu", "Noodles", "Fried Rice", "Beverages", "D
 async function main() {
   await prisma.restaurant.upsert({
     where: { id: restaurantId },
-    update: {
-      name: "Rice & Kottu Hut",
-      address: "No.32 Padukka Road\nMeegoda",
-      addressLine1: "No.32, Padukka Road",
-      city: "Meegoda",
-      phone: "0777250493",
-      phone2: "0778375427",
-      receiptFooter,
-    },
+    update: {},
     create: {
       id: restaurantId,
       name: "Rice & Kottu Hut",
@@ -46,21 +38,7 @@ async function main() {
 
   await prisma.systemSetting.upsert({
     where: { id: systemSettingId },
-    update: {
-      restaurantName: "Rice & Kottu Hut",
-      receiptFooter: "Thank You!\nPlease Visit Again\n\nDesign & Deploy by\nStartek (PVT) LTD",
-      printerName: "Xprinter XP-80T",
-      printerPaperWidth: 80,
-      autoOpenReceiptAfterCheckout: true,
-      receiptShowCustomerInfo: false,
-      receiptShowTax: true,
-      receiptShowServiceCharge: true,
-      receiptThankYouMessage: "Thank You!\nPlease Visit Again",
-      receiptDeveloperCredit: "Design & Deploy by\nStartek (PVT) LTD",
-      currencySymbol: "Rs.",
-      invoicePrefix: "RKH",
-      invoiceNumberPadding: 4,
-    },
+    update: {},
     create: {
       id: systemSettingId,
       restaurantName: "Rice & Kottu Hut",
@@ -73,41 +51,39 @@ async function main() {
       printLogo: true,
       receiptCopies: 1,
       receiptShowCustomerInfo: false,
-      receiptShowTax: true,
-      receiptShowServiceCharge: true,
+      receiptShowTax: false,
+      receiptShowServiceCharge: false,
       receiptThankYouMessage: "Thank You!\nPlease Visit Again",
       receiptDeveloperCredit: "Design & Deploy by\nStartek (PVT) LTD",
       currencySymbol: "Rs.",
+      taxEnabled: false,
+      serviceChargeEnabled: false,
+      discountEnabled: false,
+      maximumPercentageDiscount: 0,
+      maximumFixedDiscount: 0,
+      allowCash: true,
+      allowCard: true,
+      allowQr: true,
       invoicePrefix: "RKH",
       invoiceNumberPadding: 4,
       openCashDrawer: false,
     },
   });
 
-  const password = await bcrypt.hash("admin123", 12);
-
-  await prisma.user.upsert({
-    where: { username: "admin" },
-    update: {
-      fullName: "Kevin Menuja",
-      password,
-      role: UserRole.SUPER_ADMIN,
-      status: UserStatus.ACTIVE,
-    },
-    create: {
-      fullName: "Kevin Menuja",
-      username: "admin",
-      password,
-      role: UserRole.SUPER_ADMIN,
-      status: UserStatus.ACTIVE,
-    },
-  });
+  const existingAdmin = await prisma.user.findUnique({ where: { username: "admin" }, select: { id: true } });
+  if (!existingAdmin) {
+    const initialPassword = process.env.SEED_SUPER_ADMIN_PASSWORD;
+    if (!initialPassword || initialPassword.length < 12 || !/[a-z]/.test(initialPassword) || !/[A-Z]/.test(initialPassword) || !/\d/.test(initialPassword) || !/[^A-Za-z0-9]/.test(initialPassword)) {
+      throw new Error("SEED_SUPER_ADMIN_PASSWORD must be at least 12 characters and include upper, lower, number, and symbol characters for a new installation.");
+    }
+    await prisma.user.create({ data: { fullName: "Kevin Menuja", username: "admin", password: await bcrypt.hash(initialPassword, 12), role: UserRole.SUPER_ADMIN, status: UserStatus.ACTIVE } });
+  }
 
   const categories = await prisma.$transaction(
     categoryNames.map((name, index) =>
       prisma.category.upsert({
         where: { name },
-        update: { displayOrder: index + 1, active: true },
+        update: {},
         create: { name, displayOrder: index + 1 },
       }),
     ),

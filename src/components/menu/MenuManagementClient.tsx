@@ -27,7 +27,7 @@ import { cn } from "@/lib/utils";
 import { ConfirmDialog } from "./ConfirmDialog";
 import { MenuItemFormDialog } from "./MenuItemFormDialog";
 import { StatusBadge } from "./StatusBadge";
-import { ToggleSwitch } from "./ToggleSwitch";
+import { StatusSwitch } from "./StatusSwitch";
 
 interface MenuManagementClientProps {
   canManage: boolean;
@@ -125,14 +125,11 @@ export function MenuManagementClient({
   const availableCount = items.filter((item) => item.available).length;
   const unavailableCount = items.length - availableCount;
 
-  const toggleAvailability = (item: MenuItemRecord, available: boolean) => {
-    setPendingItemId(item.id);
-    startTransition(async () => {
-      const result = await toggleMenuItemAction(item.id, available);
-      if (result.success) toast.success(result.message);
-      else toast.error(result.message);
-      setPendingItemId(null);
-    });
+  const toggleAvailability = async (item: MenuItemRecord, available: boolean) => {
+    const result = await toggleMenuItemAction(item.id, available);
+    if (result.success) toast.success(result.message);
+    else toast.error(result.message);
+    return result.success;
   };
 
   const confirmDelete = () => {
@@ -307,8 +304,8 @@ export function MenuManagementClient({
                     <p className="mt-1 flex items-center gap-1 text-xs font-medium text-muted-foreground"><Clock3 aria-hidden="true" className="size-3.5" /> {item.preparationTime} min</p>
                   </div>
                   {canManage && (
-                    <div className="flex items-center gap-1.5">
-                      <ToggleSwitch checked={item.available} disabled={isPending && pendingItemId === item.id} label={`Mark ${item.name} ${item.available ? "unavailable" : "available"}`} onChange={(checked) => toggleAvailability(item, checked)} />
+                    <div className="flex shrink-0 items-center gap-2">
+                      <StatusSwitch checked={item.available} label={`Mark ${item.name} ${item.available ? "unavailable" : "available"}`} onCheckedChange={(checked) => toggleAvailability(item, checked)} />
                       <button aria-label={`Edit ${item.name}`} className="flex size-9 items-center justify-center rounded-xl text-muted-foreground transition hover:bg-muted hover:text-secondary focus-visible:ring-2 focus-visible:ring-primary" onClick={() => openEdit(item)} type="button"><Pencil aria-hidden="true" className="size-4" /></button>
                       <button aria-label={`Delete ${item.name}`} className="flex size-9 items-center justify-center rounded-xl text-muted-foreground transition hover:bg-destructive/10 hover:text-destructive focus-visible:ring-2 focus-visible:ring-destructive" onClick={() => setDeletingItem(item)} type="button"><Trash2 aria-hidden="true" className="size-4" /></button>
                     </div>
@@ -333,7 +330,7 @@ export function MenuManagementClient({
                     <td className="px-4 py-4 font-bold text-secondary">{formatLkr(item.price)}</td>
                     <td className="px-4 py-4">{item.preparationTime} min</td>
                     <td className="px-4 py-4"><StatusBadge active={item.available} activeLabel="Available" inactiveLabel="Unavailable" /></td>
-                    {canManage && <td className="px-5 py-4"><div className="flex items-center justify-end gap-2"><ToggleSwitch checked={item.available} disabled={isPending && pendingItemId === item.id} label={`Toggle ${item.name} availability`} onChange={(checked) => toggleAvailability(item, checked)} /><button aria-label={`Edit ${item.name}`} className="flex size-9 items-center justify-center rounded-xl border border-border text-muted-foreground hover:bg-muted hover:text-secondary focus-visible:ring-2 focus-visible:ring-primary" onClick={() => openEdit(item)} type="button"><Pencil aria-hidden="true" className="size-4" /></button><button aria-label={`Delete ${item.name}`} className="flex size-9 items-center justify-center rounded-xl border border-border text-muted-foreground hover:border-destructive/30 hover:bg-destructive/8 hover:text-destructive focus-visible:ring-2 focus-visible:ring-destructive" onClick={() => setDeletingItem(item)} type="button"><Trash2 aria-hidden="true" className="size-4" /></button></div></td>}
+                    {canManage && <td className="px-5 py-4"><div className="flex items-center justify-end gap-2"><StatusSwitch checked={item.available} label={`Toggle ${item.name} availability`} onCheckedChange={(checked) => toggleAvailability(item, checked)} /><button aria-label={`Edit ${item.name}`} className="flex size-9 items-center justify-center rounded-xl border border-border text-muted-foreground hover:bg-muted hover:text-secondary focus-visible:ring-2 focus-visible:ring-primary" onClick={() => openEdit(item)} type="button"><Pencil aria-hidden="true" className="size-4" /></button><button aria-label={`Delete ${item.name}`} className="flex size-9 items-center justify-center rounded-xl border border-border text-muted-foreground hover:border-destructive/30 hover:bg-destructive/8 hover:text-destructive focus-visible:ring-2 focus-visible:ring-destructive" onClick={() => setDeletingItem(item)} type="button"><Trash2 aria-hidden="true" className="size-4" /></button></div></td>}
                   </tr>
                 ))}
               </tbody>

@@ -20,6 +20,7 @@
 # production
 /build
 /.backups/
+/.pos-runtime/
 
 # misc
 .DS_Store
