@@ -1,0 +1,2 @@
+import type { ReceiptPrintSettings } from "@/features/settings/types";
+export function ReceiptFooter({copy,settings}:{copy:number;settings:ReceiptPrintSettings}){return <footer className="receipt-section receipt-footer"><p className="receipt-message receipt-thanks">{"Thank You!\nPlease Visit Again"}</p>{settings.footerText&&<p className="receipt-message">{settings.footerText}</p>}<div className="receipt-spacer"/><p className="receipt-message">{"Design & Deploy by\nStartek (PVT) LTD"}</p>{copy>1&&<p className="receipt-copy-label">COPY {copy}</p>}</footer>}

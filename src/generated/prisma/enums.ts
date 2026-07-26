@@ -9,7 +9,132 @@
 * 🟢 You can import this file directly.
 */
 
+export const UserRole = {
+  SUPER_ADMIN: 'SUPER_ADMIN',
+  OWNER: 'OWNER',
+  MANAGER: 'MANAGER',
+  CASHIER: 'CASHIER',
+  KITCHEN: 'KITCHEN'
+} as const
+
+export type UserRole = (typeof UserRole)[keyof typeof UserRole]
 
 
-// This file is empty because there are no enums in the schema.
-export {}
+export const UserStatus = {
+  ACTIVE: 'ACTIVE',
+  INACTIVE: 'INACTIVE'
+} as const
+
+export type UserStatus = (typeof UserStatus)[keyof typeof UserStatus]
+
+
+export const TableStatus = {
+  AVAILABLE: 'AVAILABLE',
+  OCCUPIED: 'OCCUPIED',
+  RESERVED: 'RESERVED',
+  CLEANING: 'CLEANING'
+} as const
+
+export type TableStatus = (typeof TableStatus)[keyof typeof TableStatus]
+
+
+export const OrderStatus = {
+  PENDING: 'PENDING',
+  CONFIRMED: 'CONFIRMED',
+  PREPARING: 'PREPARING',
+  READY: 'READY',
+  COMPLETED: 'COMPLETED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type OrderStatus = (typeof OrderStatus)[keyof typeof OrderStatus]
+
+
+export const OrderType = {
+  DINE_IN: 'DINE_IN',
+  TAKEAWAY: 'TAKEAWAY',
+  DELIVERY: 'DELIVERY'
+} as const
+
+export type OrderType = (typeof OrderType)[keyof typeof OrderType]
+
+
+export const PaymentMethod = {
+  CASH: 'CASH',
+  CARD: 'CARD',
+  BANK_TRANSFER: 'BANK_TRANSFER',
+  QR: 'QR'
+} as const
+
+export type PaymentMethod = (typeof PaymentMethod)[keyof typeof PaymentMethod]
+
+
+export const PaymentStatus = {
+  PENDING: 'PENDING',
+  PAID: 'PAID',
+  REFUNDED: 'REFUNDED'
+} as const
+
+export type PaymentStatus = (typeof PaymentStatus)[keyof typeof PaymentStatus]
+
+
+export const StockMovement = {
+  IN: 'IN',
+  OUT: 'OUT',
+  ADJUSTMENT: 'ADJUSTMENT'
+} as const
+
+export type StockMovement = (typeof StockMovement)[keyof typeof StockMovement]
+
+
+export const ExpenseCategory = {
+  INGREDIENTS: 'INGREDIENTS',
+  PACKAGING: 'PACKAGING',
+  GAS: 'GAS',
+  ELECTRICITY: 'ELECTRICITY',
+  WATER: 'WATER',
+  SALARY: 'SALARY',
+  TRANSPORT: 'TRANSPORT',
+  MAINTENANCE: 'MAINTENANCE',
+  RENT: 'RENT',
+  MARKETING: 'MARKETING',
+  STAFF_MEALS: 'STAFF_MEALS',
+  OTHER: 'OTHER'
+} as const
+
+export type ExpenseCategory = (typeof ExpenseCategory)[keyof typeof ExpenseCategory]
+
+
+export const BackupType = {
+  FULL_DATABASE: 'FULL_DATABASE',
+  BUSINESS_DATA: 'BUSINESS_DATA',
+  CONFIGURATION: 'CONFIGURATION'
+} as const
+
+export type BackupType = (typeof BackupType)[keyof typeof BackupType]
+
+
+export const BackupStatus = {
+  PENDING: 'PENDING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED',
+  DELETED: 'DELETED',
+  RESTORED: 'RESTORED'
+} as const
+
+export type BackupStatus = (typeof BackupStatus)[keyof typeof BackupStatus]
+
+
+export const NotificationType = {
+  ORDER_COMPLETED: 'ORDER_COMPLETED',
+  ORDER_CANCELLED: 'ORDER_CANCELLED',
+  EXPENSE_CREATED: 'EXPENSE_CREATED',
+  MENU_AVAILABILITY: 'MENU_AVAILABILITY',
+  STAFF_CREATED: 'STAFF_CREATED',
+  STAFF_DEACTIVATED: 'STAFF_DEACTIVATED',
+  BACKUP_COMPLETED: 'BACKUP_COMPLETED',
+  BACKUP_FAILED: 'BACKUP_FAILED',
+  SYSTEM: 'SYSTEM'
+} as const
+
+export type NotificationType = (typeof NotificationType)[keyof typeof NotificationType]

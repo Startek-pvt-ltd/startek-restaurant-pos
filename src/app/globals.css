@@ -43,7 +43,7 @@
   --secondary-foreground: #ffffff;
   --muted: #fff1c7;
   --muted-foreground: #79563f;
-  --accent: #f4b400;
+  --accent: #f97316;
   --accent-foreground: #4a2310;
   --destructive: #ef4444;
   --success: #22c55e;
@@ -57,4 +57,230 @@
   * { @apply border-border outline-ring/50; }
   html { @apply font-sans; }
   body { @apply bg-background text-foreground; }
+}
+
+@keyframes dashboard-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@layer components {
+  .dashboard-card {
+    box-shadow: 0 10px 32px rgba(74, 35, 16, 0.07);
+    transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
+  }
+
+  .dashboard-card:hover {
+    border-color: color-mix(in srgb, var(--primary) 45%, var(--border));
+    box-shadow: 0 16px 42px rgba(74, 35, 16, 0.11);
+    transform: translateY(-2px);
+  }
+
+  .dashboard-fade-in {
+    animation: dashboard-fade-up 420ms ease-out both;
+  }
+
+  .dashboard-scrollbar {
+    scrollbar-color: color-mix(in srgb, var(--secondary) 28%, transparent) transparent;
+    scrollbar-width: thin;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dashboard-card,
+  .dashboard-fade-in {
+    animation: none;
+    transition: none;
+  }
+
+  .dashboard-card:hover {
+    transform: none;
+  }
+}
+
+@page receipt {
+  size: 80mm auto;
+  margin: 0;
+}
+
+@page receipt58 {
+  size: 58mm auto;
+  margin: 0;
+}
+
+.thermal-print-page {
+  page: receipt;
+  color: #000;
+  font-family: "Times New Roman", Times, serif;
+}
+
+@page report {
+  size: A4 landscape;
+  margin: 12mm;
+}
+
+.report-page {
+  page: report;
+}
+
+@media print {
+  html:has(.report-page),
+  body:has(.report-page) {
+    width: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #fff !important;
+    color: #000 !important;
+  }
+
+  body:has(.report-page) .report-page {
+    width: auto;
+    margin: 0;
+    color: #000;
+    font-family: Arial, sans-serif;
+    font-size: 9pt;
+  }
+
+  .report-print-header,
+  .report-print-footer {
+    display: block !important;
+  }
+
+  .report-print-header {
+    margin-bottom: 8mm;
+    border-bottom: 1px solid #000;
+    padding-bottom: 4mm;
+    text-align: center;
+  }
+
+  .report-print-header h1 { font-size: 18pt; font-weight: 800; }
+  .report-print-header h2 { margin-top: 3mm; font-size: 14pt; font-weight: 800; }
+  .report-print-header p, .report-print-footer { margin-top: 1mm; font-size: 8pt; }
+  .report-print-footer { margin-top: 6mm; border-top: 1px solid #000; padding-top: 3mm; text-align: center; }
+
+  .report-chart,
+  .print-date-range {
+    display: none !important;
+  }
+
+  .report-page article,
+  .report-table tr {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .report-table {
+    overflow: visible !important;
+    border: 1px solid #000 !important;
+  }
+
+  .report-table > div { overflow: visible !important; }
+  .report-table table { min-width: 0 !important; width: 100% !important; font-size: 7.5pt; }
+  .report-table thead { background: #fff !important; color: #000 !important; border-bottom: 2px solid #000; }
+  .report-table th, .report-table td { padding: 2mm !important; border-bottom: 1px solid #bbb; color: #000 !important; white-space: normal !important; }
+}
+
+.receipt-copies {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.receipt {
+  box-sizing: border-box;
+  width: 74mm;
+  margin: 0 auto;
+  padding: 2mm;
+  background: #fff;
+  color: #000;
+  font-family: "Times New Roman", Times, serif;
+  font-size: 12px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.3;
+}
+
+.receipt-58 { page: receipt58; width: 52mm; }
+.receipt-80 { page: receipt; width: 74mm; }
+
+.receipt-section { break-inside: avoid; page-break-inside: avoid; }
+.receipt-section + .receipt-section { border-top: 1px dashed #000; margin-top: 2mm; padding-top: 2mm; }
+.receipt-header, .receipt-footer { text-align: center; }
+.receipt-header h1 { font-size: 15px; font-weight: 900; margin: 1mm 0; }
+.receipt-logo { width: 18mm; height: 18mm; margin: 0 auto; object-fit: contain; filter: grayscale(1) contrast(1.6); }
+.receipt-row { display: flex; justify-content: space-between; gap: 3mm; padding: 0.4mm 0; }
+.receipt-row > :last-child { text-align: right; overflow-wrap: anywhere; }
+.receipt-total { border-top: 2px solid #000; border-bottom: 2px solid #000; font-size: 16px; font-weight: 900; margin-top: 1.5mm; padding: 1.5mm 0; }
+.receipt-items-head, .receipt-item { display: grid; grid-template-columns: minmax(0, 1fr) 8mm 22mm; gap: 1mm; align-items: end; }
+.receipt-items-head { font-weight: 900; border-bottom: 1px solid #000; padding-bottom: 1mm; }
+.receipt-items-head span:not(:first-child), .receipt-item span { text-align: right; }
+.receipt-item { padding: 1mm 0; break-inside: avoid; page-break-inside: avoid; }
+.receipt-item-name { overflow-wrap: anywhere; }
+.receipt-notes p { margin-top: 0.5mm; overflow-wrap: anywhere; white-space: pre-wrap; }
+.receipt-message { white-space: pre-line; }
+.receipt-thanks { font-size: 13px; font-weight: 900; }
+.receipt-spacer { height: 2mm; }
+.receipt-copy-label { margin-top: 2mm; font-weight: 900; }
+
+@media print {
+  html, body {
+    width: 80mm;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #fff !important;
+    color: #000 !important;
+  }
+
+  * {
+    box-shadow: none !important;
+    text-shadow: none !important;
+    color: #000 !important;
+    background-image: none !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .dashboard-shell {
+    padding-left: 0 !important;
+  }
+
+  .dashboard-main {
+    min-height: 0 !important;
+    padding: 0 !important;
+  }
+
+  .thermal-print-page,
+  .receipt-copies {
+    display: block;
+    width: 80mm;
+    margin: 0;
+    padding: 0;
+    background: #fff !important;
+  }
+
+  .receipt {
+    width: 74mm;
+    margin: 0 auto;
+    padding: 2mm;
+    background: #fff !important;
+    color: #000 !important;
+  }
+
+  .receipt-58 { width: 52mm; }
+  .receipt-80 { width: 74mm; }
+
+  .receipt:not(:last-child) {
+    break-after: page;
+    page-break-after: always;
+  }
+
 }

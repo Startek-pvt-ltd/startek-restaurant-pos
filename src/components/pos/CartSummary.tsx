@@ -1,0 +1,7 @@
+import { formatMoney } from "@/features/pos/lib/format-money";
+
+interface CartSummaryProps { currency: string; subtotal: number; grandTotal: number; }
+
+export function CartSummary({ currency, subtotal, grandTotal }: CartSummaryProps) {
+  return <section aria-label="Order totals" className="space-y-2 rounded-xl border border-border bg-background/45 p-3 text-sm"><div className="flex justify-between"><span className="text-muted-foreground">Subtotal</span><span className="font-bold text-secondary">{formatMoney(subtotal, currency)}</span></div><div className="mt-2 flex items-end justify-between border-t border-border pt-3"><span className="font-black text-secondary">Grand Total</span><output aria-label="Grand total" className="text-xl font-black text-secondary">{formatMoney(grandTotal, currency)}</output></div></section>;
+}
