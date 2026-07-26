@@ -16,6 +16,13 @@ export type MenuItemRecord = {
   name: string;
   description: string | null;
   price: string;
+  variants: Array<{
+    id: string;
+    name: string;
+    price: string;
+    displayOrder: number;
+    active: boolean;
+  }>;
   image: string | null;
   preparationTime: number;
   available: boolean;
@@ -32,4 +39,3 @@ export type MenuActionResult =
     };
 
 export const MENU_MANAGER_ROLES = ["SUPER_ADMIN", "OWNER", "MANAGER"] as const;
-

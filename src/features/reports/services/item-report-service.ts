@@ -13,8 +13,8 @@ export async function getItemReport(filters: ReportFilters, range: ReportDateRan
     ...(filters.categoryId ? { menuItem: { categoryId: filters.categoryId } } : {}),
     ...(filters.menuItemId ? { menuItemId: filters.menuItemId } : {}),
   };
-  const groups = await prisma.orderItem.groupBy({ by: ["menuItemId"], where: itemWhere, _sum: { quantity: true, totalPrice: true } });
-  const itemIds = groups.map((group) => group.menuItemId);
+  const groups = await prisma.orderItem.groupBy({ by: ["menuItemId", "variantName"], where: itemWhere, _sum: { quantity: true, totalPrice: true } });
+  const itemIds = [...new Set(groups.map((group) => group.menuItemId))];
   const [items, availableItems] = await Promise.all([
     prisma.menuItem.findMany({ where: { id: { in: itemIds } }, select: { id: true, name: true, category: { select: { name: true } } } }),
     prisma.menuItem.findMany({
@@ -24,12 +24,17 @@ export async function getItemReport(filters: ReportFilters, range: ReportDateRan
   ]);
   const metadata = new Map(items.map((item) => [item.id, item]));
   const totalRevenue = groups.reduce((sum, group) => sum.plus(group._sum.totalPrice ?? 0), new Prisma.Decimal(0));
+  const performanceName = (menuItemId: string, variantName: string | null) => {
+    const itemName = metadata.get(menuItemId)?.name ?? "Historical menu item";
+    if (!variantName) return itemName;
+    return `${itemName} — ${variantName}`;
+  };
   const allRecords: ItemPerformanceRecord[] = groups.map((group) => {
     const item = metadata.get(group.menuItemId);
     const quantity = group._sum.quantity ?? 0;
     const revenue = decimal(group._sum.totalPrice);
     return {
-      id: group.menuItemId, name: item?.name ?? "Historical menu item", category: item?.category.name ?? "Uncategorized",
+      id: `${group.menuItemId}:${group.variantName ?? "legacy"}`, name: performanceName(group.menuItemId, group.variantName), category: item?.category.name ?? "Uncategorized",
       quantity, revenue: revenue.toFixed(2), averagePrice: quantity ? revenue.div(quantity).toFixed(2) : "0.00",
       percentage: totalRevenue.isZero() ? "0.00" : revenue.div(totalRevenue).times(100).toFixed(2),
     };
@@ -47,8 +52,8 @@ export async function getItemReport(filters: ReportFilters, range: ReportDateRan
   return {
     records, total, page, totalPages, noSales,
     totalRevenue: totalRevenue.toFixed(2), totalQuantity: groups.reduce((sum, group) => sum + (group._sum.quantity ?? 0), 0),
-    top: allSorted.slice(0, 10).map((group) => ({ name: metadata.get(group.menuItemId)?.name ?? "Historical item", value: String(group._sum.quantity ?? 0) })),
-    least: allSorted.slice(-10).reverse().map((group) => ({ name: metadata.get(group.menuItemId)?.name ?? "Historical item", value: String(group._sum.quantity ?? 0) })),
+    top: allSorted.slice(0, 10).map((group) => ({ name: performanceName(group.menuItemId, group.variantName), value: String(group._sum.quantity ?? 0) })),
+    least: allSorted.slice(-10).reverse().map((group) => ({ name: performanceName(group.menuItemId, group.variantName), value: String(group._sum.quantity ?? 0) })),
     categories: [...categoryTotals.entries()].map(([name, value]) => ({ name, value: value.toFixed(2) })),
   };
 }

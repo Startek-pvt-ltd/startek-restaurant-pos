@@ -53,10 +53,12 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   Restaurant: 'Restaurant',
   User: 'User',
+  CashSession: 'CashSession',
   Notification: 'Notification',
   BackupRecord: 'BackupRecord',
   Category: 'Category',
   MenuItem: 'MenuItem',
+  MenuItemVariant: 'MenuItemVariant',
   RestaurantTable: 'RestaurantTable',
   Customer: 'Customer',
   Order: 'Order',
@@ -131,6 +133,32 @@ export const UserScalarFieldEnum = {
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
+export const CashSessionScalarFieldEnum = {
+  id: 'id',
+  openedById: 'openedById',
+  closedById: 'closedById',
+  openingCash: 'openingCash',
+  openingNote: 'openingNote',
+  openedAt: 'openedAt',
+  closedAt: 'closedAt',
+  status: 'status',
+  expectedCash: 'expectedCash',
+  actualCash: 'actualCash',
+  cashDifference: 'cashDifference',
+  cashSales: 'cashSales',
+  cardSales: 'cardSales',
+  qrSales: 'qrSales',
+  totalSales: 'totalSales',
+  cashExpenses: 'cashExpenses',
+  totalExpenses: 'totalExpenses',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CashSessionScalarFieldEnum = (typeof CashSessionScalarFieldEnum)[keyof typeof CashSessionScalarFieldEnum]
+
+
 export const NotificationScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -194,6 +222,20 @@ export const MenuItemScalarFieldEnum = {
 export type MenuItemScalarFieldEnum = (typeof MenuItemScalarFieldEnum)[keyof typeof MenuItemScalarFieldEnum]
 
 
+export const MenuItemVariantScalarFieldEnum = {
+  id: 'id',
+  menuItemId: 'menuItemId',
+  name: 'name',
+  price: 'price',
+  displayOrder: 'displayOrder',
+  active: 'active',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type MenuItemVariantScalarFieldEnum = (typeof MenuItemVariantScalarFieldEnum)[keyof typeof MenuItemVariantScalarFieldEnum]
+
+
 export const RestaurantTableScalarFieldEnum = {
   id: 'id',
   tableNumber: 'tableNumber',
@@ -224,6 +266,7 @@ export type CustomerScalarFieldEnum = (typeof CustomerScalarFieldEnum)[keyof typ
 export const OrderScalarFieldEnum = {
   id: 'id',
   orderNumber: 'orderNumber',
+  checkoutToken: 'checkoutToken',
   customerId: 'customerId',
   tableId: 'tableId',
   cashierId: 'cashierId',
@@ -249,6 +292,8 @@ export const OrderItemScalarFieldEnum = {
   id: 'id',
   orderId: 'orderId',
   menuItemId: 'menuItemId',
+  menuItemVariantId: 'menuItemVariantId',
+  variantName: 'variantName',
   quantity: 'quantity',
   unitPrice: 'unitPrice',
   totalPrice: 'totalPrice',
@@ -319,6 +364,7 @@ export const ExpenseScalarFieldEnum = {
   category: 'category',
   title: 'title',
   amount: 'amount',
+  paymentMethod: 'paymentMethod',
   expenseDate: 'expenseDate',
   remarks: 'remarks',
   referenceNumber: 'referenceNumber',

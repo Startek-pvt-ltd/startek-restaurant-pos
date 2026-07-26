@@ -15,6 +15,8 @@ function checkoutError(error: unknown): CheckoutResult {
     POS_ACCESS_DENIED: "Your account does not have permission to complete orders.",
     DUPLICATE_CART_ITEM: "The cart contains a duplicate item. Clear the cart and try again.",
     MENU_ITEM_NOT_FOUND: "One or more menu items no longer exist. Refresh the POS and try again.",
+    MENU_ITEM_VARIANT_REQUIRED: "One or more items now require a size selection. Refresh the POS and update the cart.",
+    MENU_ITEM_VARIANT_NOT_FOUND: "One or more selected sizes are no longer valid. Refresh the POS and try again.",
     MENU_ITEM_UNAVAILABLE: "One or more items are no longer available. Refresh the POS and update the cart.",
     SETTINGS_NOT_FOUND: "Restaurant billing settings are not configured.",
     INVALID_DISCOUNT: "The discount cannot exceed the order subtotal.",

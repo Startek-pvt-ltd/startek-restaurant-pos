@@ -52,6 +52,11 @@ export type Restaurant = Prisma.RestaurantModel
  */
 export type User = Prisma.UserModel
 /**
+ * Model CashSession
+ * 
+ */
+export type CashSession = Prisma.CashSessionModel
+/**
  * Model Notification
  * 
  */
@@ -71,6 +76,11 @@ export type Category = Prisma.CategoryModel
  * 
  */
 export type MenuItem = Prisma.MenuItemModel
+/**
+ * Model MenuItemVariant
+ * 
+ */
+export type MenuItemVariant = Prisma.MenuItemVariantModel
 /**
  * Model RestaurantTable
  * 

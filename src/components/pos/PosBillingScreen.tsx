@@ -8,7 +8,7 @@ import { completeOrderAction } from "@/features/pos/actions/checkout-actions";
 import { calculateBalance, calculateTotals } from "@/features/pos/lib/calculate-totals";
 import { formatMoney } from "@/features/pos/lib/format-money";
 import { usePosStore } from "@/features/pos/store/pos-store";
-import type { PosCategory, PosProduct, RestaurantBillingSettings } from "@/features/pos/types";
+import type { PosCategory, PosProduct, PosProductVariant, RestaurantBillingSettings } from "@/features/pos/types";
 
 import { CartItem } from "./CartItem";
 import { CartSummary } from "./CartSummary";
@@ -18,6 +18,7 @@ import { OrderNotes } from "./OrderNotes";
 import { OrderTypeSelector } from "./OrderTypeSelector";
 import { PaymentPanel } from "./PaymentPanel";
 import { ProductGrid } from "./ProductGrid";
+import { VariantSelectionDialog } from "./VariantSelectionDialog";
 
 interface PosBillingScreenProps {
   categories: PosCategory[];
@@ -28,6 +29,7 @@ interface PosBillingScreenProps {
 export function PosBillingScreen({ categories, products, settings }: PosBillingScreenProps) {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [search, setSearch] = useState("");
+  const [selectingProduct, setSelectingProduct] = useState<PosProduct | null>(null);
   const [lastOrder, setLastOrder] = useState<{ id: string; orderNumber: string; grandTotal: number } | null>(null);
   const [pending, startTransition] = useTransition();
   const checkoutLocked = useRef(false);
@@ -70,13 +72,22 @@ export function PosBillingScreen({ categories, products, settings }: PosBillingS
   const reconciledItems = useMemo(
     () => items.map((item) => {
       const currentProduct = catalogById.get(item.id);
-      return currentProduct ? { ...currentProduct, quantity: item.quantity } : item;
+      if (!currentProduct) return item;
+      if (!item.variantId) {
+        return { ...currentProduct, cartKey: item.cartKey, variantId: null, variantName: null, price: currentProduct.price, quantity: item.quantity };
+      }
+      const currentVariant = currentProduct.variants.find((variant) => variant.id === item.variantId);
+      return currentVariant
+        ? { ...currentProduct, cartKey: item.cartKey, variantId: currentVariant.id, variantName: currentVariant.name, price: currentVariant.price, quantity: item.quantity }
+        : item;
     }),
     [catalogById, items],
   );
   const cartHasInvalidItem = items.some((item) => {
     const product = catalogById.get(item.id);
-    return !product || !product.available;
+    if (!product || !product.available) return true;
+    if (!item.variantId) return product.variants.length > 0;
+    return !product.variants.some((variant) => variant.id === item.variantId);
   });
 
   const totals = useMemo(() => calculateTotals({
@@ -103,7 +114,24 @@ export function PosBillingScreen({ categories, products, settings }: PosBillingS
             ? "Cash received is less than the grand total."
             : null;
 
-  const handleAdd = useCallback((product: PosProduct) => addItem(product), [addItem]);
+  const handleAdd = useCallback((product: PosProduct) => {
+    if (product.variants.length === 0) {
+      addItem(product);
+      return;
+    }
+    const onlyVariant = product.variants.length === 1 ? product.variants[0] : null;
+    if (onlyVariant) {
+      addItem(product, onlyVariant);
+      return;
+    }
+    setSelectingProduct(product);
+  }, [addItem]);
+  const closeVariantSelection = useCallback(() => setSelectingProduct(null), []);
+  const selectVariant = useCallback((variant: PosProductVariant) => {
+    if (!selectingProduct) return;
+    addItem(selectingProduct, variant);
+    setSelectingProduct(null);
+  }, [addItem, selectingProduct]);
 
   const handleComplete = () => {
     if (checkoutLocked.current || pending) return;
@@ -116,7 +144,7 @@ export function PosBillingScreen({ categories, products, settings }: PosBillingS
     startTransition(async () => {
       try {
         const result = await completeOrderAction({
-          items: items.map((item) => ({ menuItemId: item.id, quantity: item.quantity })),
+          items: items.map((item) => ({ menuItemId: item.id, menuItemVariantId: item.variantId, quantity: item.quantity })),
           orderType,
           notes,
           paymentMethod,
@@ -170,7 +198,7 @@ export function PosBillingScreen({ categories, products, settings }: PosBillingS
           <div className="space-y-4 p-4">
             <OrderTypeSelector onChange={setOrderType} value={orderType} />
 
-            {items.length === 0 ? <div className="rounded-xl border border-dashed border-input bg-background/35 px-4 py-8 text-center"><ShoppingCart aria-hidden="true" className="mx-auto size-7 text-muted-foreground/50" /><p className="mt-2 text-sm font-black text-secondary">Cart is empty</p><p className="mt-1 text-xs text-muted-foreground">Tap Add on a menu item.</p></div> : <ul aria-label="Cart items" className="max-h-80 space-y-2 overflow-y-auto pr-1 dashboard-scrollbar">{reconciledItems.map((item) => <CartItem currency={settings.currency} item={item} key={item.id} onDecrease={decreaseItem} onIncrease={increaseItem} onRemove={removeItem} />)}</ul>}
+            {items.length === 0 ? <div className="rounded-xl border border-dashed border-input bg-background/35 px-4 py-8 text-center"><ShoppingCart aria-hidden="true" className="mx-auto size-7 text-muted-foreground/50" /><p className="mt-2 text-sm font-black text-secondary">Cart is empty</p><p className="mt-1 text-xs text-muted-foreground">Tap Add on a menu item.</p></div> : <ul aria-label="Cart items" className="max-h-80 space-y-2 overflow-y-auto pr-1 dashboard-scrollbar">{reconciledItems.map((item) => <CartItem currency={settings.currency} item={item} key={item.cartKey} onDecrease={decreaseItem} onIncrease={increaseItem} onRemove={removeItem} />)}</ul>}
 
             <OrderNotes onChange={setNotes} value={notes} />
             <CartSummary currency={settings.currency} grandTotal={totals.grandTotal} subtotal={totals.subtotal} />
@@ -180,6 +208,7 @@ export function PosBillingScreen({ categories, products, settings }: PosBillingS
           </div>
         </aside>
       </div>
+      <VariantSelectionDialog currency={settings.currency} onClose={closeVariantSelection} onSelect={selectVariant} product={selectingProduct} />
     </div>
   );
 }

@@ -16,6 +16,7 @@
 | TASK-012 Staff Management and Role Administration | Complete |
 | TASK-013 Restaurant and System Settings | Complete |
 | TASK-014 Backup, Restore Preparation, and Data Export | Complete |
+| TASK-017 Rice & Kottu Hut Live Installation Preparation | On-site acceptance pending |
 | POS UX and Receipt Printing Upgrades | Complete |
 | Production deployment | Pending |
 

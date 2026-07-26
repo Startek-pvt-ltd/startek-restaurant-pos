@@ -8,6 +8,7 @@ import type {
   PosOrderType,
   PosPaymentMethod,
   PosProduct,
+  PosProductVariant,
 } from "../types";
 
 type HeldOrder = {
@@ -24,10 +25,10 @@ interface PosStore {
   amountReceived: number;
   heldOrder: HeldOrder | null;
   hydrated: boolean;
-  addItem: (product: PosProduct) => void;
-  increaseItem: (id: string) => void;
-  decreaseItem: (id: string) => void;
-  removeItem: (id: string) => void;
+  addItem: (product: PosProduct, variant?: PosProductVariant | null) => void;
+  increaseItem: (cartKey: string) => void;
+  decreaseItem: (cartKey: string) => void;
+  removeItem: (cartKey: string) => void;
   clearCart: () => void;
   holdOrder: () => void;
   resumeOrder: () => void;
@@ -52,32 +53,33 @@ export const usePosStore = create<PosStore>()(
       ...activeOrderDefaults,
       heldOrder: null,
       hydrated: false,
-      addItem: (product) => {
+      addItem: (product, variant = null) => {
         if (!product.available) return;
-        const existing = get().items.find((item) => item.id === product.id);
+        const cartKey = variant ? `${product.id}:${variant.id}` : product.id;
+        const existing = get().items.find((item) => item.cartKey === cartKey);
         set({
           items: existing
             ? get().items.map((item) =>
-                item.id === product.id
+                item.cartKey === cartKey
                   ? { ...item, quantity: Math.min(99, item.quantity + 1) }
                   : item,
               )
-            : [...get().items, { ...product, quantity: 1 }],
+            : [...get().items, { ...product, cartKey, variantId: variant?.id ?? null, variantName: variant?.name ?? null, price: variant?.price ?? product.price, quantity: 1 }],
         });
       },
-      increaseItem: (id) =>
+      increaseItem: (cartKey) =>
         set({
           items: get().items.map((item) =>
-            item.id === id ? { ...item, quantity: Math.min(99, item.quantity + 1) } : item,
+            item.cartKey === cartKey ? { ...item, quantity: Math.min(99, item.quantity + 1) } : item,
           ),
         }),
-      decreaseItem: (id) =>
+      decreaseItem: (cartKey) =>
         set({
           items: get().items.map((item) =>
-            item.id === id ? { ...item, quantity: Math.max(1, item.quantity - 1) } : item,
+            item.cartKey === cartKey ? { ...item, quantity: Math.max(1, item.quantity - 1) } : item,
           ),
         }),
-      removeItem: (id) => set({ items: get().items.filter((item) => item.id !== id) }),
+      removeItem: (cartKey) => set({ items: get().items.filter((item) => item.cartKey !== cartKey) }),
       clearCart: () => set({ ...activeOrderDefaults }),
       holdOrder: () => {
         const state = get();
@@ -104,6 +106,12 @@ export const usePosStore = create<PosStore>()(
     }),
     {
       name: "startek-pos-cart",
+      version: 3,
+      migrate: (persistedState, version) => {
+        const state = persistedState as Partial<PosStore>;
+        if (version < 3) return { ...state, items: [], heldOrder: null } as PosStore;
+        return state as PosStore;
+      },
       partialize: (state) => ({
         items: state.items,
         orderType: state.orderType,

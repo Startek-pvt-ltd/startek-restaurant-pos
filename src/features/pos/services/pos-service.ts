@@ -5,7 +5,6 @@ import { prisma } from "@/lib/prisma";
 import { notifyActiveUsers } from "@/features/notifications/services/notification-service";
 import { getSettingsBundle } from "@/features/settings/services/settings-service";
 
-import { calculateBalance, calculateTotals, toCents } from "../lib/calculate-totals";
 import type { CheckoutInput } from "../types";
 
 const POS_ROLES: readonly UserRole[] = ["SUPER_ADMIN", "OWNER", "MANAGER", "CASHIER"];
@@ -30,6 +29,11 @@ export async function getPosData() {
         price: true,
         image: true,
         available: true,
+        variants: {
+          where: { active: true },
+          select: { id: true, name: true, price: true },
+          orderBy: [{ displayOrder: "asc" }, { name: "asc" }],
+        },
         category: { select: { name: true, displayOrder: true } },
       },
       orderBy: [{ category: { displayOrder: "asc" } }, { name: "asc" }],
@@ -50,10 +54,14 @@ export async function getPosData() {
       ...category,
       itemCount: _count.menuItems,
     })),
-    products: products.map(({ category, price, ...product }) => ({
+    products: products.map(({ category, price, variants, ...product }) => ({
       ...product,
       categoryName: category.name,
       price: Number(price.toFixed(2)),
+      variants: variants.map((variant) => ({
+        ...variant,
+        price: Number(variant.price.toFixed(2)),
+      })),
     })),
     settings: {
       currency: restaurant.currency,
@@ -125,55 +133,98 @@ export async function createCompletedOrder(cashierId: string, input: CheckoutInp
             throw new Error("POS_ACCESS_DENIED");
           }
 
-          const uniqueIds = [...new Set(input.items.map((item) => item.menuItemId))];
-          if (uniqueIds.length !== input.items.length) throw new Error("DUPLICATE_CART_ITEM");
+          const cartKeys = input.items.map((item) => `${item.menuItemId}:${item.menuItemVariantId ?? "base"}`);
+          if (new Set(cartKeys).size !== input.items.length) throw new Error("DUPLICATE_CART_ITEM");
+          const uniqueVariantIds = [...new Set(input.items.map((item) => item.menuItemVariantId).filter((id): id is string => Boolean(id)))];
+          const uniqueMenuItemIds = [...new Set(input.items.map((item) => item.menuItemId))];
 
-          const menuItems = await tx.menuItem.findMany({
-            where: { id: { in: uniqueIds } },
-            select: {
-              id: true,
-              price: true,
-              available: true,
-              category: { select: { active: true } },
-            },
-          });
+          const [menuItems, variants] = await Promise.all([
+            tx.menuItem.findMany({
+              where: { id: { in: uniqueMenuItemIds } },
+              select: {
+                id: true,
+                price: true,
+                available: true,
+                variants: { where: { active: true }, select: { id: true } },
+                category: { select: { active: true } },
+              },
+            }),
+            tx.menuItemVariant.findMany({
+              where: { id: { in: uniqueVariantIds } },
+              select: {
+                id: true,
+                name: true,
+                price: true,
+                active: true,
+                menuItem: {
+                  select: {
+                    id: true,
+                    available: true,
+                    category: { select: { active: true } },
+                  },
+                },
+              },
+            }),
+          ]);
           const system = await tx.systemSetting.findFirst({ orderBy: { id: "asc" } });
 
           if (!system) throw new Error("SETTINGS_NOT_FOUND");
-          if (menuItems.length !== uniqueIds.length) throw new Error("MENU_ITEM_NOT_FOUND");
+          if (menuItems.length !== uniqueMenuItemIds.length) throw new Error("MENU_ITEM_NOT_FOUND");
+          if (variants.length !== uniqueVariantIds.length) throw new Error("MENU_ITEM_VARIANT_NOT_FOUND");
 
           const menuItemMap = new Map(menuItems.map((item) => [item.id, item]));
+          const variantMap = new Map(variants.map((variant) => [variant.id, variant]));
           const pricedItems = input.items.map((cartItem) => {
             const menuItem = menuItemMap.get(cartItem.menuItemId);
             if (!menuItem) throw new Error("MENU_ITEM_NOT_FOUND");
-            if (!menuItem.available || !menuItem.category.active) {
+            if (!menuItem.available || !menuItem.category.active) throw new Error("MENU_ITEM_UNAVAILABLE");
+
+            if (!cartItem.menuItemVariantId) {
+              if (menuItem.variants.length > 0) throw new Error("MENU_ITEM_VARIANT_REQUIRED");
+              return {
+                menuItemId: menuItem.id,
+                variantId: null,
+                variantName: null,
+                quantity: cartItem.quantity,
+                unitPrice: menuItem.price,
+                totalPrice: menuItem.price.mul(cartItem.quantity),
+              };
+            }
+
+            const variant = variantMap.get(cartItem.menuItemVariantId);
+            if (!variant || variant.menuItem.id !== cartItem.menuItemId) {
+              throw new Error("MENU_ITEM_VARIANT_NOT_FOUND");
+            }
+            if (!variant.active || !variant.menuItem.available || !variant.menuItem.category.active) {
               throw new Error("MENU_ITEM_UNAVAILABLE");
             }
 
             return {
-              id: menuItem.id,
+              menuItemId: variant.menuItem.id,
+              variantId: variant.id,
+              variantName: variant.name,
               quantity: cartItem.quantity,
-              price: Number(menuItem.price),
+              unitPrice: variant.price,
+              totalPrice: variant.price.mul(cartItem.quantity),
             };
           });
 
-          const totals = calculateTotals({
-            items: pricedItems,
-            discountType: "FIXED",
-            discountValue: 0,
-            taxPercentage: 0,
-            serviceChargePercentage: 0,
-          });
+          const subtotal = pricedItems.reduce(
+            (total, item) => total.plus(item.totalPrice),
+            new Prisma.Decimal(0),
+          );
+          const grandTotal = subtotal;
 
           if (system.requireOrderNotes && !input.notes.trim()) throw new Error("ORDER_NOTES_REQUIRED");
           if ((input.paymentMethod === "CASH" && !system.allowCash) || (input.paymentMethod === "CARD" && !system.allowCard) || (input.paymentMethod === "QR" && !system.allowQr)) throw new Error("PAYMENT_METHOD_DISABLED");
 
-          if (!totals.totalsValid || totals.grandTotal < 0) throw new Error("INVALID_TOTAL");
+          if (grandTotal.isNegative()) throw new Error("INVALID_TOTAL");
 
-          const receivedAmount = input.paymentMethod === "CASH" ? input.amountReceived : null;
-          const balance =
-            receivedAmount === null ? 0 : calculateBalance(receivedAmount, totals.grandTotal);
-          if (input.paymentMethod === "CASH" && (receivedAmount === null || balance < 0)) {
+          const receivedAmount = input.paymentMethod === "CASH" && input.amountReceived !== null
+            ? new Prisma.Decimal(input.amountReceived.toFixed(2))
+            : null;
+          const balance = receivedAmount?.minus(grandTotal) ?? new Prisma.Decimal(0);
+          if (input.paymentMethod === "CASH" && (receivedAmount === null || balance.isNegative())) {
             throw new Error("INSUFFICIENT_PAYMENT");
           }
 
@@ -185,24 +236,26 @@ export async function createCompletedOrder(cashierId: string, input: CheckoutInp
               orderType: input.orderType,
               status: "COMPLETED",
               notes: input.notes || null,
-              subtotal: totals.subtotal,
+              subtotal,
               discount: 0,
               tax: 0,
               serviceCharge: 0,
-              grandTotal: totals.grandTotal,
+              grandTotal,
               items: {
                 create: pricedItems.map((item) => ({
-                  menuItemId: item.id,
+                  menuItemId: item.menuItemId,
+                  menuItemVariantId: item.variantId,
+                  variantName: item.variantName,
                   quantity: item.quantity,
-                  unitPrice: item.price,
-                  totalPrice: toCents(item.price) * item.quantity / 100,
+                  unitPrice: item.unitPrice,
+                  totalPrice: item.totalPrice,
                 })),
               },
               payments: {
                 create: {
                   paymentMethod: input.paymentMethod,
                   paymentStatus: "PAID",
-                  amount: totals.grandTotal,
+                  amount: grandTotal,
                   receivedAmount,
                   changeAmount: input.paymentMethod === "CASH" ? balance : null,
                 },
@@ -222,8 +275,8 @@ export async function createCompletedOrder(cashierId: string, input: CheckoutInp
           return {
             orderId: order.id,
             orderNumber: order.orderNumber,
-            grandTotal: totals.grandTotal,
-            balance,
+            grandTotal: Number(grandTotal.toFixed(2)),
+            balance: Number(balance.toFixed(2)),
           };
         },
         { isolationLevel: Prisma.TransactionIsolationLevel.Serializable },

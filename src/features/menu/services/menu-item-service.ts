@@ -19,17 +19,28 @@ export async function getMenuItems() {
       createdAt: true,
       updatedAt: true,
       category: { select: { name: true } },
+      variants: {
+        select: { id: true, name: true, price: true, displayOrder: true, active: true },
+        orderBy: [{ displayOrder: "asc" }, { name: "asc" }],
+      },
     },
     orderBy: [{ category: { displayOrder: "asc" } }, { name: "asc" }],
   });
 
-  return items.map(({ category, price, createdAt, updatedAt, ...item }) => ({
-    ...item,
-    categoryName: category.name,
-    price: price.toFixed(2),
-    createdAt: createdAt.toISOString(),
-    updatedAt: updatedAt.toISOString(),
-  }));
+  return items.map(({ category, price, variants, createdAt, updatedAt, ...item }) => {
+    const serializedVariants = variants.map((variant) => ({
+      ...variant,
+      price: variant.price.toFixed(2),
+    }));
+    return {
+      ...item,
+      categoryName: category.name,
+      price: price.toFixed(2),
+      variants: serializedVariants,
+      createdAt: createdAt.toISOString(),
+      updatedAt: updatedAt.toISOString(),
+    };
+  });
 }
 
 async function menuItemNameExists(categoryId: string, name: string, excludeId?: string) {
@@ -60,9 +71,25 @@ export async function createMenuItem(input: MenuItemInput) {
 
   return prisma.menuItem.create({
     data: {
-      ...input,
+      categoryId: input.categoryId,
+      name: input.name,
       description: input.description || null,
+      price: input.price,
+      preparationTime: input.preparationTime,
       image: input.image || null,
+      available: input.available,
+      ...(input.hasVariants
+        ? {
+            variants: {
+              create: input.variants.map((variant, index) => ({
+                name: variant.name.trim(),
+                price: variant.price,
+                active: variant.active,
+                displayOrder: index + 1,
+              })),
+            },
+          }
+        : {}),
     },
   });
 }
@@ -73,13 +100,34 @@ export async function updateMenuItem(id: string, input: MenuItemInput) {
     throw new Error("MENU_ITEM_NAME_EXISTS");
   }
 
-  return prisma.menuItem.update({
-    where: { id },
-    data: {
-      ...input,
-      description: input.description || null,
-      image: input.image || null,
-    },
+  return prisma.$transaction(async (tx) => {
+    const item = await tx.menuItem.update({
+      where: { id },
+      data: {
+        categoryId: input.categoryId,
+        name: input.name,
+        description: input.description || null,
+        price: input.price,
+        preparationTime: input.preparationTime,
+        image: input.image || null,
+        available: input.available,
+      },
+    });
+
+    await tx.menuItemVariant.deleteMany({ where: { menuItemId: id } });
+    if (input.hasVariants) {
+      await tx.menuItemVariant.createMany({
+        data: input.variants.map((variant, index) => ({
+          menuItemId: id,
+          name: variant.name.trim(),
+          price: variant.price,
+          active: variant.active,
+          displayOrder: index + 1,
+        })),
+      });
+    }
+
+    return item;
   });
 }
 

@@ -14,8 +14,15 @@ export type PosProduct = {
   categoryName: string;
   name: string;
   price: number;
+  variants: PosProductVariant[];
   image: string | null;
   available: boolean;
+};
+
+export type PosProductVariant = {
+  id: string;
+  name: string;
+  price: number;
 };
 
 export type RestaurantBillingSettings = {
@@ -34,11 +41,14 @@ export type RestaurantBillingSettings = {
 };
 
 export type CartLine = PosProduct & {
+  cartKey: string;
+  variantId: string | null;
+  variantName: string | null;
   quantity: number;
 };
 
 export type CheckoutInput = {
-  items: Array<{ menuItemId: string; quantity: number }>;
+  items: Array<{ menuItemId: string; menuItemVariantId: string | null; quantity: number }>;
   orderType: PosOrderType;
   notes: string;
   paymentMethod: PosPaymentMethod;

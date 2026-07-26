@@ -27,7 +27,7 @@ import { cn } from "@/lib/utils";
 import { ConfirmDialog } from "./ConfirmDialog";
 import { MenuItemFormDialog } from "./MenuItemFormDialog";
 import { StatusBadge } from "./StatusBadge";
-import { ToggleSwitch } from "./ToggleSwitch";
+import { StatusSwitch } from "./StatusSwitch";
 
 interface MenuManagementClientProps {
   canManage: boolean;
@@ -68,6 +68,22 @@ function MenuImage({ image, name }: { image: string | null; name: string }) {
     // Menu images may use manager-provided URLs that cannot be enumerated in next.config.ts.
     // eslint-disable-next-line @next/next/no-img-element
     <img alt={name} className="h-full w-full object-cover" loading="lazy" src={safeImage} />
+  );
+}
+
+function VariantPrices({ item, compact = false }: { item: MenuItemRecord; compact?: boolean }) {
+  if (item.variants.length === 0) {
+    return <p className={compact ? "text-xs font-black text-secondary" : "text-lg font-black text-secondary"}>{formatLkr(item.price)}</p>;
+  }
+
+  return (
+    <div className={compact ? "space-y-0.5 text-xs" : "space-y-1 text-sm"}>
+      {item.variants.map((variant) => (
+        <p className="font-black text-secondary" key={variant.id}>
+          <span className="text-muted-foreground">{variant.name}:</span> {formatLkr(variant.price)}
+        </p>
+      ))}
+    </div>
   );
 }
 
@@ -125,14 +141,11 @@ export function MenuManagementClient({
   const availableCount = items.filter((item) => item.available).length;
   const unavailableCount = items.length - availableCount;
 
-  const toggleAvailability = (item: MenuItemRecord, available: boolean) => {
-    setPendingItemId(item.id);
-    startTransition(async () => {
-      const result = await toggleMenuItemAction(item.id, available);
-      if (result.success) toast.success(result.message);
-      else toast.error(result.message);
-      setPendingItemId(null);
-    });
+  const toggleAvailability = async (item: MenuItemRecord, available: boolean) => {
+    const result = await toggleMenuItemAction(item.id, available);
+    if (result.success) toast.success(result.message);
+    else toast.error(result.message);
+    return result.success;
   };
 
   const confirmDelete = () => {
@@ -303,12 +316,12 @@ export function MenuManagementClient({
                 </div>
                 <div className="mt-4 flex items-end justify-between gap-3 border-t border-border pt-4">
                   <div>
-                    <p className="text-lg font-black text-secondary">{formatLkr(item.price)}</p>
+                    <VariantPrices item={item} />
                     <p className="mt-1 flex items-center gap-1 text-xs font-medium text-muted-foreground"><Clock3 aria-hidden="true" className="size-3.5" /> {item.preparationTime} min</p>
                   </div>
                   {canManage && (
                     <div className="flex items-center gap-1.5">
-                      <ToggleSwitch checked={item.available} disabled={isPending && pendingItemId === item.id} label={`Mark ${item.name} ${item.available ? "unavailable" : "available"}`} onChange={(checked) => toggleAvailability(item, checked)} />
+                      <StatusSwitch checked={item.available} disabled={isPending && pendingItemId === item.id} label={`Mark ${item.name} ${item.available ? "unavailable" : "available"}`} onCheckedChange={(checked) => toggleAvailability(item, checked)} />
                       <button aria-label={`Edit ${item.name}`} className="flex size-9 items-center justify-center rounded-xl text-muted-foreground transition hover:bg-muted hover:text-secondary focus-visible:ring-2 focus-visible:ring-primary" onClick={() => openEdit(item)} type="button"><Pencil aria-hidden="true" className="size-4" /></button>
                       <button aria-label={`Delete ${item.name}`} className="flex size-9 items-center justify-center rounded-xl text-muted-foreground transition hover:bg-destructive/10 hover:text-destructive focus-visible:ring-2 focus-visible:ring-destructive" onClick={() => setDeletingItem(item)} type="button"><Trash2 aria-hidden="true" className="size-4" /></button>
                     </div>
@@ -323,17 +336,17 @@ export function MenuManagementClient({
           <div className="overflow-x-auto dashboard-scrollbar">
             <table className="min-w-[900px] w-full text-left text-sm">
               <thead className="bg-secondary text-xs uppercase tracking-wide text-white/75">
-                <tr><th className="px-5 py-3.5">Item</th><th className="px-4 py-3.5">Category</th><th className="px-4 py-3.5">Price</th><th className="px-4 py-3.5">Prep time</th><th className="px-4 py-3.5">Status</th>{canManage && <th className="px-5 py-3.5 text-right">Actions</th>}</tr>
+                <tr><th className="px-5 py-3.5">Item</th><th className="px-4 py-3.5">Category</th><th className="px-4 py-3.5">Size prices</th><th className="px-4 py-3.5">Prep time</th><th className="px-4 py-3.5">Status</th>{canManage && <th className="px-5 py-3.5 text-right">Actions</th>}</tr>
               </thead>
               <tbody className="divide-y divide-border">
                 {filteredItems.map((item) => (
                   <tr className="transition hover:bg-background/60" key={item.id}>
                     <td className="px-5 py-4"><p className="font-bold text-secondary">{item.name}</p><p className="mt-0.5 max-w-xs truncate text-xs text-muted-foreground">{item.description || "No description"}</p></td>
                     <td className="px-4 py-4 font-medium">{item.categoryName}</td>
-                    <td className="px-4 py-4 font-bold text-secondary">{formatLkr(item.price)}</td>
+                    <td className="px-4 py-4"><VariantPrices compact item={item} /></td>
                     <td className="px-4 py-4">{item.preparationTime} min</td>
                     <td className="px-4 py-4"><StatusBadge active={item.available} activeLabel="Available" inactiveLabel="Unavailable" /></td>
-                    {canManage && <td className="px-5 py-4"><div className="flex items-center justify-end gap-2"><ToggleSwitch checked={item.available} disabled={isPending && pendingItemId === item.id} label={`Toggle ${item.name} availability`} onChange={(checked) => toggleAvailability(item, checked)} /><button aria-label={`Edit ${item.name}`} className="flex size-9 items-center justify-center rounded-xl border border-border text-muted-foreground hover:bg-muted hover:text-secondary focus-visible:ring-2 focus-visible:ring-primary" onClick={() => openEdit(item)} type="button"><Pencil aria-hidden="true" className="size-4" /></button><button aria-label={`Delete ${item.name}`} className="flex size-9 items-center justify-center rounded-xl border border-border text-muted-foreground hover:border-destructive/30 hover:bg-destructive/8 hover:text-destructive focus-visible:ring-2 focus-visible:ring-destructive" onClick={() => setDeletingItem(item)} type="button"><Trash2 aria-hidden="true" className="size-4" /></button></div></td>}
+                    {canManage && <td className="px-5 py-4"><div className="flex items-center justify-end gap-2"><StatusSwitch checked={item.available} disabled={isPending && pendingItemId === item.id} label={`Toggle ${item.name} availability`} onCheckedChange={(checked) => toggleAvailability(item, checked)} /><button aria-label={`Edit ${item.name}`} className="flex size-9 items-center justify-center rounded-xl border border-border text-muted-foreground hover:bg-muted hover:text-secondary focus-visible:ring-2 focus-visible:ring-primary" onClick={() => openEdit(item)} type="button"><Pencil aria-hidden="true" className="size-4" /></button><button aria-label={`Delete ${item.name}`} className="flex size-9 items-center justify-center rounded-xl border border-border text-muted-foreground hover:border-destructive/30 hover:bg-destructive/8 hover:text-destructive focus-visible:ring-2 focus-visible:ring-destructive" onClick={() => setDeletingItem(item)} type="button"><Trash2 aria-hidden="true" className="size-4" /></button></div></td>}
                   </tr>
                 ))}
               </tbody>

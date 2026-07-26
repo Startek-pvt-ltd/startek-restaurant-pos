@@ -125,6 +125,24 @@ export const BackupStatus = {
 export type BackupStatus = (typeof BackupStatus)[keyof typeof BackupStatus]
 
 
+export const CashSessionStatus = {
+  OPEN: 'OPEN',
+  CLOSED: 'CLOSED'
+} as const
+
+export type CashSessionStatus = (typeof CashSessionStatus)[keyof typeof CashSessionStatus]
+
+
+export const ExpensePaymentMethod = {
+  CASH: 'CASH',
+  CARD: 'CARD',
+  BANK: 'BANK',
+  OTHER: 'OTHER'
+} as const
+
+export type ExpensePaymentMethod = (typeof ExpensePaymentMethod)[keyof typeof ExpensePaymentMethod]
+
+
 export const NotificationType = {
   ORDER_COMPLETED: 'ORDER_COMPLETED',
   ORDER_CANCELLED: 'ORDER_CANCELLED',

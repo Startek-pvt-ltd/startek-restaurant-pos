@@ -12,5 +12,6 @@ export const config = {
     "/staff/:path*",
     "/settings/:path*",
     "/notifications/:path*",
+    "/system-status/:path*",
   ],
 };
