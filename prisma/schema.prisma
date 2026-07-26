@@ -76,6 +76,20 @@ enum ExpenseCategory {
   OTHER
 }
 
+enum BackupType {
+  FULL_DATABASE
+  BUSINESS_DATA
+  CONFIGURATION
+}
+
+enum BackupStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  DELETED
+  RESTORED
+}
+
 model Restaurant {
   id                         String   @id @default(uuid()) @db.Uuid
   name                       String
@@ -121,11 +135,33 @@ model User {
   expenses          Expense[]
   activityLogs      ActivityLog[]
   cancelledOrders   Order[]            @relation("CancelledOrders")
+  backupRecords     BackupRecord[]
 
   @@index([phone])
   @@index([role])
   @@index([status])
   @@index([lastLogin])
+}
+
+model BackupRecord {
+  id                 String       @id @default(uuid()) @db.Uuid
+  fileName           String
+  filePath           String
+  backupType         BackupType
+  status             BackupStatus @default(PENDING)
+  fileSize           BigInt?
+  checksum           String?      @db.VarChar(64)
+  createdById        String?      @db.Uuid
+  createdAt          DateTime     @default(now())
+  completedAt        DateTime?
+  failureReason      String?
+  databaseVersion    String?
+  applicationVersion String
+  createdBy          User?        @relation(fields: [createdById], references: [id], onDelete: SetNull)
+
+  @@index([status, createdAt])
+  @@index([backupType, createdAt])
+  @@index([createdById])
 }
 
 model Category {

@@ -60,6 +60,8 @@ Receipts target the **Xprinter XP-80T** using 80 mm paper and the browser/system
 - `docs/UI_GUIDE.md` — navigation, responsive, and receipt rules
 - `docs/QA_CHECKLIST.md` — executed and deferred QA checks
 - `docs/BUG_FIX_REPORT.md` — stabilization findings and resolutions
+- `docs/BACKUP_RESTORE_GUIDE.md` — private backup configuration and guarded manual restore procedure
+- `docs/DATA_EXPORT_GUIDE.md` — approved datasets, filters, formats, and sensitive-data exclusions
 
 ## Branding
 
@@ -68,3 +70,7 @@ The interface uses gold `#F4B400`, dark brown `#4A2310`, cream `#FFF8E6`, white 
 ## Settings
 
 TASK-013 adds protected restaurant, billing, receipt, printer, system, and profile settings under `/settings`. Typed PostgreSQL fields are validated by Zod and enforced again inside server-side transactions. Uploaded restaurant logos are restricted to verified PNG, JPEG, or WebP files up to 2 MB.
+
+## Backup and data export
+
+TASK-014 adds `/settings/backup` and `/settings/data-export`. Full backups are real PostgreSQL custom-format dumps written to private `BACKUP_DIR`; exports support CSV, Excel, and JSON without passwords, tokens, secrets, credentials, or private paths. In-process destructive restore is intentionally disabled; SUPER_ADMIN receives an integrity preflight and documented maintenance-window procedure.

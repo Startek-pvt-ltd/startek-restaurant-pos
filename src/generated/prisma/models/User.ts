@@ -285,6 +285,7 @@ export type UserWhereInput = {
   expenses?: Prisma.ExpenseListRelationFilter
   activityLogs?: Prisma.ActivityLogListRelationFilter
   cancelledOrders?: Prisma.OrderListRelationFilter
+  backupRecords?: Prisma.BackupRecordListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -306,6 +307,7 @@ export type UserOrderByWithRelationInput = {
   expenses?: Prisma.ExpenseOrderByRelationAggregateInput
   activityLogs?: Prisma.ActivityLogOrderByRelationAggregateInput
   cancelledOrders?: Prisma.OrderOrderByRelationAggregateInput
+  backupRecords?: Prisma.BackupRecordOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -330,6 +332,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   expenses?: Prisma.ExpenseListRelationFilter
   activityLogs?: Prisma.ActivityLogListRelationFilter
   cancelledOrders?: Prisma.OrderListRelationFilter
+  backupRecords?: Prisma.BackupRecordListRelationFilter
 }, "id" | "email" | "username">
 
 export type UserOrderByWithAggregationInput = {
@@ -391,6 +394,7 @@ export type UserCreateInput = {
   expenses?: Prisma.ExpenseCreateNestedManyWithoutCreatorInput
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
   cancelledOrders?: Prisma.OrderCreateNestedManyWithoutCancelledByInput
+  backupRecords?: Prisma.BackupRecordCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -412,6 +416,7 @@ export type UserUncheckedCreateInput = {
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutCreatorInput
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
   cancelledOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutCancelledByInput
+  backupRecords?: Prisma.BackupRecordUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUpdateInput = {
@@ -433,6 +438,7 @@ export type UserUpdateInput = {
   expenses?: Prisma.ExpenseUpdateManyWithoutCreatorNestedInput
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
   cancelledOrders?: Prisma.OrderUpdateManyWithoutCancelledByNestedInput
+  backupRecords?: Prisma.BackupRecordUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -454,6 +460,7 @@ export type UserUncheckedUpdateInput = {
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutCreatorNestedInput
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
   cancelledOrders?: Prisma.OrderUncheckedUpdateManyWithoutCancelledByNestedInput
+  backupRecords?: Prisma.BackupRecordUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -560,14 +567,14 @@ export type UserSumOrderByAggregateInput = {
   sessionVersion?: Prisma.SortOrder
 }
 
-export type UserScalarRelationFilter = {
-  is?: Prisma.UserWhereInput
-  isNot?: Prisma.UserWhereInput
-}
-
 export type UserNullableScalarRelationFilter = {
   is?: Prisma.UserWhereInput | null
   isNot?: Prisma.UserWhereInput | null
+}
+
+export type UserScalarRelationFilter = {
+  is?: Prisma.UserWhereInput
+  isNot?: Prisma.UserWhereInput
 }
 
 export type EnumUserRoleFieldUpdateOperationsInput = {
@@ -588,6 +595,22 @@ export type IntFieldUpdateOperationsInput = {
   decrement?: number
   multiply?: number
   divide?: number
+}
+
+export type UserCreateNestedOneWithoutBackupRecordsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutBackupRecordsInput, Prisma.UserUncheckedCreateWithoutBackupRecordsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutBackupRecordsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutBackupRecordsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutBackupRecordsInput, Prisma.UserUncheckedCreateWithoutBackupRecordsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutBackupRecordsInput
+  upsert?: Prisma.UserUpsertWithoutBackupRecordsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutBackupRecordsInput, Prisma.UserUpdateWithoutBackupRecordsInput>, Prisma.UserUncheckedUpdateWithoutBackupRecordsInput>
 }
 
 export type UserCreateNestedOneWithoutOrdersInput = {
@@ -664,6 +687,106 @@ export type UserUpdateOneWithoutActivityLogsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutActivityLogsInput, Prisma.UserUpdateWithoutActivityLogsInput>, Prisma.UserUncheckedUpdateWithoutActivityLogsInput>
 }
 
+export type UserCreateWithoutBackupRecordsInput = {
+  id?: string
+  fullName: string
+  email?: string | null
+  username: string
+  password: string
+  phone?: string | null
+  role: $Enums.UserRole
+  status?: $Enums.UserStatus
+  avatar?: string | null
+  lastLogin?: Date | string | null
+  sessionVersion?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  orders?: Prisma.OrderCreateNestedManyWithoutCashierInput
+  stockTransactions?: Prisma.StockTransactionCreateNestedManyWithoutUserInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutCreatorInput
+  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
+  cancelledOrders?: Prisma.OrderCreateNestedManyWithoutCancelledByInput
+}
+
+export type UserUncheckedCreateWithoutBackupRecordsInput = {
+  id?: string
+  fullName: string
+  email?: string | null
+  username: string
+  password: string
+  phone?: string | null
+  role: $Enums.UserRole
+  status?: $Enums.UserStatus
+  avatar?: string | null
+  lastLogin?: Date | string | null
+  sessionVersion?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutCashierInput
+  stockTransactions?: Prisma.StockTransactionUncheckedCreateNestedManyWithoutUserInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutCreatorInput
+  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
+  cancelledOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutCancelledByInput
+}
+
+export type UserCreateOrConnectWithoutBackupRecordsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutBackupRecordsInput, Prisma.UserUncheckedCreateWithoutBackupRecordsInput>
+}
+
+export type UserUpsertWithoutBackupRecordsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutBackupRecordsInput, Prisma.UserUncheckedUpdateWithoutBackupRecordsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutBackupRecordsInput, Prisma.UserUncheckedCreateWithoutBackupRecordsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutBackupRecordsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutBackupRecordsInput, Prisma.UserUncheckedUpdateWithoutBackupRecordsInput>
+}
+
+export type UserUpdateWithoutBackupRecordsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  orders?: Prisma.OrderUpdateManyWithoutCashierNestedInput
+  stockTransactions?: Prisma.StockTransactionUpdateManyWithoutUserNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutCreatorNestedInput
+  activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
+  cancelledOrders?: Prisma.OrderUpdateManyWithoutCancelledByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutBackupRecordsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutCashierNestedInput
+  stockTransactions?: Prisma.StockTransactionUncheckedUpdateManyWithoutUserNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutCreatorNestedInput
+  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
+  cancelledOrders?: Prisma.OrderUncheckedUpdateManyWithoutCancelledByNestedInput
+}
+
 export type UserCreateWithoutOrdersInput = {
   id?: string
   fullName: string
@@ -682,6 +805,7 @@ export type UserCreateWithoutOrdersInput = {
   expenses?: Prisma.ExpenseCreateNestedManyWithoutCreatorInput
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
   cancelledOrders?: Prisma.OrderCreateNestedManyWithoutCancelledByInput
+  backupRecords?: Prisma.BackupRecordCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutOrdersInput = {
@@ -702,6 +826,7 @@ export type UserUncheckedCreateWithoutOrdersInput = {
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutCreatorInput
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
   cancelledOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutCancelledByInput
+  backupRecords?: Prisma.BackupRecordUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutOrdersInput = {
@@ -727,6 +852,7 @@ export type UserCreateWithoutCancelledOrdersInput = {
   stockTransactions?: Prisma.StockTransactionCreateNestedManyWithoutUserInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutCreatorInput
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
+  backupRecords?: Prisma.BackupRecordCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutCancelledOrdersInput = {
@@ -747,6 +873,7 @@ export type UserUncheckedCreateWithoutCancelledOrdersInput = {
   stockTransactions?: Prisma.StockTransactionUncheckedCreateNestedManyWithoutUserInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutCreatorInput
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
+  backupRecords?: Prisma.BackupRecordUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutCancelledOrdersInput = {
@@ -783,6 +910,7 @@ export type UserUpdateWithoutOrdersInput = {
   expenses?: Prisma.ExpenseUpdateManyWithoutCreatorNestedInput
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
   cancelledOrders?: Prisma.OrderUpdateManyWithoutCancelledByNestedInput
+  backupRecords?: Prisma.BackupRecordUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutOrdersInput = {
@@ -803,6 +931,7 @@ export type UserUncheckedUpdateWithoutOrdersInput = {
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutCreatorNestedInput
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
   cancelledOrders?: Prisma.OrderUncheckedUpdateManyWithoutCancelledByNestedInput
+  backupRecords?: Prisma.BackupRecordUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUpsertWithoutCancelledOrdersInput = {
@@ -834,6 +963,7 @@ export type UserUpdateWithoutCancelledOrdersInput = {
   stockTransactions?: Prisma.StockTransactionUpdateManyWithoutUserNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutCreatorNestedInput
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
+  backupRecords?: Prisma.BackupRecordUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCancelledOrdersInput = {
@@ -854,6 +984,7 @@ export type UserUncheckedUpdateWithoutCancelledOrdersInput = {
   stockTransactions?: Prisma.StockTransactionUncheckedUpdateManyWithoutUserNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutCreatorNestedInput
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
+  backupRecords?: Prisma.BackupRecordUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateWithoutStockTransactionsInput = {
@@ -874,6 +1005,7 @@ export type UserCreateWithoutStockTransactionsInput = {
   expenses?: Prisma.ExpenseCreateNestedManyWithoutCreatorInput
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
   cancelledOrders?: Prisma.OrderCreateNestedManyWithoutCancelledByInput
+  backupRecords?: Prisma.BackupRecordCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutStockTransactionsInput = {
@@ -894,6 +1026,7 @@ export type UserUncheckedCreateWithoutStockTransactionsInput = {
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutCreatorInput
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
   cancelledOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutCancelledByInput
+  backupRecords?: Prisma.BackupRecordUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutStockTransactionsInput = {
@@ -930,6 +1063,7 @@ export type UserUpdateWithoutStockTransactionsInput = {
   expenses?: Prisma.ExpenseUpdateManyWithoutCreatorNestedInput
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
   cancelledOrders?: Prisma.OrderUpdateManyWithoutCancelledByNestedInput
+  backupRecords?: Prisma.BackupRecordUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutStockTransactionsInput = {
@@ -950,6 +1084,7 @@ export type UserUncheckedUpdateWithoutStockTransactionsInput = {
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutCreatorNestedInput
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
   cancelledOrders?: Prisma.OrderUncheckedUpdateManyWithoutCancelledByNestedInput
+  backupRecords?: Prisma.BackupRecordUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateWithoutExpensesInput = {
@@ -970,6 +1105,7 @@ export type UserCreateWithoutExpensesInput = {
   stockTransactions?: Prisma.StockTransactionCreateNestedManyWithoutUserInput
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
   cancelledOrders?: Prisma.OrderCreateNestedManyWithoutCancelledByInput
+  backupRecords?: Prisma.BackupRecordCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutExpensesInput = {
@@ -990,6 +1126,7 @@ export type UserUncheckedCreateWithoutExpensesInput = {
   stockTransactions?: Prisma.StockTransactionUncheckedCreateNestedManyWithoutUserInput
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
   cancelledOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutCancelledByInput
+  backupRecords?: Prisma.BackupRecordUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutExpensesInput = {
@@ -1026,6 +1163,7 @@ export type UserUpdateWithoutExpensesInput = {
   stockTransactions?: Prisma.StockTransactionUpdateManyWithoutUserNestedInput
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
   cancelledOrders?: Prisma.OrderUpdateManyWithoutCancelledByNestedInput
+  backupRecords?: Prisma.BackupRecordUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutExpensesInput = {
@@ -1046,6 +1184,7 @@ export type UserUncheckedUpdateWithoutExpensesInput = {
   stockTransactions?: Prisma.StockTransactionUncheckedUpdateManyWithoutUserNestedInput
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
   cancelledOrders?: Prisma.OrderUncheckedUpdateManyWithoutCancelledByNestedInput
+  backupRecords?: Prisma.BackupRecordUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateWithoutActivityLogsInput = {
@@ -1066,6 +1205,7 @@ export type UserCreateWithoutActivityLogsInput = {
   stockTransactions?: Prisma.StockTransactionCreateNestedManyWithoutUserInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutCreatorInput
   cancelledOrders?: Prisma.OrderCreateNestedManyWithoutCancelledByInput
+  backupRecords?: Prisma.BackupRecordCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutActivityLogsInput = {
@@ -1086,6 +1226,7 @@ export type UserUncheckedCreateWithoutActivityLogsInput = {
   stockTransactions?: Prisma.StockTransactionUncheckedCreateNestedManyWithoutUserInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutCreatorInput
   cancelledOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutCancelledByInput
+  backupRecords?: Prisma.BackupRecordUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutActivityLogsInput = {
@@ -1122,6 +1263,7 @@ export type UserUpdateWithoutActivityLogsInput = {
   stockTransactions?: Prisma.StockTransactionUpdateManyWithoutUserNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutCreatorNestedInput
   cancelledOrders?: Prisma.OrderUpdateManyWithoutCancelledByNestedInput
+  backupRecords?: Prisma.BackupRecordUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutActivityLogsInput = {
@@ -1142,6 +1284,7 @@ export type UserUncheckedUpdateWithoutActivityLogsInput = {
   stockTransactions?: Prisma.StockTransactionUncheckedUpdateManyWithoutUserNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutCreatorNestedInput
   cancelledOrders?: Prisma.OrderUncheckedUpdateManyWithoutCancelledByNestedInput
+  backupRecords?: Prisma.BackupRecordUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 
@@ -1155,6 +1298,7 @@ export type UserCountOutputType = {
   expenses: number
   activityLogs: number
   cancelledOrders: number
+  backupRecords: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1163,6 +1307,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   expenses?: boolean | UserCountOutputTypeCountExpensesArgs
   activityLogs?: boolean | UserCountOutputTypeCountActivityLogsArgs
   cancelledOrders?: boolean | UserCountOutputTypeCountCancelledOrdersArgs
+  backupRecords?: boolean | UserCountOutputTypeCountBackupRecordsArgs
 }
 
 /**
@@ -1210,6 +1355,13 @@ export type UserCountOutputTypeCountCancelledOrdersArgs<ExtArgs extends runtime.
   where?: Prisma.OrderWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountBackupRecordsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.BackupRecordWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1230,6 +1382,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   expenses?: boolean | Prisma.User$expensesArgs<ExtArgs>
   activityLogs?: boolean | Prisma.User$activityLogsArgs<ExtArgs>
   cancelledOrders?: boolean | Prisma.User$cancelledOrdersArgs<ExtArgs>
+  backupRecords?: boolean | Prisma.User$backupRecordsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -1288,6 +1441,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   expenses?: boolean | Prisma.User$expensesArgs<ExtArgs>
   activityLogs?: boolean | Prisma.User$activityLogsArgs<ExtArgs>
   cancelledOrders?: boolean | Prisma.User$cancelledOrdersArgs<ExtArgs>
+  backupRecords?: boolean | Prisma.User$backupRecordsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1301,6 +1455,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     expenses: Prisma.$ExpensePayload<ExtArgs>[]
     activityLogs: Prisma.$ActivityLogPayload<ExtArgs>[]
     cancelledOrders: Prisma.$OrderPayload<ExtArgs>[]
+    backupRecords: Prisma.$BackupRecordPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1715,6 +1870,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   expenses<T extends Prisma.User$expensesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$expensesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExpensePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   activityLogs<T extends Prisma.User$activityLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$activityLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ActivityLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   cancelledOrders<T extends Prisma.User$cancelledOrdersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$cancelledOrdersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  backupRecords<T extends Prisma.User$backupRecordsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$backupRecordsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BackupRecordPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2267,6 +2423,30 @@ export type User$cancelledOrdersArgs<ExtArgs extends runtime.Types.Extensions.In
   take?: number
   skip?: number
   distinct?: Prisma.OrderScalarFieldEnum | Prisma.OrderScalarFieldEnum[]
+}
+
+/**
+ * User.backupRecords
+ */
+export type User$backupRecordsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the BackupRecord
+   */
+  select?: Prisma.BackupRecordSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the BackupRecord
+   */
+  omit?: Prisma.BackupRecordOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BackupRecordInclude<ExtArgs> | null
+  where?: Prisma.BackupRecordWhereInput
+  orderBy?: Prisma.BackupRecordOrderByWithRelationInput | Prisma.BackupRecordOrderByWithRelationInput[]
+  cursor?: Prisma.BackupRecordWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.BackupRecordScalarFieldEnum | Prisma.BackupRecordScalarFieldEnum[]
 }
 
 /**

@@ -86,3 +86,7 @@ Payroll, attendance, shifts, salary calculations, email recovery, forecasting, f
 ## TASK-013 settings
 
 The settings hub now covers restaurant identity, billing rules, receipt content, browser printer preferences, system preferences, and the existing self-service profile. SUPER_ADMIN has full access; OWNER manages restaurant/billing/receipt/printer/profile; MANAGER has read-only restaurant/billing/system access and may update receipt/printer operations; CASHIER is restricted to profile. Developer credit and product controls are protected on the server.
+
+## TASK-014 backup and export
+
+The protected settings area now provides native PostgreSQL backup creation/history/download/deletion, guarded restore preparation, and filtered CSV/Excel/JSON exports. Backup files are private and checksummed. Customer, table, kitchen, inventory, supplier, PickMe, and Uber data are excluded. Automated destructive restore and scheduled/cloud backups remain outside scope.

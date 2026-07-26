@@ -15,6 +15,7 @@
 - TASK-011 — Real-data reports, financial formulas, charts, URL filters, CSV/Excel exports, A4 printing, and report RBAC
 - TASK-012 — Staff CRUD administration, role hierarchy, session revocation, password reset, audit logging, staff details, and self-service profile
 - TASK-013 — Typed restaurant, billing, receipt, printer, system, and profile settings with role enforcement and audit logging
+- TASK-014 — PostgreSQL-native backups, guarded restore preflight, backup history/download/deletion, and secure CSV/Excel/JSON exports
 
 ## Excluded product scope
 

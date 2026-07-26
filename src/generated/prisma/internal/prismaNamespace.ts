@@ -399,6 +399,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 export const ModelName = {
   Restaurant: 'Restaurant',
   User: 'User',
+  BackupRecord: 'BackupRecord',
   Category: 'Category',
   MenuItem: 'MenuItem',
   RestaurantTable: 'RestaurantTable',
@@ -427,7 +428,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "restaurant" | "user" | "category" | "menuItem" | "restaurantTable" | "customer" | "order" | "orderItem" | "payment" | "supplier" | "inventoryItem" | "stockTransaction" | "expense" | "activityLog" | "systemSetting"
+    modelProps: "restaurant" | "user" | "backupRecord" | "category" | "menuItem" | "restaurantTable" | "customer" | "order" | "orderItem" | "payment" | "supplier" | "inventoryItem" | "stockTransaction" | "expense" | "activityLog" | "systemSetting"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -576,6 +577,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.UserCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.UserCountAggregateOutputType> | number
+        }
+      }
+    }
+    BackupRecord: {
+      payload: Prisma.$BackupRecordPayload<ExtArgs>
+      fields: Prisma.BackupRecordFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.BackupRecordFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BackupRecordPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.BackupRecordFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BackupRecordPayload>
+        }
+        findFirst: {
+          args: Prisma.BackupRecordFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BackupRecordPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.BackupRecordFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BackupRecordPayload>
+        }
+        findMany: {
+          args: Prisma.BackupRecordFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BackupRecordPayload>[]
+        }
+        create: {
+          args: Prisma.BackupRecordCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BackupRecordPayload>
+        }
+        createMany: {
+          args: Prisma.BackupRecordCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.BackupRecordCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BackupRecordPayload>[]
+        }
+        delete: {
+          args: Prisma.BackupRecordDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BackupRecordPayload>
+        }
+        update: {
+          args: Prisma.BackupRecordUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BackupRecordPayload>
+        }
+        deleteMany: {
+          args: Prisma.BackupRecordDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.BackupRecordUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.BackupRecordUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BackupRecordPayload>[]
+        }
+        upsert: {
+          args: Prisma.BackupRecordUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BackupRecordPayload>
+        }
+        aggregate: {
+          args: Prisma.BackupRecordAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateBackupRecord>
+        }
+        groupBy: {
+          args: Prisma.BackupRecordGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BackupRecordGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.BackupRecordCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BackupRecordCountAggregateOutputType> | number
         }
       }
     }
@@ -1625,6 +1700,25 @@ export const UserScalarFieldEnum = {
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
+export const BackupRecordScalarFieldEnum = {
+  id: 'id',
+  fileName: 'fileName',
+  filePath: 'filePath',
+  backupType: 'backupType',
+  status: 'status',
+  fileSize: 'fileSize',
+  checksum: 'checksum',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  completedAt: 'completedAt',
+  failureReason: 'failureReason',
+  databaseVersion: 'databaseVersion',
+  applicationVersion: 'applicationVersion'
+} as const
+
+export type BackupRecordScalarFieldEnum = (typeof BackupRecordScalarFieldEnum)[keyof typeof BackupRecordScalarFieldEnum]
+
+
 export const CategoryScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -1979,6 +2073,48 @@ export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
 
 
 /**
+ * Reference to a field of type 'BackupType'
+ */
+export type EnumBackupTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BackupType'>
+    
+
+
+/**
+ * Reference to a field of type 'BackupType[]'
+ */
+export type ListEnumBackupTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BackupType[]'>
+    
+
+
+/**
+ * Reference to a field of type 'BackupStatus'
+ */
+export type EnumBackupStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BackupStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'BackupStatus[]'
+ */
+export type ListEnumBackupStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BackupStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'BigInt'
+ */
+export type BigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt'>
+    
+
+
+/**
+ * Reference to a field of type 'BigInt[]'
+ */
+export type ListBigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt[]'>
+    
+
+
+/**
  * Reference to a field of type 'Boolean'
  */
 export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
@@ -2249,6 +2385,7 @@ export type PrismaClientOptions = PrismaClientOptionsWithAccelerateUrl | PrismaC
 export type GlobalOmitConfig = {
   restaurant?: Prisma.RestaurantOmit
   user?: Prisma.UserOmit
+  backupRecord?: Prisma.BackupRecordOmit
   category?: Prisma.CategoryOmit
   menuItem?: Prisma.MenuItemOmit
   restaurantTable?: Prisma.RestaurantTableOmit

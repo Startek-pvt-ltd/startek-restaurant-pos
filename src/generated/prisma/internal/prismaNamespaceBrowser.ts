@@ -53,6 +53,7 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   Restaurant: 'Restaurant',
   User: 'User',
+  BackupRecord: 'BackupRecord',
   Category: 'Category',
   MenuItem: 'MenuItem',
   RestaurantTable: 'RestaurantTable',
@@ -127,6 +128,25 @@ export const UserScalarFieldEnum = {
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const BackupRecordScalarFieldEnum = {
+  id: 'id',
+  fileName: 'fileName',
+  filePath: 'filePath',
+  backupType: 'backupType',
+  status: 'status',
+  fileSize: 'fileSize',
+  checksum: 'checksum',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  completedAt: 'completedAt',
+  failureReason: 'failureReason',
+  databaseVersion: 'databaseVersion',
+  applicationVersion: 'applicationVersion'
+} as const
+
+export type BackupRecordScalarFieldEnum = (typeof BackupRecordScalarFieldEnum)[keyof typeof BackupRecordScalarFieldEnum]
 
 
 export const CategoryScalarFieldEnum = {

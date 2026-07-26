@@ -28,6 +28,11 @@ export type Restaurant = Prisma.RestaurantModel
  */
 export type User = Prisma.UserModel
 /**
+ * Model BackupRecord
+ * 
+ */
+export type BackupRecord = Prisma.BackupRecordModel
+/**
  * Model Category
  * 
  */

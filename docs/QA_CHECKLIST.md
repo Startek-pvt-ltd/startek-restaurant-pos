@@ -164,3 +164,17 @@ Executed on 2026-07-26 in the local `feature/staff` workspace.
 - [x] Current settings feed new POS checkouts; completed order monetary snapshots remain intact
 - [x] Prisma validate, seed, migration status, lint, type-check, and production build pass
 - [ ] Cross-browser visual/mobile pass and physical Xprinter output require a cashier workstation
+
+## TASK-014 backup/export verification
+
+- [x] PostgreSQL 16.14 `pg_dump` and `pg_restore` detected
+- [x] Real custom dump created, non-zero size verified, SHA-256 generated, and `pg_restore --list` passed
+- [x] Missing `pg_dump` simulation produced a safe `FAILED` history row
+- [x] Authorized download resolution passed and path traversal was rejected
+- [x] Deletion removed the private file and retained a `DELETED` history row
+- [x] Duplicate operations are blocked by a private atomic lock file
+- [x] Restore phrase/password/acknowledgement and checksum preflight passed; live restore remained disabled
+- [x] All nine approved datasets generated JSON, CSV, and valid unzippable Excel workbooks
+- [x] Sensitive-field scan found no password, session, auth secret, database URL, or backup path keys
+- [x] Invalid date ranges were rejected
+- [ ] Authenticated browser visual/mobile checks require interactive role sessions

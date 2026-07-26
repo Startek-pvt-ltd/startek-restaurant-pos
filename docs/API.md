@@ -63,3 +63,10 @@ Receipt pages are server-rendered from stored snapshots and use the browser/syst
 `updateRestaurantSettingsAction`, `updateBillingSettingsAction`, `updateReceiptSettingsAction`, `updatePrinterSettingsAction`, and `updateSystemSettingsAction` accept constrained payloads, re-check the active actor in the database transaction, record an `ActivityLog`, and revalidate settings/POS/order paths. Restaurant logo uploads use generated filenames and server-side size, MIME, and file-signature checks. No REST API routes were added.
 
 POS checkout reloads current typed settings on the server, enforces enabled payment methods, notes and discount limits, and generates invoices from the validated prefix/padding. Browser totals remain untrusted.
+
+## Backup and export handlers
+
+- Backup create/delete and restore-preflight mutations are authenticated Server Actions with database-backed roles and Zod validation.
+- `GET /settings/backup/download/[id]` validates UUID, actor, completed status, canonical private path, and physical file before streaming a private attachment.
+- `GET /settings/data-export/download` validates dataset, format, dates, and supported filters before returning CSV, genuine `.xlsx`, or JSON.
+- Responses omit passwords, sessions, secrets, database URLs, and private backup paths. Completed operations write safe activity events.

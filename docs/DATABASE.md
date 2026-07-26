@@ -66,3 +66,7 @@ Production should apply checked-in migrations with `npx prisma migrate deploy`. 
 ## TASK-013 migration
 
 Migration `20260726045700_add_typed_restaurant_system_settings` non-destructively extends `Restaurant` with structured address/contact/locale fields and `SystemSetting` with typed billing, receipt, printer, and system preferences. Existing identifiers and historical order monetary snapshots are unchanged. Legacy receipt columns remain for compatibility; new explicit zero-line flags drive receipt rendering.
+
+## Backup metadata
+
+Migration `20260726061353_add_backup_records` adds `BackupType`, `BackupStatus`, and `BackupRecord`. Metadata includes the safe filename, private server path, status, byte size, SHA-256 checksum, actor, timestamps, safe failure reason, database version, and application version. Deletion marks a row `DELETED`; history remains. Private paths are never selected for UI history or data exports.

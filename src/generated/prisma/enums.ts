@@ -103,3 +103,23 @@ export const ExpenseCategory = {
 } as const
 
 export type ExpenseCategory = (typeof ExpenseCategory)[keyof typeof ExpenseCategory]
+
+
+export const BackupType = {
+  FULL_DATABASE: 'FULL_DATABASE',
+  BUSINESS_DATA: 'BUSINESS_DATA',
+  CONFIGURATION: 'CONFIGURATION'
+} as const
+
+export type BackupType = (typeof BackupType)[keyof typeof BackupType]
+
+
+export const BackupStatus = {
+  PENDING: 'PENDING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED',
+  DELETED: 'DELETED',
+  RESTORED: 'RESTORED'
+} as const
+
+export type BackupStatus = (typeof BackupStatus)[keyof typeof BackupStatus]
