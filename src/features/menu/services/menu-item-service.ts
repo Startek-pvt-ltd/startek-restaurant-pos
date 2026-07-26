@@ -1,6 +1,7 @@
 import "server-only";
 
 import { prisma } from "@/lib/prisma";
+import { notifyActiveUsers } from "@/features/notifications/services/notification-service";
 
 import type { MenuItemInput } from "../validations/menu-item";
 
@@ -83,10 +84,13 @@ export async function updateMenuItem(id: string, input: MenuItemInput) {
 }
 
 export async function setMenuItemAvailable(id: string, available: boolean) {
-  return prisma.menuItem.update({ where: { id }, data: { available } });
+  return prisma.$transaction(async (tx) => {
+    const item = await tx.menuItem.update({ where: { id }, data: { available }, select: { id: true, name: true, available: true } });
+    await notifyActiveUsers(tx, { title: "Menu availability changed", message: `${item.name} is now ${item.available ? "available" : "unavailable"}.`, type: "MENU_AVAILABILITY", link: "/menu" });
+    return item;
+  });
 }
 
 export async function deleteMenuItem(id: string) {
   return prisma.menuItem.delete({ where: { id } });
 }
-

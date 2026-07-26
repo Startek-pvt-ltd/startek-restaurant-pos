@@ -66,8 +66,8 @@ export async function saveRestaurantSettings(input: z.infer<typeof restaurantSet
 export async function saveBillingSettings(input: z.infer<typeof billingSettingsSchema>, userId: string) {
   return mutate(userId, OWNER_SETTINGS_ROLES, "UPDATED_BILLING_SETTINGS", async (tx) => {
     const [r,s]=await Promise.all([tx.restaurant.findFirst({select:{id:true},orderBy:{createdAt:"asc"}}),tx.systemSetting.findFirst({select:{id:true},orderBy:{id:"asc"}})]); if(!r||!s) throw new Error("SETTINGS_NOT_FOUND");
-    await tx.restaurant.update({where:{id:r.id},data:{currency:input.currency,taxPercentage:input.taxEnabled?input.taxPercentage:0,serviceCharge:input.serviceChargeEnabled?input.serviceChargePercentage:0}});
-    await tx.systemSetting.update({where:{id:s.id},data:{currency:input.currency,currencySymbol:input.currencySymbol,taxEnabled:input.taxEnabled,serviceChargeEnabled:input.serviceChargeEnabled,discountEnabled:input.discountEnabled,maximumPercentageDiscount:input.maximumPercentageDiscount,maximumFixedDiscount:input.maximumFixedDiscount,defaultOrderType:input.defaultOrderType,allowCash:input.allowCash,allowCard:input.allowCard,allowQr:input.allowQr,requireOrderNotes:input.requireOrderNotes,allowNegativeBalance:false,invoicePrefix:input.invoicePrefix,invoiceNumberPadding:input.invoiceNumberPadding}});
+    await tx.restaurant.update({where:{id:r.id},data:{currency:input.currency,taxPercentage:0,serviceCharge:0}});
+    await tx.systemSetting.update({where:{id:s.id},data:{currency:input.currency,currencySymbol:input.currencySymbol,taxEnabled:false,serviceChargeEnabled:false,discountEnabled:false,maximumPercentageDiscount:0,maximumFixedDiscount:0,defaultOrderType:input.defaultOrderType,allowCash:input.allowCash,allowCard:input.allowCard,allowQr:input.allowQr,requireOrderNotes:input.requireOrderNotes,allowNegativeBalance:false,invoicePrefix:input.invoicePrefix,invoiceNumberPadding:input.invoiceNumberPadding}});
   });
 }
 export async function saveReceiptSettings(input: z.infer<typeof receiptSettingsSchema>, userId: string) {

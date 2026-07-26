@@ -54,7 +54,7 @@ The following are excluded: Customer Management, Table Management, Kitchen Displ
 
 - `/expenses` provides PostgreSQL-backed create, view, edit, and owner-level delete workflows.
 - Search, category/date filters, amount/date sorting, pagination, and daily/weekly/monthly/filtered totals are calculated server-side.
-- Super admins and owners have full access; managers may create/view/edit; cashiers are denied at the protected route and every mutation boundary.
+- Super admins and owners have full access; managers may create/view/edit; cashiers may view, search, filter, create, and edit only their own expenses. Cashiers cannot delete expenses or edit another user’s records. Every mutation repeats authorization on the server.
 - Create, update, and deletion events are recorded in `ActivityLog`. Physical deletion requires explicit confirmation and writes its audit record in the same transaction before removal.
 
 ### Staff Management
@@ -71,6 +71,12 @@ The following are excluded: Customer Management, Table Management, Kitchen Displ
 - Customer information is never printed. Item columns are Item, Qty, and Total.
 - Zero discount, tax, and service-charge lines are hidden. Tendered amount/change appear only for cash payments.
 - The browser/system print dialog remains responsible for selecting Xprinter XP-80T.
+
+### POS UX and notifications
+
+- The authenticated sidebar collapses to an icon rail on desktop/tablet, retains accessible labels/tooltips, persists the preference locally, and becomes a closing drawer on mobile.
+- The topbar notification center provides per-user unread state and safe operational notices for orders, expenses, menu availability, staff administration, and backups.
+- New POS checkouts are subtotal-only: discount, tax, and service charge are forced to zero by the server, so grand total equals the server-priced item subtotal. Historical order snapshots remain unchanged.
 
 ### Out of scope
 

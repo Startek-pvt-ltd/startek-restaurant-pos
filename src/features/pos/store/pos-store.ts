@@ -5,7 +5,6 @@ import { persist } from "zustand/middleware";
 
 import type {
   CartLine,
-  DiscountType,
   PosOrderType,
   PosPaymentMethod,
   PosProduct,
@@ -15,16 +14,12 @@ type HeldOrder = {
   items: CartLine[];
   orderType: PosOrderType;
   notes: string;
-  discountType: DiscountType;
-  discountValue: number;
 };
 
 interface PosStore {
   items: CartLine[];
   orderType: PosOrderType;
   notes: string;
-  discountType: DiscountType;
-  discountValue: number;
   paymentMethod: PosPaymentMethod;
   amountReceived: number;
   heldOrder: HeldOrder | null;
@@ -38,7 +33,6 @@ interface PosStore {
   resumeOrder: () => void;
   setOrderType: (orderType: PosOrderType) => void;
   setNotes: (notes: string) => void;
-  setDiscount: (discountType: DiscountType, discountValue: number) => void;
   setPaymentMethod: (paymentMethod: PosPaymentMethod) => void;
   setAmountReceived: (amountReceived: number) => void;
   setHydrated: (hydrated: boolean) => void;
@@ -48,8 +42,6 @@ const activeOrderDefaults = {
   items: [] as CartLine[],
   orderType: "TAKEAWAY" as PosOrderType,
   notes: "",
-  discountType: "PERCENTAGE" as DiscountType,
-  discountValue: 0,
   paymentMethod: "CASH" as PosPaymentMethod,
   amountReceived: 0,
 };
@@ -96,8 +88,6 @@ export const usePosStore = create<PosStore>()(
             items: state.items,
             orderType: state.orderType,
             notes: state.notes,
-            discountType: state.discountType,
-            discountValue: state.discountValue,
           },
         });
       },
@@ -108,7 +98,6 @@ export const usePosStore = create<PosStore>()(
       },
       setOrderType: (orderType) => set({ orderType }),
       setNotes: (notes) => set({ notes }),
-      setDiscount: (discountType, discountValue) => set({ discountType, discountValue }),
       setPaymentMethod: (paymentMethod) => set({ paymentMethod }),
       setAmountReceived: (amountReceived) => set({ amountReceived }),
       setHydrated: (hydrated) => set({ hydrated }),
@@ -119,8 +108,6 @@ export const usePosStore = create<PosStore>()(
         items: state.items,
         orderType: state.orderType,
         notes: state.notes,
-        discountType: state.discountType,
-        discountValue: state.discountValue,
         paymentMethod: state.paymentMethod,
         amountReceived: state.amountReceived,
         heldOrder: state.heldOrder,

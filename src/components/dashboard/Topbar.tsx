@@ -1,9 +1,11 @@
 "use client";
 
-import { Bell, Menu, Search } from "lucide-react";
+import { Menu, Search } from "lucide-react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+
+import { NotificationPanel } from "@/components/dashboard/NotificationPanel";
 
 interface TopbarProps {
   onMenuClick: () => void;
@@ -60,7 +62,7 @@ export function Topbar({ onMenuClick, user }: TopbarProps) {
     <header className="no-print sticky top-0 z-30 flex h-20 items-center gap-3 border-b border-border/80 bg-card/92 px-4 shadow-[0_6px_24px_rgba(74,35,16,0.04)] backdrop-blur-xl sm:px-6 lg:px-8 2xl:px-10">
       <button
         aria-label="Open navigation"
-        className="flex size-10 shrink-0 items-center justify-center rounded-xl border border-border bg-card text-foreground transition hover:border-primary hover:bg-muted focus-visible:ring-2 focus-visible:ring-primary lg:hidden"
+        className="flex size-10 shrink-0 items-center justify-center rounded-xl border border-border bg-card text-foreground transition hover:border-primary hover:bg-muted focus-visible:ring-2 focus-visible:ring-primary md:hidden"
         onClick={onMenuClick}
         type="button"
       >
@@ -96,14 +98,7 @@ export function Topbar({ onMenuClick, user }: TopbarProps) {
         />
       </label>
 
-      <button
-        aria-label="View notifications"
-        className="relative flex size-10 shrink-0 items-center justify-center rounded-xl border border-border bg-card text-muted-foreground transition hover:border-primary hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary"
-        type="button"
-      >
-        <Bell aria-hidden="true" className="size-5" />
-        <span className="absolute right-2 top-2 size-2 rounded-full bg-destructive ring-2 ring-card" />
-      </button>
+      <NotificationPanel />
 
       <Link aria-label="Open my profile" className="flex shrink-0 items-center gap-3 rounded-xl border-l border-border pl-3 transition hover:bg-muted/60 focus-visible:ring-2 focus-visible:ring-primary" href="/settings/profile">
         <div className="flex size-10 items-center justify-center rounded-xl bg-secondary text-xs font-bold text-white shadow-sm">

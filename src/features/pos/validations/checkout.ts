@@ -12,9 +12,6 @@ export const checkoutSchema = z.object({
     .max(100, "The cart contains too many different items."),
   orderType: z.enum(["DINE_IN", "TAKEAWAY", "DELIVERY"]),
   notes: z.string().trim().max(500, "Order notes cannot exceed 500 characters."),
-  discountType: z.enum(["PERCENTAGE", "FIXED"]),
-  discountValue: z.number().finite().min(0, "Discount cannot be negative."),
   paymentMethod: z.enum(["CASH", "CARD", "QR"]),
   amountReceived: z.number().finite().min(0).nullable(),
-});
-
+}).strict();

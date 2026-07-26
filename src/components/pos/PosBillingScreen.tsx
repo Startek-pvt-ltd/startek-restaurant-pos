@@ -14,7 +14,6 @@ import { CartItem } from "./CartItem";
 import { CartSummary } from "./CartSummary";
 import { CategoryTabs } from "./CategoryTabs";
 import { CheckoutFooter } from "./CheckoutFooter";
-import { DiscountPanel } from "./DiscountPanel";
 import { OrderNotes } from "./OrderNotes";
 import { OrderTypeSelector } from "./OrderTypeSelector";
 import { PaymentPanel } from "./PaymentPanel";
@@ -37,8 +36,6 @@ export function PosBillingScreen({ categories, products, settings }: PosBillingS
   const items = usePosStore((state) => state.items);
   const orderType = usePosStore((state) => state.orderType);
   const notes = usePosStore((state) => state.notes);
-  const discountType = usePosStore((state) => state.discountType);
-  const discountValue = usePosStore((state) => state.discountValue);
   const paymentMethod = usePosStore((state) => state.paymentMethod);
   const amountReceived = usePosStore((state) => state.amountReceived);
   const heldOrder = usePosStore((state) => state.heldOrder);
@@ -51,7 +48,6 @@ export function PosBillingScreen({ categories, products, settings }: PosBillingS
   const resumeOrder = usePosStore((state) => state.resumeOrder);
   const setOrderType = usePosStore((state) => state.setOrderType);
   const setNotes = usePosStore((state) => state.setNotes);
-  const setDiscount = usePosStore((state) => state.setDiscount);
   const setPaymentMethod = usePosStore((state) => state.setPaymentMethod);
   const setAmountReceived = usePosStore((state) => state.setAmountReceived);
   const enabledMethods = useMemo(() => ([...(settings.allowCash ? ["CASH" as const] : []), ...(settings.allowCard ? ["CARD" as const] : []), ...(settings.allowQr ? ["QR" as const] : [])]), [settings.allowCard, settings.allowCash, settings.allowQr]);
@@ -85,24 +81,21 @@ export function PosBillingScreen({ categories, products, settings }: PosBillingS
 
   const totals = useMemo(() => calculateTotals({
     items: reconciledItems,
-    discountType,
-    discountValue,
-    taxPercentage: settings.taxPercentage,
-    serviceChargePercentage: settings.serviceChargePercentage,
-  }), [discountType, discountValue, reconciledItems, settings.serviceChargePercentage, settings.taxPercentage]);
+    discountType: "FIXED",
+    discountValue: 0,
+    taxPercentage: 0,
+    serviceChargePercentage: 0,
+  }), [reconciledItems]);
   const balance = calculateBalance(amountReceived, totals.grandTotal);
   const cartQuantity = items.reduce((sum, item) => sum + item.quantity, 0);
   const paymentSufficient = paymentMethod !== "CASH" || balance >= 0;
-  const discountWithinPolicy = settings.discountEnabled ? (discountType === "PERCENTAGE" ? discountValue <= settings.maximumPercentageDiscount : discountValue <= settings.maximumFixedDiscount) : discountValue === 0;
   const notesValid = !settings.requireOrderNotes || notes.trim().length > 0;
-  const canComplete = items.length > 0 && !cartHasInvalidItem && totals.discountValid && discountWithinPolicy && notesValid && totals.totalsValid && paymentSufficient;
+  const canComplete = items.length > 0 && !cartHasInvalidItem && notesValid && totals.totalsValid && paymentSufficient;
   const checkoutIssue = items.length === 0
     ? "Add an item to begin the order."
     : cartHasInvalidItem
       ? "Remove unavailable or deleted items before checkout."
-      : !totals.discountValid || !discountWithinPolicy
-        ? "Discount cannot exceed the subtotal."
-        : !notesValid
+      : !notesValid
           ? "Order notes are required."
         : !totals.totalsValid
           ? "Order total cannot be negative."
@@ -126,8 +119,6 @@ export function PosBillingScreen({ categories, products, settings }: PosBillingS
           items: items.map((item) => ({ menuItemId: item.id, quantity: item.quantity })),
           orderType,
           notes,
-          discountType,
-          discountValue,
           paymentMethod,
           amountReceived: paymentMethod === "CASH" ? amountReceived : null,
         });
@@ -182,8 +173,7 @@ export function PosBillingScreen({ categories, products, settings }: PosBillingS
             {items.length === 0 ? <div className="rounded-xl border border-dashed border-input bg-background/35 px-4 py-8 text-center"><ShoppingCart aria-hidden="true" className="mx-auto size-7 text-muted-foreground/50" /><p className="mt-2 text-sm font-black text-secondary">Cart is empty</p><p className="mt-1 text-xs text-muted-foreground">Tap Add on a menu item.</p></div> : <ul aria-label="Cart items" className="max-h-80 space-y-2 overflow-y-auto pr-1 dashboard-scrollbar">{reconciledItems.map((item) => <CartItem currency={settings.currency} item={item} key={item.id} onDecrease={decreaseItem} onIncrease={increaseItem} onRemove={removeItem} />)}</ul>}
 
             <OrderNotes onChange={setNotes} value={notes} />
-            <DiscountPanel onChange={setDiscount} type={discountType} valid={totals.discountValid} value={discountValue} />
-            <CartSummary currency={settings.currency} discount={totals.discount} grandTotal={totals.grandTotal} serviceCharge={totals.serviceCharge} serviceChargePercentage={settings.serviceChargePercentage} subtotal={totals.subtotal} tax={totals.tax} taxPercentage={settings.taxPercentage} />
+            <CartSummary currency={settings.currency} grandTotal={totals.grandTotal} subtotal={totals.subtotal} />
             <PaymentPanel amountReceived={amountReceived} currency={settings.currency} enabledMethods={enabledMethods} grandTotal={totals.grandTotal} method={paymentMethod} onAmountChange={setAmountReceived} onMethodChange={setPaymentMethod} />
             {checkoutIssue && <p className="rounded-xl bg-amber-50 px-3 py-2 text-xs font-bold text-amber-800" role="status">{checkoutIssue}</p>}
             <CheckoutFooter canComplete={canComplete} canPrint={Boolean(lastOrder)} cartEmpty={items.length === 0} hasHeldOrder={Boolean(heldOrder)} onClear={() => { if (window.confirm("Clear every item from the current cart?")) { clearCart(); toast.success("Cart cleared."); } }} onComplete={handleComplete} onHold={() => { holdOrder(); toast.success("Order held on this device."); }} onPrint={() => { if (lastOrder) window.open(`/orders/${lastOrder.id}/receipt`, "_blank", "noopener,noreferrer"); }} onResume={() => { resumeOrder(); toast.success("Held order resumed."); }} pending={pending} />

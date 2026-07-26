@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint src next.config.ts prisma.config.ts prisma/seed.ts",
     "typecheck": "tsc --noEmit",
+    "test": "tsx --test tests/**/*.test.ts",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:seed": "prisma db seed",

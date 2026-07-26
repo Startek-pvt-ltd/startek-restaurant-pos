@@ -8,8 +8,8 @@ Categories are managed inside Menu Management and do not receive a separate top-
 
 ## Responsive shell
 
-- Desktop: fixed 288 px sidebar and scrollable content.
-- Tablet/mobile: keyboard-accessible navigation drawer with overlay and explicit close controls.
+- Desktop/tablet: the 288 px sidebar collapses to an 80 px icon rail, exposes accessible tooltips, and persists the preference in local browser storage.
+- Mobile: keyboard-accessible navigation drawer with overlay, explicit close controls, and automatic close after navigation.
 - Tables use horizontal scrolling instead of clipping required columns.
 - POS stacks category, products, and cart content at narrower widths while preserving touch-sized controls.
 
@@ -37,8 +37,8 @@ The staff form never offers KITCHEN. Password fields appear only during creation
 
 ## Thermal receipt
 
-- Target: Xprinter XP-80T, 80 mm paper, approximately 72 mm printable width.
-- Monochrome, monospace, minimal margins, no dashboard/background output.
+- Target: Xprinter XP-80T, 80 mm paper, 74 mm receipt width with 2 mm internal padding.
+- Monochrome Times New Roman at 12 px/600 weight, minimal margins, strong separators, and no dashboard/background output.
 - Item columns: Item, Qty, Total.
 - Never show customer information.
 - Hide discount, tax, and service-charge lines when their values are zero.
@@ -51,4 +51,4 @@ Users select Xprinter XP-80T and 80 mm paper in the operating-system print dialo
 
 ## Settings UI
 
-The responsive settings navigation links overview, restaurant, receipt, billing, printer, system, and profile screens. Forms expose visible focus states, disabled/read-only role states, saving feedback, and toast results. Receipt settings include a live sample; printer settings include a browser print test and five-step system-dialog guide. Both 80 mm (72 mm content) and future 58 mm (52 mm content) styles are available.
+The responsive settings navigation links overview, restaurant, receipt, billing, printer, system, and profile screens. Forms expose visible focus states, disabled/read-only role states, saving feedback, and toast results. Discount, tax, and service-charge billing controls are disabled from the active workflow. Receipt settings include a live sample; printer settings include a browser print test and five-step system-dialog guide. Both 80 mm and future 58 mm styles are available.

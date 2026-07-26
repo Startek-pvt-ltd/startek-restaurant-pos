@@ -26,6 +26,9 @@ function safeActionError(error: unknown, fallback: string): ExpenseActionResult 
   if (message === "EXPENSE_ACCESS_DENIED") {
     return { success: false, message: "Your active account does not have expense access." };
   }
+  if (message === "EXPENSE_EDIT_DENIED") {
+    return { success: false, message: "Cashiers can only edit expenses they created." };
+  }
   if (message === "EXPENSE_NOT_FOUND") {
     return { success: false, message: "This expense no longer exists." };
   }

@@ -123,3 +123,18 @@ export const BackupStatus = {
 } as const
 
 export type BackupStatus = (typeof BackupStatus)[keyof typeof BackupStatus]
+
+
+export const NotificationType = {
+  ORDER_COMPLETED: 'ORDER_COMPLETED',
+  ORDER_CANCELLED: 'ORDER_CANCELLED',
+  EXPENSE_CREATED: 'EXPENSE_CREATED',
+  MENU_AVAILABILITY: 'MENU_AVAILABILITY',
+  STAFF_CREATED: 'STAFF_CREATED',
+  STAFF_DEACTIVATED: 'STAFF_DEACTIVATED',
+  BACKUP_COMPLETED: 'BACKUP_COMPLETED',
+  BACKUP_FAILED: 'BACKUP_FAILED',
+  SYSTEM: 'SYSTEM'
+} as const
+
+export type NotificationType = (typeof NotificationType)[keyof typeof NotificationType]

@@ -7,6 +7,7 @@ import { getExpensesPage } from "@/features/expenses/services/expense-service";
 import {
   EXPENSE_ACCESS_ROLES,
   EXPENSE_DELETE_ROLES,
+  EXPENSE_EDIT_ALL_ROLES,
 } from "@/features/expenses/types";
 import { expenseFiltersSchema } from "@/features/expenses/validations/expense-schema";
 import type { UserRole } from "@/generated/prisma/client";
@@ -44,13 +45,22 @@ export default async function ExpensesPage({ searchParams }: { searchParams: Sea
     session.user.role,
     EXPENSE_DELETE_ROLES as readonly UserRole[],
   );
+  const canEditAll = hasRole(
+    session.user.role,
+    EXPENSE_EDIT_ALL_ROLES as readonly UserRole[],
+  );
 
   return (
     <div className="space-y-5 pb-8">
       <ExpenseHeader />
       <ExpenseStatistics statistics={data.statistics} />
       <ExpenseFilters error={filterError} filters={filters} />
-      <ExpenseTable canDelete={canDelete} expenses={data.expenses} />
+      <ExpenseTable
+        canDelete={canDelete}
+        canEditAll={canEditAll}
+        currentUserId={session.user.id}
+        expenses={data.expenses}
+      />
       <ExpensePagination
         filters={filters}
         page={data.page}

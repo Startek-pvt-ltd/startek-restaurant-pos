@@ -4,6 +4,7 @@ import bcrypt from "bcryptjs";
 
 import { Prisma, type UserRole } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
+import { notifyActiveUsers } from "@/features/notifications/services/notification-service";
 
 import { canManageRole } from "../permissions/staff-permissions";
 import { APPROVED_STAFF_ROLES, STAFF_ACCESS_ROLES, type ApprovedStaffRole, type StaffFilters, type StaffRecord } from "../types";
@@ -190,6 +191,7 @@ export async function createStaff(input: CreateStaffInput, actorId: string) {
       select: { id: true, fullName: true },
     });
     await tx.activityLog.create({ data: { userId: actorId, action: activity("STAFF_CREATED", user.id, user.fullName) } });
+    await notifyActiveUsers(tx, { title: "Staff account created", message: `${user.fullName} was added to staff.`, type: "STAFF_CREATED", link: "/staff" });
     return user;
   }, { isolationLevel: "Serializable" });
 }
@@ -220,6 +222,7 @@ export async function updateStaff(id: string, input: EditStaffInput, actorId: st
     await tx.activityLog.create({ data: { userId: actorId, action: activity("STAFF_UPDATED", id, input.fullName) } });
     if (statusChanged) {
       await tx.activityLog.create({ data: { userId: actorId, action: activity(input.status === "ACTIVE" ? "STAFF_ACTIVATED" : "STAFF_DEACTIVATED", id, input.fullName) } });
+      if (input.status === "INACTIVE") await notifyActiveUsers(tx, { title: "Staff account deactivated", message: `${input.fullName} was deactivated.`, type: "STAFF_DEACTIVATED", link: "/staff" });
     }
     return { id };
   }, { isolationLevel: "Serializable" });
@@ -236,6 +239,7 @@ export async function changeStaffStatus(id: string, status: "ACTIVE" | "INACTIVE
     if (status === "INACTIVE") await protectLastPrivilegedAccount(tx, target.role);
     await tx.user.update({ where: { id }, data: { status, sessionVersion: { increment: 1 } } });
     await tx.activityLog.create({ data: { userId: actorId, action: activity(status === "ACTIVE" ? "STAFF_ACTIVATED" : "STAFF_DEACTIVATED", id, target.fullName) } });
+    if (status === "INACTIVE") await notifyActiveUsers(tx, { title: "Staff account deactivated", message: `${target.fullName} was deactivated.`, type: "STAFF_DEACTIVATED", link: "/staff" });
     return { id };
   }, { isolationLevel: "Serializable" });
 }

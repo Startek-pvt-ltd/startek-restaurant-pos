@@ -16,6 +16,7 @@
 | TASK-012 Staff Management and Role Administration | Complete |
 | TASK-013 Restaurant and System Settings | Complete |
 | TASK-014 Backup, Restore Preparation, and Data Export | Complete |
+| POS UX and Receipt Printing Upgrades | Complete |
 | Production deployment | Pending |
 
 Customer management, table management, kitchen display, inventory, and supplier management are excluded rather than pending milestones.

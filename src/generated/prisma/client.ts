@@ -52,6 +52,11 @@ export type Restaurant = Prisma.RestaurantModel
  */
 export type User = Prisma.UserModel
 /**
+ * Model Notification
+ * 
+ */
+export type Notification = Prisma.NotificationModel
+/**
  * Model BackupRecord
  * 
  */

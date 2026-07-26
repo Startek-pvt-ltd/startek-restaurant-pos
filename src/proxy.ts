@@ -11,5 +11,6 @@ export const config = {
     "/expenses/:path*",
     "/staff/:path*",
     "/settings/:path*",
+    "/notifications/:path*",
   ],
 };

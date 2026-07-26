@@ -90,6 +90,18 @@ enum BackupStatus {
   RESTORED
 }
 
+enum NotificationType {
+  ORDER_COMPLETED
+  ORDER_CANCELLED
+  EXPENSE_CREATED
+  MENU_AVAILABILITY
+  STAFF_CREATED
+  STAFF_DEACTIVATED
+  BACKUP_COMPLETED
+  BACKUP_FAILED
+  SYSTEM
+}
+
 model Restaurant {
   id                         String   @id @default(uuid()) @db.Uuid
   name                       String
@@ -136,11 +148,28 @@ model User {
   activityLogs      ActivityLog[]
   cancelledOrders   Order[]            @relation("CancelledOrders")
   backupRecords     BackupRecord[]
+  notifications     Notification[]
 
   @@index([phone])
   @@index([role])
   @@index([status])
   @@index([lastLogin])
+}
+
+model Notification {
+  id        String           @id @default(uuid()) @db.Uuid
+  userId    String?          @db.Uuid
+  title     String
+  message   String
+  type      NotificationType
+  link      String?
+  read      Boolean          @default(false)
+  createdAt DateTime         @default(now())
+  readAt    DateTime?
+  user      User?            @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, read, createdAt])
+  @@index([createdAt])
 }
 
 model BackupRecord {

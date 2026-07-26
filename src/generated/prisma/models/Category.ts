@@ -405,10 +405,6 @@ export type CategoryScalarRelationFilter = {
   isNot?: Prisma.CategoryWhereInput
 }
 
-export type BoolFieldUpdateOperationsInput = {
-  set?: boolean
-}
-
 export type CategoryCreateNestedOneWithoutMenuItemsInput = {
   create?: Prisma.XOR<Prisma.CategoryCreateWithoutMenuItemsInput, Prisma.CategoryUncheckedCreateWithoutMenuItemsInput>
   connectOrCreate?: Prisma.CategoryCreateOrConnectWithoutMenuItemsInput

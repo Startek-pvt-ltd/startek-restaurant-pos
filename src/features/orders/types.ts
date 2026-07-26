@@ -76,7 +76,11 @@ export type OrderDetailRecord = {
   restaurant: {
     name: string;
     address: string;
+    addressLine1: string;
+    addressLine2: string | null;
+    city: string;
     phone: string;
+    phone2: string | null;
     email: string | null;
     taxNumber: string | null;
     logo: string | null;

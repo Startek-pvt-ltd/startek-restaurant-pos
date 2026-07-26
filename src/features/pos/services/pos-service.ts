@@ -2,6 +2,7 @@ import "server-only";
 
 import { Prisma, type UserRole } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
+import { notifyActiveUsers } from "@/features/notifications/services/notification-service";
 import { getSettingsBundle } from "@/features/settings/services/settings-service";
 
 import { calculateBalance, calculateTotals, toCents } from "../lib/calculate-totals";
@@ -36,8 +37,6 @@ export async function getPosData() {
     prisma.restaurant.findFirst({
       select: {
         currency: true,
-        taxPercentage: true,
-        serviceCharge: true,
       },
       orderBy: { createdAt: "asc" },
     }),
@@ -58,8 +57,6 @@ export async function getPosData() {
     })),
     settings: {
       currency: restaurant.currency,
-      taxPercentage: Number(restaurant.taxPercentage),
-      serviceChargePercentage: Number(restaurant.serviceCharge),
       printerName: printer.printer.printerName,
       printerPaperWidth: printer.printer.paperWidth,
       autoOpenReceiptAfterCheckout: printer.printer.autoOpenReceiptAfterCheckout,
@@ -67,9 +64,6 @@ export async function getPosData() {
       printLogo: printer.printer.printLogo,
       receiptCopies: printer.printer.receiptCopies,
       defaultOrderType: printer.billing.defaultOrderType,
-      discountEnabled: printer.billing.discountEnabled,
-      maximumPercentageDiscount: printer.billing.maximumPercentageDiscount,
-      maximumFixedDiscount: printer.billing.maximumFixedDiscount,
       allowCash: printer.billing.allowCash,
       allowCard: printer.billing.allowCard,
       allowQr: printer.billing.allowQr,
@@ -143,13 +137,9 @@ export async function createCompletedOrder(cashierId: string, input: CheckoutInp
               category: { select: { active: true } },
             },
           });
-          const restaurant = await tx.restaurant.findFirst({
-            select: { taxPercentage: true, serviceCharge: true },
-            orderBy: { createdAt: "asc" },
-          });
           const system = await tx.systemSetting.findFirst({ orderBy: { id: "asc" } });
 
-          if (!restaurant || !system) throw new Error("SETTINGS_NOT_FOUND");
+          if (!system) throw new Error("SETTINGS_NOT_FOUND");
           if (menuItems.length !== uniqueIds.length) throw new Error("MENU_ITEM_NOT_FOUND");
 
           const menuItemMap = new Map(menuItems.map((item) => [item.id, item]));
@@ -169,19 +159,15 @@ export async function createCompletedOrder(cashierId: string, input: CheckoutInp
 
           const totals = calculateTotals({
             items: pricedItems,
-            discountType: input.discountType,
-            discountValue: input.discountValue,
-            taxPercentage: Number(restaurant.taxPercentage),
-            serviceChargePercentage: Number(restaurant.serviceCharge),
+            discountType: "FIXED",
+            discountValue: 0,
+            taxPercentage: 0,
+            serviceChargePercentage: 0,
           });
 
-          if (!system.discountEnabled && input.discountValue > 0) throw new Error("INVALID_DISCOUNT");
-          if (input.discountType === "PERCENTAGE" && input.discountValue > Number(system.maximumPercentageDiscount)) throw new Error("INVALID_DISCOUNT");
-          if (input.discountType === "FIXED" && input.discountValue > Number(system.maximumFixedDiscount)) throw new Error("INVALID_DISCOUNT");
           if (system.requireOrderNotes && !input.notes.trim()) throw new Error("ORDER_NOTES_REQUIRED");
           if ((input.paymentMethod === "CASH" && !system.allowCash) || (input.paymentMethod === "CARD" && !system.allowCard) || (input.paymentMethod === "QR" && !system.allowQr)) throw new Error("PAYMENT_METHOD_DISABLED");
 
-          if (!totals.discountValid) throw new Error("INVALID_DISCOUNT");
           if (!totals.totalsValid || totals.grandTotal < 0) throw new Error("INVALID_TOTAL");
 
           const receivedAmount = input.paymentMethod === "CASH" ? input.amountReceived : null;
@@ -200,9 +186,9 @@ export async function createCompletedOrder(cashierId: string, input: CheckoutInp
               status: "COMPLETED",
               notes: input.notes || null,
               subtotal: totals.subtotal,
-              discount: totals.discount,
-              tax: totals.tax,
-              serviceCharge: totals.serviceCharge,
+              discount: 0,
+              tax: 0,
+              serviceCharge: 0,
               grandTotal: totals.grandTotal,
               items: {
                 create: pricedItems.map((item) => ({
@@ -231,6 +217,7 @@ export async function createCompletedOrder(cashierId: string, input: CheckoutInp
               action: `COMPLETED_ORDER ${order.orderNumber}`,
             },
           });
+          await notifyActiveUsers(tx, { title: "Order completed", message: `${order.orderNumber} was completed.`, type: "ORDER_COMPLETED", link: `/orders/${order.id}` });
 
           return {
             orderId: order.id,

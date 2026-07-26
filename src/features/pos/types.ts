@@ -20,8 +20,6 @@ export type PosProduct = {
 
 export type RestaurantBillingSettings = {
   currency: string;
-  taxPercentage: number;
-  serviceChargePercentage: number;
   printerName: string;
   printerPaperWidth: number;
   autoOpenReceiptAfterCheckout: boolean;
@@ -29,9 +27,6 @@ export type RestaurantBillingSettings = {
   printLogo: boolean;
   receiptCopies: number;
   defaultOrderType: PosOrderType;
-  discountEnabled: boolean;
-  maximumPercentageDiscount: number;
-  maximumFixedDiscount: number;
   allowCash: boolean;
   allowCard: boolean;
   allowQr: boolean;
@@ -46,8 +41,6 @@ export type CheckoutInput = {
   items: Array<{ menuItemId: string; quantity: number }>;
   orderType: PosOrderType;
   notes: string;
-  discountType: DiscountType;
-  discountValue: number;
   paymentMethod: PosPaymentMethod;
   amountReceived: number | null;
 };

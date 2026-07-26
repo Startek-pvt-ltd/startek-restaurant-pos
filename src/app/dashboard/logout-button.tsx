@@ -10,9 +10,10 @@ import { cn } from "@/lib/utils";
 interface LogoutButtonProps {
   className?: string;
   icon?: React.ReactNode;
+  hideLabel?: boolean;
 }
 
-export function LogoutButton({ className, icon }: LogoutButtonProps) {
+export function LogoutButton({ className, hideLabel, icon }: LogoutButtonProps) {
   const [isSigningOut, setIsSigningOut] = useState(false);
 
   return (
@@ -31,7 +32,7 @@ export function LogoutButton({ className, icon }: LogoutButtonProps) {
       ) : (
         icon ?? <LogOut aria-hidden="true" />
       )}
-      {isSigningOut ? "Signing out…" : "Logout"}
+      <span className={hideLabel ? "md:hidden" : undefined}>{isSigningOut ? "Signing out…" : "Logout"}</span>
     </Button>
   );
 }

@@ -47,6 +47,12 @@ Migration `20260726093000_add_expenses_management` adds `expenseDate`, optional 
 
 Removing them now would require a destructive migration and could discard deployed data. Cleanup is deferred to a separately approved data-retention/migration task with backups, usage verification, and an explicit rollback plan. TASK-009 does not delete migrations, reset the database, or remove existing records.
 
+## Notification model
+
+Migration `20260726190000_add_notifications` adds typed, per-user operational notifications with title, safe message, optional link, read state, creation time, and read time. The composite `(userId, read, createdAt)` index supports the topbar unread counter and recent-notification query. Deleting a user cascades only that user’s notification inbox; business and audit records are unaffected.
+
+New orders retain the existing `discount`, `tax`, and `serviceCharge` columns for historical compatibility, but checkout writes zero to all three fields and calculates `grandTotal` from server-priced menu item snapshots only.
+
 The seed no longer creates restaurant tables and defaults customer receipt visibility off. It preserves existing menu/order data and creates sample menu items only when none exist.
 
 ## Receipt settings compatibility

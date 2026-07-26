@@ -2,6 +2,7 @@ import "server-only";
 
 import { Prisma, type UserRole } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
+import { notifyActiveUsers } from "@/features/notifications/services/notification-service";
 
 import {
   type OrderDetailRecord,
@@ -165,7 +166,11 @@ export async function getOrderDetail(id: string): Promise<OrderDetailRecord | nu
       select: {
         name: true,
         address: true,
+        addressLine1: true,
+        addressLine2: true,
+        city: true,
         phone: true,
+        phone2: true,
         email: true,
         taxNumber: true,
         logo: true,
@@ -245,6 +250,7 @@ export async function completePendingOrder(orderId: string, userId: string) {
     await tx.activityLog.create({
       data: { userId, action: `COMPLETED_ORDER ${order.orderNumber}` },
     });
+    await notifyActiveUsers(tx, { title: "Order completed", message: `${order.orderNumber} was completed.`, type: "ORDER_COMPLETED", link: `/orders/${orderId}` });
     return order;
   });
 }
@@ -281,6 +287,7 @@ export async function cancelOrder(orderId: string, reason: string, userId: strin
     await tx.activityLog.create({
       data: { userId, action: `CANCELLED_ORDER ${order.orderNumber}: ${reason}` },
     });
+    await notifyActiveUsers(tx, { title: "Order cancelled", message: `${order.orderNumber} was cancelled.`, type: "ORDER_CANCELLED", link: `/orders/${orderId}` });
     return order;
   });
 }

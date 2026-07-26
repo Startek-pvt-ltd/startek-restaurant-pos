@@ -2,11 +2,13 @@ import "server-only";
 
 import { Prisma, type UserRole } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
+import { notifyActiveUsers } from "@/features/notifications/services/notification-service";
 
 import type { ExpenseInput } from "../validations/expense-schema";
 import {
   EXPENSE_ACCESS_ROLES,
   EXPENSE_DELETE_ROLES,
+  EXPENSE_EDIT_ALL_ROLES,
   type ExpenseListFilters,
   type ExpenseRecord,
 } from "../types";
@@ -150,6 +152,7 @@ async function assertExpenseUser(
   if (!user || user.status !== "ACTIVE" || !allowedRoles.includes(user.role)) {
     throw new Error("EXPENSE_ACCESS_DENIED");
   }
+  return user;
 }
 
 function expenseData(input: ExpenseInput) {
@@ -167,6 +170,10 @@ function safeLogDescription(title: string) {
   return title.replaceAll("|", "-").slice(0, 150);
 }
 
+function hasFullExpenseEditAccess(role: UserRole) {
+  return (EXPENSE_EDIT_ALL_ROLES as readonly UserRole[]).includes(role);
+}
+
 export async function createExpense(input: ExpenseInput, userId: string) {
   return prisma.$transaction(async (tx) => {
     await assertExpenseUser(tx, userId, EXPENSE_ACCESS_ROLES as readonly UserRole[]);
@@ -180,6 +187,12 @@ export async function createExpense(input: ExpenseInput, userId: string) {
         action: `EXPENSE_CREATED | ${expense.id} | ${safeLogDescription(expense.title)}`,
       },
     });
+    await notifyActiveUsers(tx, {
+      title: "Expense created",
+      message: `${expense.title} was added to expenses.`,
+      type: "EXPENSE_CREATED",
+      link: "/expenses",
+    });
     return expense;
   });
 }
@@ -191,15 +204,20 @@ export async function updateExpense(
   userId: string,
 ) {
   return prisma.$transaction(async (tx) => {
-    await assertExpenseUser(tx, userId, EXPENSE_ACCESS_ROLES as readonly UserRole[]);
+    const user = await assertExpenseUser(tx, userId, EXPENSE_ACCESS_ROLES as readonly UserRole[]);
     const updatedAt = new Date();
     const result = await tx.expense.updateMany({
-      where: { id, updatedAt: new Date(expectedUpdatedAt) },
+      where: {
+        id,
+        updatedAt: new Date(expectedUpdatedAt),
+        ...(hasFullExpenseEditAccess(user.role) ? {} : { createdBy: userId }),
+      },
       data: { ...expenseData(input), updatedAt },
     });
     if (result.count !== 1) {
-      const exists = await tx.expense.count({ where: { id } });
-      throw new Error(exists ? "EXPENSE_UPDATE_CONFLICT" : "EXPENSE_NOT_FOUND");
+      const existing = await tx.expense.findUnique({ where: { id }, select: { createdBy: true } });
+      if (existing && existing.createdBy !== userId) throw new Error("EXPENSE_EDIT_DENIED");
+      throw new Error(existing ? "EXPENSE_UPDATE_CONFLICT" : "EXPENSE_NOT_FOUND");
     }
     await tx.activityLog.create({
       data: {

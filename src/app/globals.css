@@ -117,7 +117,7 @@
 .thermal-print-page {
   page: receipt;
   color: #000;
-  font-family: "Courier New", Courier, monospace;
+  font-family: "Times New Roman", Times, serif;
 }
 
 @page report {
@@ -195,19 +195,20 @@
 
 .receipt {
   box-sizing: border-box;
-  width: 72mm;
+  width: 74mm;
   margin: 0 auto;
-  padding: 2mm 1mm;
+  padding: 2mm;
   background: #fff;
   color: #000;
-  font-family: "Courier New", Courier, monospace;
-  font-size: 10px;
+  font-family: "Times New Roman", Times, serif;
+  font-size: 12px;
+  font-weight: 600;
   font-variant-numeric: tabular-nums;
-  line-height: 1.35;
+  line-height: 1.3;
 }
 
 .receipt-58 { page: receipt58; width: 52mm; }
-.receipt-80 { page: receipt; width: 72mm; }
+.receipt-80 { page: receipt; width: 74mm; }
 
 .receipt-section { break-inside: avoid; page-break-inside: avoid; }
 .receipt-section + .receipt-section { border-top: 1px dashed #000; margin-top: 2mm; padding-top: 2mm; }
@@ -216,7 +217,7 @@
 .receipt-logo { width: 18mm; height: 18mm; margin: 0 auto; object-fit: contain; filter: grayscale(1) contrast(1.6); }
 .receipt-row { display: flex; justify-content: space-between; gap: 3mm; padding: 0.4mm 0; }
 .receipt-row > :last-child { text-align: right; overflow-wrap: anywhere; }
-.receipt-total { border-top: 1px solid #000; font-size: 12px; font-weight: 900; margin-top: 1mm; padding-top: 1.5mm; }
+.receipt-total { border-top: 2px solid #000; border-bottom: 2px solid #000; font-size: 16px; font-weight: 900; margin-top: 1.5mm; padding: 1.5mm 0; }
 .receipt-items-head, .receipt-item { display: grid; grid-template-columns: minmax(0, 1fr) 8mm 22mm; gap: 1mm; align-items: end; }
 .receipt-items-head { font-weight: 900; border-bottom: 1px solid #000; padding-bottom: 1mm; }
 .receipt-items-head span:not(:first-child), .receipt-item span { text-align: right; }
@@ -240,6 +241,8 @@
   * {
     box-shadow: none !important;
     text-shadow: none !important;
+    color: #000 !important;
+    background-image: none !important;
   }
 
   .no-print {
@@ -265,14 +268,15 @@
   }
 
   .receipt {
-    width: 72mm;
+    width: 74mm;
     margin: 0 auto;
+    padding: 2mm;
     background: #fff !important;
     color: #000 !important;
   }
 
   .receipt-58 { width: 52mm; }
-  .receipt-80 { width: 72mm; }
+  .receipt-80 { width: 74mm; }
 
   .receipt:not(:last-child) {
     break-after: page;

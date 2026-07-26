@@ -1,6 +1,7 @@
 import type { ExpenseCategory } from "@/generated/prisma/client";
 
-export const EXPENSE_ACCESS_ROLES = ["SUPER_ADMIN", "OWNER", "MANAGER"] as const;
+export const EXPENSE_ACCESS_ROLES = ["SUPER_ADMIN", "OWNER", "MANAGER", "CASHIER"] as const;
+export const EXPENSE_EDIT_ALL_ROLES = ["SUPER_ADMIN", "OWNER", "MANAGER"] as const;
 export const EXPENSE_DELETE_ROLES = ["SUPER_ADMIN", "OWNER"] as const;
 
 export const EXPENSE_CATEGORIES = [
