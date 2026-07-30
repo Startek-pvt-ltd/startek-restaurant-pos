@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 export const checkoutSchema = z.object({
+  checkoutToken: z.string().uuid("Invalid checkout token."),
   items: z
     .array(
       z.object({

@@ -32,13 +32,17 @@ export async function getSettingsBundle() {
       showServiceChargeWhenZero: system.receiptShowServiceWhenZero, showCashReceived: system.receiptShowCashReceived, showBalance: system.receiptShowBalance,
       showOrderType: system.receiptShowOrderType, showCashier: system.receiptShowCashier, showRestaurantPhone: system.receiptShowRestaurantPhone,
       developerCredit: system.receiptDeveloperCredit, autoOpenReceiptAfterCheckout: system.autoOpenReceiptAfterCheckout, autoPrintAfterCheckout: system.autoPrintAfterCheckout,
-      receiptCopies: system.receiptCopies, footerText: system.receiptFooterText ?? "",
+      receiptCopies: 1, footerText: system.receiptFooterText ?? "",
     },
     printer: {
       printerName: system.printerName, paperWidth: system.printerPaperWidth, scale: system.printerScale, margin: system.printerMargin === "MINIMUM" ? "MINIMUM" as const : "NONE" as const,
       headersFootersReminder: system.printerHeadersFootersReminder, autoOpenReceiptAfterCheckout: system.autoOpenReceiptAfterCheckout,
-      autoPrintAfterCheckout: system.autoPrintAfterCheckout, printLogo: system.printLogo, receiptCopies: system.receiptCopies, notes: system.printerNotes ?? "",
-      openCashDrawer: false as const, showTaxLine: system.receiptShowTax, showServiceChargeLine: system.receiptShowServiceCharge,
+      autoPrintAfterCheckout: system.autoPrintAfterCheckout, printLogo: system.printLogo, receiptCopies: 1, notes: system.printerNotes ?? "",
+      mode: system.printerMode === "ESC_POS_BRIDGE" ? "ESC_POS_BRIDGE" as const : "BROWSER" as const,
+      automaticCut: system.printerAutomaticCut, cashDrawerEnabled: system.openCashDrawer,
+      drawerOpenMode: system.printerDrawerOpenMode === "ALL_PAYMENTS" ? "ALL_PAYMENTS" as const : "CASH_ONLY" as const,
+      drawerPin: system.printerDrawerPin === 1 ? 1 as const : 0 as const, drawerPulseOnMs: system.printerDrawerPulseOnMs,
+      drawerPulseOffMs: system.printerDrawerPulseOffMs, showTaxLine: system.receiptShowTax, showServiceChargeLine: system.receiptShowServiceCharge,
     },
     system: {
       applicationName: system.applicationName, applicationVersion: system.applicationVersion, timezone: system.timezone, dateFormat: system.dateFormat,
@@ -73,11 +77,11 @@ export async function saveBillingSettings(input: z.infer<typeof billingSettingsS
 export async function saveReceiptSettings(input: z.infer<typeof receiptSettingsSchema>, userId: string) {
   return mutate(userId, OPERATIONAL_SETTINGS_ROLES, "UPDATED_RECEIPT_SETTINGS", async (tx) => {
     const actor=await tx.user.findUniqueOrThrow({where:{id:userId},select:{role:true}}); const s=await tx.systemSetting.findFirst({select:{id:true},orderBy:{id:"asc"}}); if(!s) throw new Error("SETTINGS_NOT_FOUND");
-    await tx.systemSetting.update({where:{id:s.id},data:{printLogo:input.printLogo,printerPaperWidth:input.paperWidth,receiptHeaderMessage:input.headerMessage||null,receiptThankYouMessage:input.thankYouMessage,receiptVisitAgainMessage:input.visitAgainMessage,receiptShowDiscountWhenZero:input.showDiscountWhenZero,receiptShowTaxWhenZero:input.showTaxWhenZero,receiptShowServiceWhenZero:input.showServiceChargeWhenZero,receiptShowCashReceived:input.showCashReceived,receiptShowBalance:input.showBalance,receiptShowOrderType:input.showOrderType,receiptShowCashier:input.showCashier,receiptShowRestaurantPhone:input.showRestaurantPhone,...(actor.role==="SUPER_ADMIN"?{receiptDeveloperCredit:input.developerCredit}:{}),autoOpenReceiptAfterCheckout:input.autoOpenReceiptAfterCheckout,autoPrintAfterCheckout:input.autoPrintAfterCheckout,receiptCopies:input.receiptCopies,receiptFooterText:input.footerText||null}});
+    await tx.systemSetting.update({where:{id:s.id},data:{printLogo:input.printLogo,printerPaperWidth:input.paperWidth,receiptHeaderMessage:input.headerMessage||null,receiptThankYouMessage:input.thankYouMessage,receiptVisitAgainMessage:input.visitAgainMessage,receiptShowDiscountWhenZero:input.showDiscountWhenZero,receiptShowTaxWhenZero:input.showTaxWhenZero,receiptShowServiceWhenZero:input.showServiceChargeWhenZero,receiptShowCashReceived:input.showCashReceived,receiptShowBalance:input.showBalance,receiptShowOrderType:false,receiptShowCashier:input.showCashier,receiptShowRestaurantPhone:input.showRestaurantPhone,...(actor.role==="SUPER_ADMIN"?{receiptDeveloperCredit:input.developerCredit}:{}),autoOpenReceiptAfterCheckout:input.autoOpenReceiptAfterCheckout,autoPrintAfterCheckout:input.autoPrintAfterCheckout,receiptCopies:1,receiptFooterText:input.footerText||null}});
   });
 }
 export async function savePrinterSettings(input: z.infer<typeof printerSettingsSchema>, userId: string) {
-  return mutate(userId, OPERATIONAL_SETTINGS_ROLES, "UPDATED_PRINTER_SETTINGS", async (tx) => { const s=await tx.systemSetting.findFirst({select:{id:true},orderBy:{id:"asc"}}); if(!s) throw new Error("SETTINGS_NOT_FOUND"); await tx.systemSetting.update({where:{id:s.id},data:{printerName:input.printerName,printerPaperWidth:input.paperWidth,printerScale:input.scale,printerMargin:input.margin,printerHeadersFootersReminder:input.headersFootersReminder,autoOpenReceiptAfterCheckout:input.autoOpenReceiptAfterCheckout,autoPrintAfterCheckout:input.autoPrintAfterCheckout,printLogo:input.printLogo,receiptCopies:input.receiptCopies,printerNotes:input.notes||null,openCashDrawer:false}}); });
+  return mutate(userId, OPERATIONAL_SETTINGS_ROLES, "UPDATED_PRINTER_SETTINGS", async (tx) => { const s=await tx.systemSetting.findFirst({select:{id:true},orderBy:{id:"asc"}}); if(!s) throw new Error("SETTINGS_NOT_FOUND"); await tx.systemSetting.update({where:{id:s.id},data:{printerName:input.printerName,printerPaperWidth:input.paperWidth,printerScale:input.scale,printerMargin:input.margin,printerHeadersFootersReminder:input.headersFootersReminder,autoOpenReceiptAfterCheckout:input.autoOpenReceiptAfterCheckout,autoPrintAfterCheckout:input.autoPrintAfterCheckout,printLogo:input.printLogo,receiptCopies:1,printerNotes:input.notes||null,printerMode:input.mode,printerAutomaticCut:input.automaticCut,openCashDrawer:input.cashDrawerEnabled,printerDrawerOpenMode:input.drawerOpenMode,printerDrawerPin:input.drawerPin,printerDrawerPulseOnMs:input.drawerPulseOnMs,printerDrawerPulseOffMs:input.drawerPulseOffMs}}); });
 }
 export async function saveSystemPreferences(input: z.infer<typeof systemPreferencesSchema>, userId: string) {
   return mutate(userId, ["SUPER_ADMIN"], "UPDATED_SYSTEM_SETTINGS", async (tx) => { const s=await tx.systemSetting.findFirst({select:{id:true},orderBy:{id:"asc"}}); if(!s) throw new Error("SETTINGS_NOT_FOUND"); await tx.systemSetting.update({where:{id:s.id},data:input}); });

@@ -13,6 +13,7 @@
     "pos:start": "./scripts/start-pos.sh",
     "pos:stop": "./scripts/stop-pos.sh",
     "pos:health": "./scripts/health-check.sh",
+    "printer:bridge": "node --env-file-if-exists=.env scripts/escpos-printer-bridge.mjs",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:seed": "prisma db seed",

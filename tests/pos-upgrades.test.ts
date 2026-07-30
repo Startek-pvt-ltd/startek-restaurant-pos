@@ -7,6 +7,7 @@ import { checkoutSchema } from "../src/features/pos/validations/checkout";
 import { menuItemSchema } from "../src/features/menu/validations/menu-item";
 
 const checkout = {
+  checkoutToken: "550e8400-e29b-41d4-a716-446655440099",
   items: [{ menuItemId: "550e8400-e29b-41d4-a716-446655440000", menuItemVariantId: "550e8400-e29b-41d4-a716-446655440001", quantity: 2 }],
   orderType: "TAKEAWAY" as const,
   notes: "",

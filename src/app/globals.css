@@ -105,12 +105,12 @@
 }
 
 @page receipt {
-  size: 80mm auto;
+  size: auto;
   margin: 0;
 }
 
 @page receipt58 {
-  size: 58mm auto;
+  size: auto;
   margin: 0;
 }
 
@@ -218,7 +218,7 @@
 .receipt-row { display: flex; justify-content: space-between; gap: 3mm; padding: 0.4mm 0; }
 .receipt-row > :last-child { text-align: right; overflow-wrap: anywhere; }
 .receipt-total { border-top: 2px solid #000; border-bottom: 2px solid #000; font-size: 16px; font-weight: 900; margin-top: 1.5mm; padding: 1.5mm 0; }
-.receipt-items-head, .receipt-item { display: grid; grid-template-columns: minmax(0, 1fr) 8mm 22mm; gap: 1mm; align-items: end; }
+.receipt-items-head, .receipt-item { display: grid; grid-template-columns: minmax(0, 1fr) 7mm 18mm 20mm; gap: 1mm; align-items: end; }
 .receipt-items-head { font-weight: 900; border-bottom: 1px solid #000; padding-bottom: 1mm; }
 .receipt-items-head span:not(:first-child), .receipt-item span { text-align: right; }
 .receipt-item { padding: 1mm 0; break-inside: avoid; page-break-inside: avoid; }
@@ -244,6 +244,9 @@
     line-height: 1.35 !important;
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
   }
 
   body:has(.thermal-print-page) * {
@@ -268,6 +271,18 @@
     padding: 0 !important;
   }
 
+  body:has(.thermal-print-page) > [data-sonner-toaster],
+  body:has(.thermal-print-page) .no-print {
+    display: none !important;
+  }
+
+  body:has(.thermal-print-page) .min-h-screen,
+  body:has(.thermal-print-page) .dashboard-shell,
+  body:has(.thermal-print-page) .dashboard-main {
+    height: auto !important;
+    min-height: 0 !important;
+  }
+
   .thermal-print-page,
   .receipt-copies {
     display: block;
@@ -278,6 +293,8 @@
     margin: 0 !important;
     padding: 0 !important;
     background: #fff !important;
+    height: auto !important;
+    min-height: 0 !important;
   }
 
   .receipt {
@@ -297,6 +314,8 @@
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
     zoom: 1 !important;
+    height: auto !important;
+    min-height: 0 !important;
   }
 
   .receipt-58 {
@@ -386,7 +405,7 @@
   .receipt-items-head,
   .receipt-item {
     display: grid !important;
-    grid-template-columns: minmax(0, 1fr) 9mm 23mm !important;
+    grid-template-columns: minmax(0, 1fr) 7mm 18mm 20mm !important;
     align-items: start !important;
     column-gap: 2mm !important;
   }
@@ -403,6 +422,13 @@
   .receipt-item-name {
     min-width: 0;
     text-align: left !important;
+  }
+
+  .receipt-58 .receipt-items-head,
+  .receipt-58 .receipt-item {
+    grid-template-columns: minmax(0, 1fr) 6mm 14mm 16mm !important;
+    column-gap: 1mm !important;
+    font-size: 9px !important;
   }
 
   .receipt-items-head span:not(:first-child),
@@ -471,11 +497,6 @@
   .receipt-copy-label {
     margin-top: 2mm !important;
     font-weight: 700 !important;
-  }
-
-  .receipt:not(:last-child) {
-    break-after: page;
-    page-break-after: always;
   }
 
 }

@@ -71,6 +71,7 @@ export async function getPosData() {
       autoPrintAfterCheckout: printer.printer.autoPrintAfterCheckout,
       printLogo: printer.printer.printLogo,
       receiptCopies: printer.printer.receiptCopies,
+      printerMode: printer.printer.mode,
       defaultOrderType: printer.billing.defaultOrderType,
       allowCash: printer.billing.allowCash,
       allowCard: printer.billing.allowCard,
@@ -131,6 +132,15 @@ export async function createCompletedOrder(cashierId: string, input: CheckoutInp
 
           if (!cashier || cashier.status !== "ACTIVE" || !POS_ROLES.includes(cashier.role)) {
             throw new Error("POS_ACCESS_DENIED");
+          }
+
+          const existingOrder = await tx.order.findUnique({
+            where: { checkoutToken: input.checkoutToken },
+            select: { id: true, orderNumber: true, cashierId: true, grandTotal: true, payments: { select: { changeAmount: true }, orderBy: { createdAt: "desc" }, take: 1 } },
+          });
+          if (existingOrder) {
+            if (existingOrder.cashierId !== cashierId) throw new Error("POS_ACCESS_DENIED");
+            return { orderId: existingOrder.id, orderNumber: existingOrder.orderNumber, grandTotal: Number(existingOrder.grandTotal.toFixed(2)), balance: Number(existingOrder.payments[0]?.changeAmount?.toFixed(2) ?? 0) };
           }
 
           const cartKeys = input.items.map((item) => `${item.menuItemId}:${item.menuItemVariantId ?? "base"}`);
@@ -232,6 +242,7 @@ export async function createCompletedOrder(cashierId: string, input: CheckoutInp
           const order = await tx.order.create({
             data: {
               orderNumber,
+              checkoutToken: input.checkoutToken,
               cashierId,
               orderType: input.orderType,
               status: "COMPLETED",

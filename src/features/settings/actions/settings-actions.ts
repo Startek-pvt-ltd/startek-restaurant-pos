@@ -5,6 +5,7 @@ import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { revalidatePath } from "next/cache";
 import { hasRole, requireAuth } from "@/lib/auth-utils";
+import { testPrinterHardware } from "@/features/printing/services/printer-bridge-service";
 import { OWNER_SETTINGS_ROLES, type ActionResult } from "../types";
 import { saveBillingSettings, savePrinterSettings, saveReceiptSettings, saveRestaurantSettings, saveSystemPreferences } from "../services/settings-service";
 import { billingSettingsSchema, printerSettingsSchema, receiptSettingsSchema, restaurantSettingsSchema, systemPreferencesSchema } from "../validations/settings";
@@ -18,6 +19,11 @@ export async function updateBillingSettingsAction(input: unknown){return run(inp
 export async function updateReceiptSettingsAction(input: unknown){return run(input,receiptSettingsSchema,saveReceiptSettings,"Receipt settings saved.");}
 export async function updatePrinterSettingsAction(input: unknown){return run(input,printerSettingsSchema,savePrinterSettings,"Printer settings saved.");}
 export async function updateSystemSettingsAction(input: unknown){return run(input,systemPreferencesSchema,saveSystemPreferences,"System preferences saved.");}
+export async function testPrinterHardwareAction(kind: "PRINT" | "DRAWER"): Promise<ActionResult> {
+  const session=await requireAuth(); if(!hasRole(session.user.role,OWNER_SETTINGS_ROLES))return {success:false,message:"Owner access is required to test printer hardware."};
+  try { const result=await testPrinterHardware(kind); return {success:true,message:result.message}; }
+  catch(error){const code=error instanceof Error?error.message:""; const messages:Record<string,string>={DIRECT_PRINTING_DISABLED:"Enable the ESC/POS bridge mode and save settings first.",PRINTER_BRIDGE_NOT_CONFIGURED:"The local printer bridge URL or token is not configured.",PRINTER_BRIDGE_URL_UNSAFE:"The printer bridge must use a loopback HTTP address.",PRINTER_BRIDGE_OFFLINE:"The local printer bridge or thermal printer is offline."}; return {success:false,message:code.startsWith("PRINTER_JOB_FAILED:")?`Printer test failed: ${code.slice("PRINTER_JOB_FAILED:".length)}`:messages[code]??"The printer hardware test failed."};}
+}
 
 function logoType(bytes: Uint8Array, mime: string) {
   if(mime==="image/png"&&bytes[0]===0x89&&bytes[1]===0x50&&bytes[2]===0x4e&&bytes[3]===0x47)return "png";

@@ -2,6 +2,7 @@
 
 import type { UserRole } from "@/generated/prisma/client";
 import { hasRole, requireAuth } from "@/lib/auth-utils";
+import { printCompletedOrder } from "@/features/printing/services/printer-bridge-service";
 
 import { createCompletedOrder } from "../services/pos-service";
 import type { CheckoutResult } from "../types";
@@ -52,11 +53,20 @@ export async function completeOrderAction(input: unknown): Promise<CheckoutResul
 
   try {
     const order = await createCompletedOrder(session.user.id, parsed.data);
-    return {
-      success: true,
-      message: `Order ${order.orderNumber} completed successfully.`,
-      ...order,
-    };
+    try {
+      const print = await printCompletedOrder(order.orderId);
+      return { success: true, message: `Order ${order.orderNumber} completed successfully.`, ...order, printMode: print.mode, printSuccess: true, printMessage: print.message };
+    } catch (printError) {
+      const code = printError instanceof Error ? printError.message : "";
+      const messages: Record<string, string> = {
+        PRINTER_BRIDGE_NOT_CONFIGURED: "Order saved, but the local printer bridge is not configured.",
+        PRINTER_BRIDGE_URL_UNSAFE: "Order saved, but the printer bridge address is not a safe loopback URL.",
+        PRINTER_BRIDGE_OFFLINE: "Order saved, but the printer or local printer bridge is offline.",
+        ORDER_NOT_READY_TO_PRINT: "Order saved, but its paid receipt could not be verified for printing.",
+      };
+      const bridgeFailure = code.startsWith("PRINTER_JOB_FAILED:") ? code.slice("PRINTER_JOB_FAILED:".length) : null;
+      return { success: true, message: `Order ${order.orderNumber} completed, but printing failed.`, ...order, printMode: "ESC_POS_BRIDGE", printSuccess: false, printMessage: bridgeFailure ? `Order saved. Printer job failed: ${bridgeFailure}` : messages[code] ?? "Order saved, but the receipt, drawer, or cutter command failed." };
+    }
   } catch (error) {
     return checkoutError(error);
   }

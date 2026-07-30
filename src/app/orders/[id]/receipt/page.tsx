@@ -17,5 +17,5 @@ export default async function ReceiptPage({ params, searchParams }: { params: Pr
   const [order, settings] = await Promise.all([getOrderDetail(parsedId.data), getPrinterSettings()]);
   if (!order) notFound();
 
-  return <div className="thermal-print-page"><ReceiptPreviewToolbar autoPrint={query.auto === "1"} copies={settings.receiptCopies} orderId={order.id} printerName={settings.printerName} /><div className="receipt-copies">{Array.from({ length: settings.receiptCopies }, (_, index) => <ReceiptDocument copy={index + 1} key={index} order={order} settings={settings} />)}</div></div>;
+  return <div className="thermal-print-page"><ReceiptPreviewToolbar autoPrint={query.auto === "1"} copies={1} orderId={order.id} printerName={settings.printerName} /><div className="receipt-copies"><ReceiptDocument copy={1} order={order} settings={settings} /></div></div>;
 }

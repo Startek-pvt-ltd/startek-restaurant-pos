@@ -32,6 +32,7 @@ export function PosBillingScreen({ categories, products, settings }: PosBillingS
   const [lastOrder, setLastOrder] = useState<{ id: string; orderNumber: string; grandTotal: number } | null>(null);
   const [pending, startTransition] = useTransition();
   const checkoutLocked = useRef(false);
+  const checkoutToken = useRef<string | null>(null);
 
   const hydrated = usePosStore((state) => state.hydrated);
   const items = usePosStore((state) => state.items);
@@ -143,6 +144,7 @@ export function PosBillingScreen({ categories, products, settings }: PosBillingS
     startTransition(async () => {
       try {
         const result = await completeOrderAction({
+          checkoutToken: checkoutToken.current ??= window.crypto.randomUUID(),
           items: items.map((item) => ({ menuItemId: item.id, menuItemVariantId: item.variantId, quantity: item.quantity })),
           orderType,
           notes,
@@ -156,7 +158,16 @@ export function PosBillingScreen({ categories, products, settings }: PosBillingS
         }
 
         setLastOrder({ id: result.orderId, orderNumber: result.orderNumber, grandTotal: result.grandTotal });
+        checkoutToken.current = null;
         clearCart();
+        if (!result.printSuccess) {
+          toast.error(result.message, { description: result.printMessage, duration: 8_000 });
+          return;
+        }
+        if (result.printMode === "ESC_POS_BRIDGE") {
+          toast.success(result.message, { description: result.printMessage });
+          return;
+        }
         if (settings.autoOpenReceiptAfterCheckout || settings.autoPrintAfterCheckout) {
           window.location.assign(`/orders/${result.orderId}/receipt${settings.autoPrintAfterCheckout ? "?auto=1" : ""}`);
           return;
