@@ -1,6 +1,8 @@
 import "server-only";
 
 import { randomUUID } from "node:crypto";
+import { readFile } from "node:fs/promises";
+import path from "node:path";
 
 import { getOrderDetail } from "@/features/orders/services/order-service";
 import { getSettingsBundle } from "@/features/settings/services/settings-service";
@@ -9,6 +11,13 @@ import { renderReceiptText } from "../lib/receipt-text";
 import { shouldOpenCashDrawer } from "../lib/printing-policy";
 
 type BridgeResult = { success: boolean; message: string; receiptSent?: boolean; drawerOpened?: boolean; cut?: boolean };
+const RECEIPT_LOGO_DOT_WIDTH = 576;
+let receiptLogoRaster: Promise<string> | undefined;
+
+function getReceiptLogoRaster() {
+  receiptLogoRaster ??= readFile(path.join(process.cwd(), "public/logos/rice-kottu-hut-receipt-576.bin")).then((bytes) => bytes.toString("base64"));
+  return receiptLogoRaster;
+}
 
 function bridgeConfig() {
   const rawUrl = process.env.PRINTER_BRIDGE_URL?.trim(); const token = process.env.PRINTER_BRIDGE_TOKEN?.trim();
@@ -36,12 +45,14 @@ export async function printCompletedOrder(orderId: string) {
   if (!order || order.status !== "COMPLETED" || order.payment?.paymentStatus !== "PAID") throw new Error("ORDER_NOT_READY_TO_PRINT");
   if (bundle.printer.mode !== "ESC_POS_BRIDGE") return { mode: "BROWSER" as const, success: true, message: "Use the browser print dialog." };
   const openDrawer = shouldOpenCashDrawer(order.payment.paymentMethod, bundle.printer.cashDrawerEnabled, bundle.printer.drawerOpenMode);
-  const result = await sendJob({ jobId: `order:${order.id}`, printerName: bundle.printer.printerName, receiptText: renderReceiptText(order, { ...bundle.printer, ...bundle.receipt }), openDrawer, automaticCut: bundle.printer.automaticCut, drawerPin: bundle.printer.drawerPin, drawerPulseOnMs: bundle.printer.drawerPulseOnMs, drawerPulseOffMs: bundle.printer.drawerPulseOffMs });
+  const logoRasterBase64 = bundle.printer.printLogo ? await getReceiptLogoRaster() : undefined;
+  const result = await sendJob({ jobId: `order:${order.id}`, printerName: bundle.printer.printerName, receiptText: renderReceiptText(order, { ...bundle.printer, ...bundle.receipt }), logoRasterBase64, logoDotWidth: logoRasterBase64 ? RECEIPT_LOGO_DOT_WIDTH : undefined, openDrawer, automaticCut: bundle.printer.automaticCut, drawerPin: bundle.printer.drawerPin, drawerPulseOnMs: bundle.printer.drawerPulseOnMs, drawerPulseOffMs: bundle.printer.drawerPulseOffMs });
   return { mode: "ESC_POS_BRIDGE" as const, ...result };
 }
 
 export async function testPrinterHardware(kind: "PRINT" | "DRAWER") {
   const bundle = await getSettingsBundle();
   if (bundle.printer.mode !== "ESC_POS_BRIDGE") throw new Error("DIRECT_PRINTING_DISABLED");
-  return sendJob({ jobId: `test:${kind.toLowerCase()}:${randomUUID()}`, printerName: bundle.printer.printerName, receiptText: kind === "PRINT" ? "STARTEK POS\nPrinter test successful\n\n" : "", openDrawer: kind === "DRAWER", automaticCut: kind === "PRINT" && bundle.printer.automaticCut, drawerPin: bundle.printer.drawerPin, drawerPulseOnMs: bundle.printer.drawerPulseOnMs, drawerPulseOffMs: bundle.printer.drawerPulseOffMs });
+  const logoRasterBase64 = kind === "PRINT" && bundle.printer.printLogo ? await getReceiptLogoRaster() : undefined;
+  return sendJob({ jobId: `test:${kind.toLowerCase()}:${randomUUID()}`, printerName: bundle.printer.printerName, receiptText: kind === "PRINT" ? "STARTEK POS\nPrinter test successful\n\n" : "", logoRasterBase64, logoDotWidth: logoRasterBase64 ? RECEIPT_LOGO_DOT_WIDTH : undefined, openDrawer: kind === "DRAWER", automaticCut: kind === "PRINT" && bundle.printer.automaticCut, drawerPin: bundle.printer.drawerPin, drawerPulseOnMs: bundle.printer.drawerPulseOnMs, drawerPulseOffMs: bundle.printer.drawerPulseOffMs });
 }
