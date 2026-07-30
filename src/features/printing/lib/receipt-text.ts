@@ -10,7 +10,18 @@ function pair(label: string, value: string) { return `${fit(label, 20)}${right(v
 function money(value: string | null | undefined, currency: string) { return `${currency} ${Number(value ?? 0).toFixed(2)}`; }
 function wrap(value: string, width: number) {
   const words = value.trim().split(/\s+/); const lines: string[] = []; let line = "";
-  for (const word of words) { const candidate = line ? `${line} ${word}` : word; if (candidate.length <= width) line = candidate; else { if (line) lines.push(line); line = word; } }
+  for (const word of words) {
+    if (word.length > width) {
+      if (line) { lines.push(line); line = ""; }
+      let remaining = word;
+      while (remaining.length > width) { lines.push(remaining.slice(0, width)); remaining = remaining.slice(width); }
+      line = remaining;
+      continue;
+    }
+    const candidate = line ? `${line} ${word}` : word;
+    if (candidate.length <= width) line = candidate;
+    else { if (line) lines.push(line); line = word; }
+  }
   if (line) lines.push(line); return lines.length ? lines : [""];
 }
 

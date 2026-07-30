@@ -32,3 +32,21 @@ test("direct receipt omits order type and ends with the Startek credit", () => {
   assert.match(receipt, /Item\s+Qty\s+Price\s+Total/);
   assert.equal(receipt.trimEnd().endsWith("Powered by Startek (PVT) LTD"), true);
 });
+
+test("direct receipt wraps long unbroken item names without truncating them", () => {
+  const longName = "SupercalifragilisticexpialidociousKottu";
+  const order = {
+    id: "order", orderNumber: "RKH-2", createdAt: "2026-07-31T09:00:00.000Z", updatedAt: "2026-07-31T09:00:00.000Z",
+    orderType: "TAKEAWAY", status: "COMPLETED", notes: null, cancellationReason: null, cancelledAt: null, cancelledBy: null, cashierName: "Cashier",
+    items: [{ id: "item", name: longName, variantName: null, quantity: 1, unitPrice: "900.00", totalPrice: "900.00", notes: null }],
+    subtotal: "900.00", discount: "0", tax: "0", serviceCharge: "0", grandTotal: "900.00",
+    payment: { paymentMethod: "CARD", paymentStatus: "PAID", amount: "900.00", receivedAmount: null, balance: null, reference: null },
+    restaurant: { name: "Rice & Kottu Hut", address: "", addressLine1: "Main Street", addressLine2: null, city: "Colombo", phone: "0112345678", phone2: null, email: null, taxNumber: null, logo: null, currency: "Rs.", receiptFooter: null },
+  };
+  const settings = { headerMessage: "", showCashier: true, thankYouMessage: "Thank You!", visitAgainMessage: "Please Visit Again" };
+  const receipt = renderReceiptText(order as never, settings as never);
+  assert.equal(receipt.includes("…"), false);
+  assert.equal(receipt.includes(longName.slice(0, 18)), true);
+  assert.equal(receipt.includes(longName.slice(18, 36)), true);
+  assert.equal(receipt.includes(longName.slice(36)), true);
+});
