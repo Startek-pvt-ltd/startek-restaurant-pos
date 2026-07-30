@@ -14,6 +14,7 @@ import {
   Utensils,
 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useMemo, useState, useTransition } from "react";
 import { toast } from "sonner";
 
@@ -93,6 +94,7 @@ export function MenuManagementClient({
   initialCreateOpen = false,
   items,
 }: MenuManagementClientProps) {
+  const router = useRouter();
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [availabilityFilter, setAvailabilityFilter] = useState<AvailabilityFilter>("all");
@@ -152,11 +154,20 @@ export function MenuManagementClient({
     if (!deletingItem) return;
     setPendingItemId(deletingItem.id);
     startTransition(async () => {
-      const result = await deleteMenuItemAction(deletingItem.id);
-      if (result.success) toast.success(result.message);
-      else toast.error(result.message);
-      if (result.success) setDeletingItem(null);
-      setPendingItemId(null);
+      try {
+        const result = await deleteMenuItemAction(deletingItem.id);
+        if (!result.success) {
+          toast.error(result.message);
+          return;
+        }
+        setDeletingItem(null);
+        toast.success(result.message);
+        router.refresh();
+      } catch {
+        toast.error("Unable to delete the menu item. Check the connection and try again.");
+      } finally {
+        setPendingItemId(null);
+      }
     });
   };
 
@@ -171,7 +182,7 @@ export function MenuManagementClient({
   };
 
   return (
-    <div className="space-y-6 pb-8">
+    <div className="space-y-4 pb-8">
       <section className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
         <div>
           <p className="text-xs font-bold uppercase tracking-[0.18em] text-accent">Restaurant catalogue</p>
@@ -207,15 +218,15 @@ export function MenuManagementClient({
         </p>
       )}
 
-      <section aria-label="Menu summary" className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+      <section aria-label="Menu summary" className="grid grid-cols-2 gap-2.5 lg:grid-cols-4">
         {[
           { label: "Total Items", value: items.length, icon: ChefHat, tone: "bg-primary/12 text-amber-700" },
           { label: "Categories", value: categories.length, icon: Layers3, tone: "bg-secondary/8 text-secondary" },
           { label: "Available", value: availableCount, icon: Utensils, tone: "bg-success/10 text-green-700" },
           { label: "Unavailable", value: unavailableCount, icon: Clock3, tone: "bg-destructive/8 text-red-700" },
         ].map(({ icon: Icon, label, tone, value }) => (
-          <div key={label} className="dashboard-card flex items-center gap-3 rounded-2xl border border-border bg-card p-4">
-            <span className={cn("flex size-10 items-center justify-center rounded-xl", tone)}>
+          <div key={label} className="dashboard-card flex items-center gap-3 rounded-2xl border border-border bg-card px-3.5 py-3">
+            <span className={cn("flex size-9 items-center justify-center rounded-xl", tone)}>
               <Icon aria-hidden="true" className="size-5" />
             </span>
             <div>
@@ -299,31 +310,31 @@ export function MenuManagementClient({
           {canManage && items.length === 0 && <button className="mt-5 rounded-xl bg-primary px-4 py-2.5 text-sm font-bold text-secondary focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2" onClick={openCreate} type="button">Add first item</button>}
         </section>
       ) : viewMode === "cards" ? (
-        <section aria-label="Menu item cards" className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+        <section aria-label="Menu item cards" className="grid gap-2.5 xl:grid-cols-2">
           {filteredItems.map((item) => (
-            <article className={cn("dashboard-card overflow-hidden rounded-3xl border border-border bg-card", !item.available && "opacity-80")} key={item.id}>
-              <div className="relative h-44 overflow-hidden bg-muted">
+            <article className={cn("dashboard-card flex min-h-28 overflow-hidden rounded-2xl border border-border bg-card", !item.available && "opacity-80")} key={item.id}>
+              <div className="relative w-28 shrink-0 overflow-hidden bg-muted sm:w-32">
                 <MenuImage image={item.image} name={item.name} />
-                <span className="absolute left-3 top-3 rounded-full bg-secondary/90 px-2.5 py-1 text-[0.68rem] font-bold text-white backdrop-blur">{item.categoryName}</span>
+                <span className="absolute left-1.5 top-1.5 max-w-[calc(100%-0.75rem)] truncate rounded-full bg-secondary/90 px-2 py-0.5 text-[0.6rem] font-bold text-white backdrop-blur">{item.categoryName}</span>
               </div>
-              <div className="p-5">
-                <div className="flex items-start justify-between gap-3">
+              <div className="flex min-w-0 flex-1 flex-col p-3">
+                <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0">
-                    <h2 className="truncate text-lg font-black text-secondary">{item.name}</h2>
-                    <p className="mt-1 line-clamp-2 min-h-10 text-sm leading-5 text-muted-foreground">{item.description || "No description added."}</p>
+                    <h2 className="truncate text-base font-black text-secondary">{item.name}</h2>
+                    <p className="mt-0.5 truncate text-xs text-muted-foreground">{item.description || "No description added."}</p>
                   </div>
                   <StatusBadge active={item.available} activeLabel="Available" inactiveLabel="Unavailable" />
                 </div>
-                <div className="mt-4 flex items-end justify-between gap-3 border-t border-border pt-4">
-                  <div>
-                    <VariantPrices item={item} />
-                    <p className="mt-1 flex items-center gap-1 text-xs font-medium text-muted-foreground"><Clock3 aria-hidden="true" className="size-3.5" /> {item.preparationTime} min</p>
+                <div className="mt-auto flex items-end justify-between gap-2 pt-2">
+                  <div className="min-w-0">
+                    <VariantPrices compact item={item} />
+                    <p className="mt-0.5 flex items-center gap-1 text-[0.68rem] font-medium text-muted-foreground"><Clock3 aria-hidden="true" className="size-3" /> {item.preparationTime} min</p>
                   </div>
                   {canManage && (
-                    <div className="flex items-center gap-1.5">
+                    <div className="flex shrink-0 items-center gap-1">
                       <StatusSwitch checked={item.available} disabled={isPending && pendingItemId === item.id} label={`Mark ${item.name} ${item.available ? "unavailable" : "available"}`} onCheckedChange={(checked) => toggleAvailability(item, checked)} />
-                      <button aria-label={`Edit ${item.name}`} className="flex size-9 items-center justify-center rounded-xl text-muted-foreground transition hover:bg-muted hover:text-secondary focus-visible:ring-2 focus-visible:ring-primary" onClick={() => openEdit(item)} type="button"><Pencil aria-hidden="true" className="size-4" /></button>
-                      <button aria-label={`Delete ${item.name}`} className="flex size-9 items-center justify-center rounded-xl text-muted-foreground transition hover:bg-destructive/10 hover:text-destructive focus-visible:ring-2 focus-visible:ring-destructive" onClick={() => setDeletingItem(item)} type="button"><Trash2 aria-hidden="true" className="size-4" /></button>
+                      <button aria-label={`Edit ${item.name}`} className="flex size-8 items-center justify-center rounded-lg text-muted-foreground transition hover:bg-muted hover:text-secondary focus-visible:ring-2 focus-visible:ring-primary" onClick={() => openEdit(item)} type="button"><Pencil aria-hidden="true" className="size-3.5" /></button>
+                      <button aria-label={`Delete ${item.name}`} className="flex size-8 items-center justify-center rounded-lg text-muted-foreground transition hover:bg-destructive/10 hover:text-destructive focus-visible:ring-2 focus-visible:ring-destructive" onClick={() => setDeletingItem(item)} type="button"><Trash2 aria-hidden="true" className="size-3.5" /></button>
                     </div>
                   )}
                 </div>

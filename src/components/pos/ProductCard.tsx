@@ -30,28 +30,28 @@ export const ProductCard = memo(function ProductCard({ currency, onAdd, product 
   const canAdd = product.available;
 
   return (
-    <article className={cn("group overflow-hidden rounded-2xl border bg-card shadow-sm transition duration-200", canAdd ? "border-border hover:-translate-y-0.5 hover:border-primary hover:shadow-lg" : "border-stone-200 opacity-65")}>
-      <div className="relative h-28 overflow-hidden sm:h-32">
+    <article className={cn("group flex min-h-28 overflow-hidden rounded-2xl border bg-card shadow-sm transition duration-200", canAdd ? "border-border hover:-translate-y-0.5 hover:border-primary hover:shadow-lg" : "border-stone-200 opacity-65")}>
+      <div className="relative w-24 shrink-0 overflow-hidden sm:w-28">
         <ProductImage product={product} />
-        <span className={cn("absolute right-2 top-2 rounded-full px-2 py-1 text-[0.62rem] font-black uppercase tracking-wide backdrop-blur", canAdd ? "bg-success/90 text-white" : "bg-secondary/85 text-white")}>
+        <span className={cn("absolute left-1.5 top-1.5 rounded-full px-1.5 py-0.5 text-[0.56rem] font-black uppercase tracking-wide backdrop-blur", canAdd ? "bg-success/90 text-white" : "bg-secondary/85 text-white")}>
           {canAdd ? "Available" : "Unavailable"}
         </span>
       </div>
-      <div className="p-3">
-        <p className="truncate text-[0.68rem] font-bold uppercase tracking-wide text-muted-foreground">{product.categoryName}</p>
-        <h3 className="mt-1 line-clamp-2 min-h-10 text-sm font-black leading-5 text-secondary sm:text-base">{product.name}</h3>
-        <div className="mt-1 space-y-0.5">
+      <div className="flex min-w-0 flex-1 flex-col p-2.5">
+        <p className="truncate text-[0.62rem] font-bold uppercase tracking-wide text-muted-foreground">{product.categoryName}</p>
+        <h3 className="mt-0.5 truncate text-sm font-black leading-5 text-secondary">{product.name}</h3>
+        <div className="mt-0.5 flex min-h-5 flex-wrap items-center gap-x-2 gap-y-0.5 overflow-hidden">
           {product.variants.length === 0
             ? <p className="text-sm font-black text-secondary">{formatMoney(product.price, currency)}</p>
-            : product.variants.map((variant) => <p className="text-xs font-black text-secondary" key={variant.id}><span className="text-muted-foreground">{variant.name}:</span> {formatMoney(variant.price, currency)}</p>)}
+            : product.variants.map((variant) => <p className="whitespace-nowrap text-[0.68rem] font-black text-secondary" key={variant.id}><span className="text-muted-foreground">{variant.name}:</span> {formatMoney(variant.price, currency)}</p>)}
         </div>
         <button
-          className="mt-3 flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-primary px-3 text-sm font-black text-secondary shadow-sm transition hover:bg-amber-500 active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:bg-stone-200 disabled:text-stone-500"
+          className="mt-auto flex h-8 w-full items-center justify-center gap-1.5 rounded-lg bg-primary px-2 text-xs font-black text-secondary shadow-sm transition hover:bg-amber-500 active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:bg-stone-200 disabled:text-stone-500"
           disabled={!canAdd}
           onClick={() => onAdd(product)}
           type="button"
         >
-          {canAdd ? <Plus aria-hidden="true" className="size-5" /> : <ShoppingBag aria-hidden="true" className="size-4" />}
+          {canAdd ? <Plus aria-hidden="true" className="size-4" /> : <ShoppingBag aria-hidden="true" className="size-3.5" />}
           {canAdd ? "Add" : "Unavailable"}
         </button>
       </div>

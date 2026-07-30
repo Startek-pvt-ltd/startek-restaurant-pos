@@ -2,6 +2,7 @@
 
 import { ArrowLeft, Layers3, Pencil, Plus, Search, Trash2 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useMemo, useState, useTransition } from "react";
 import { toast } from "sonner";
 
@@ -24,6 +25,7 @@ interface CategoryManagementClientProps {
 type CategorySort = "order" | "name-asc" | "name-desc" | "newest";
 
 export function CategoryManagementClient({ canManage, categories }: CategoryManagementClientProps) {
+  const router = useRouter();
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState<CategorySort>("order");
   const [formOpen, setFormOpen] = useState(false);
@@ -55,12 +57,31 @@ export function CategoryManagementClient({ canManage, categories }: CategoryMana
     if (!deletingCategory) return;
     setPendingCategoryId(deletingCategory.id);
     startTransition(async () => {
-      const result = await deleteCategoryAction(deletingCategory.id);
-      if (result.success) toast.success(result.message);
-      else toast.error(result.message);
-      if (result.success) setDeletingCategory(null);
-      setPendingCategoryId(null);
+      try {
+        const result = await deleteCategoryAction(deletingCategory.id);
+        if (!result.success) {
+          toast.error(result.message);
+          return;
+        }
+        setDeletingCategory(null);
+        toast.success(result.message);
+        router.refresh();
+      } catch {
+        toast.error("Unable to delete the category. Check the connection and try again.");
+      } finally {
+        setPendingCategoryId(null);
+      }
     });
+  };
+
+  const requestDelete = (category: CategoryRecord) => {
+    if (category.itemCount > 0) {
+      toast.error("Category cannot be deleted.", {
+        description: `Move or remove the ${category.itemCount} menu ${category.itemCount === 1 ? "item" : "items"} in ${category.name} first.`,
+      });
+      return;
+    }
+    setDeletingCategory(category);
   };
 
   return (
@@ -98,7 +119,7 @@ export function CategoryManagementClient({ canManage, categories }: CategoryMana
                     <td className="px-4 py-4"><span className="inline-flex min-w-8 justify-center rounded-lg bg-muted px-2 py-1 text-xs font-black text-secondary">{category.displayOrder}</span></td>
                     <td className="px-4 py-4 font-semibold">{category.itemCount}</td>
                     <td className="px-4 py-4"><StatusBadge active={category.active} /></td>
-                    {canManage && <td className="px-5 py-4"><div className="flex items-center justify-end gap-2"><StatusSwitch checked={category.active} disabled={isPending && pendingCategoryId === category.id} label={`${category.active ? "Deactivate" : "Activate"} ${category.name}`} onCheckedChange={(active) => toggleActive(category, active)} /><button aria-label={`Edit ${category.name}`} className="flex size-9 items-center justify-center rounded-xl border border-border text-muted-foreground transition hover:bg-muted hover:text-secondary focus-visible:ring-2 focus-visible:ring-primary" onClick={() => { setEditingCategory(category); setFormOpen(true); }} type="button"><Pencil aria-hidden="true" className="size-4" /></button><button aria-label={`Delete ${category.name}`} className="flex size-9 items-center justify-center rounded-xl border border-border text-muted-foreground transition hover:border-destructive/30 hover:bg-destructive/8 hover:text-destructive focus-visible:ring-2 focus-visible:ring-destructive disabled:cursor-not-allowed disabled:opacity-45" disabled={category.itemCount > 0} onClick={() => setDeletingCategory(category)} title={category.itemCount > 0 ? "Remove all menu items before deleting this category" : "Delete category"} type="button"><Trash2 aria-hidden="true" className="size-4" /></button></div></td>}
+                    {canManage && <td className="px-5 py-4"><div className="flex items-center justify-end gap-2"><StatusSwitch checked={category.active} disabled={isPending && pendingCategoryId === category.id} label={`${category.active ? "Deactivate" : "Activate"} ${category.name}`} onCheckedChange={(active) => toggleActive(category, active)} /><button aria-label={`Edit ${category.name}`} className="flex size-9 items-center justify-center rounded-xl border border-border text-muted-foreground transition hover:bg-muted hover:text-secondary focus-visible:ring-2 focus-visible:ring-primary" onClick={() => { setEditingCategory(category); setFormOpen(true); }} type="button"><Pencil aria-hidden="true" className="size-4" /></button><button aria-label={`Delete ${category.name}`} className="flex size-9 items-center justify-center rounded-xl border border-border text-muted-foreground transition hover:border-destructive/30 hover:bg-destructive/8 hover:text-destructive focus-visible:ring-2 focus-visible:ring-destructive" onClick={() => requestDelete(category)} title={category.itemCount > 0 ? "Remove all menu items before deleting this category" : "Delete category"} type="button"><Trash2 aria-hidden="true" className="size-4" /></button></div></td>}
                   </tr>
                 ))}
               </tbody>
