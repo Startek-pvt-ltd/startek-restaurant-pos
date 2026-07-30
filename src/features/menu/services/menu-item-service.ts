@@ -4,9 +4,11 @@ import { prisma } from "@/lib/prisma";
 import { notifyActiveUsers } from "@/features/notifications/services/notification-service";
 
 import type { MenuItemInput } from "../validations/menu-item";
+import { menuItemDeleteMode } from "./deletion-policy";
 
 export async function getMenuItems() {
   const items = await prisma.menuItem.findMany({
+    where: { deletedAt: null, category: { deletedAt: null } },
     select: {
       id: true,
       categoryId: true,
@@ -55,8 +57,8 @@ async function menuItemNameExists(categoryId: string, name: string, excludeId?: 
 }
 
 async function ensureCategoryExists(categoryId: string) {
-  const category = await prisma.category.findUnique({
-    where: { id: categoryId },
+  const category = await prisma.category.findFirst({
+    where: { id: categoryId, deletedAt: null },
     select: { id: true },
   });
 
@@ -140,5 +142,24 @@ export async function setMenuItemAvailable(id: string, available: boolean) {
 }
 
 export async function deleteMenuItem(id: string) {
-  return prisma.menuItem.delete({ where: { id } });
+  return prisma.$transaction(async (tx) => {
+    const item = await tx.menuItem.findUnique({
+      where: { id },
+      select: { deletedAt: true, _count: { select: { orderItems: true } } },
+    });
+
+    if (!item || item.deletedAt) throw new Error("MENU_ITEM_NOT_FOUND");
+
+    const mode = menuItemDeleteMode(item._count.orderItems);
+    if (mode === "hard-delete") {
+      await tx.menuItem.delete({ where: { id } });
+    } else {
+      await tx.menuItem.update({
+        where: { id },
+        data: { available: false, deletedAt: new Date() },
+      });
+    }
+
+    return { mode };
+  });
 }

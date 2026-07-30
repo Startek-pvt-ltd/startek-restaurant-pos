@@ -25,13 +25,16 @@ export const receiptSettingsSchema = z.object({
   showDiscountWhenZero: z.boolean(), showTaxWhenZero: z.boolean(), showServiceChargeWhenZero: z.boolean(),
   showCashReceived: z.boolean(), showBalance: z.boolean(), showOrderType: z.boolean(), showCashier: z.boolean(),
   showRestaurantPhone: z.boolean(), developerCredit: text("Developer credit", 200),
-  autoOpenReceiptAfterCheckout: z.boolean(), autoPrintAfterCheckout: z.boolean(), receiptCopies: z.number().int().min(1).max(3), footerText: optional(500),
+  autoOpenReceiptAfterCheckout: z.boolean(), autoPrintAfterCheckout: z.boolean(), receiptCopies: z.literal(1), footerText: optional(500),
 });
 export const printerSettingsSchema = z.object({
   printerName: text("Printer name", 100), paperWidth: z.union([z.literal(58), z.literal(80)]), scale: z.number().int().min(50).max(150),
   margin: z.enum(["NONE", "MINIMUM"]), headersFootersReminder: z.boolean(), autoOpenReceiptAfterCheckout: z.boolean(),
-  autoPrintAfterCheckout: z.boolean(), printLogo: z.boolean(), receiptCopies: z.number().int().min(1).max(3), notes: optional(500),
-});
+  autoPrintAfterCheckout: z.boolean(), printLogo: z.boolean(), receiptCopies: z.literal(1), notes: optional(500),
+  mode: z.enum(["BROWSER", "ESC_POS_BRIDGE"]), automaticCut: z.boolean(), cashDrawerEnabled: z.boolean(),
+  drawerOpenMode: z.enum(["CASH_ONLY", "ALL_PAYMENTS"]), drawerPin: z.union([z.literal(0), z.literal(1)]),
+  drawerPulseOnMs: z.number().int().min(20).max(510), drawerPulseOffMs: z.number().int().min(20).max(510),
+}).refine((value) => value.mode === "BROWSER" || value.paperWidth === 80, { message: "Direct ESC/POS printing requires 80 mm paper.", path: ["paperWidth"] });
 export const systemPreferencesSchema = z.object({
   applicationName: text("Application name", 100), applicationVersion: text("Version", 32), timezone: z.enum(["Asia/Colombo"]),
   dateFormat: z.enum(["DD/MM/YYYY", "YYYY-MM-DD"]), timeFormat: z.enum(["12-hour", "24-hour"]),

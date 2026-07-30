@@ -12,16 +12,16 @@ const POS_ROLES: readonly UserRole[] = ["SUPER_ADMIN", "OWNER", "MANAGER", "CASH
 export async function getPosData() {
   const [categories, products, restaurant, printer] = await Promise.all([
     prisma.category.findMany({
-      where: { active: true },
+      where: { active: true, deletedAt: null },
       select: {
         id: true,
         name: true,
-        _count: { select: { menuItems: true } },
+        _count: { select: { menuItems: { where: { deletedAt: null } } } },
       },
       orderBy: [{ displayOrder: "asc" }, { name: "asc" }],
     }),
     prisma.menuItem.findMany({
-      where: { category: { active: true } },
+      where: { deletedAt: null, category: { active: true, deletedAt: null } },
       select: {
         id: true,
         categoryId: true,
@@ -71,6 +71,7 @@ export async function getPosData() {
       autoPrintAfterCheckout: printer.printer.autoPrintAfterCheckout,
       printLogo: printer.printer.printLogo,
       receiptCopies: printer.printer.receiptCopies,
+      printerMode: printer.printer.mode,
       defaultOrderType: printer.billing.defaultOrderType,
       allowCash: printer.billing.allowCash,
       allowCard: printer.billing.allowCard,
@@ -133,6 +134,15 @@ export async function createCompletedOrder(cashierId: string, input: CheckoutInp
             throw new Error("POS_ACCESS_DENIED");
           }
 
+          const existingOrder = await tx.order.findUnique({
+            where: { checkoutToken: input.checkoutToken },
+            select: { id: true, orderNumber: true, cashierId: true, grandTotal: true, payments: { select: { changeAmount: true }, orderBy: { createdAt: "desc" }, take: 1 } },
+          });
+          if (existingOrder) {
+            if (existingOrder.cashierId !== cashierId) throw new Error("POS_ACCESS_DENIED");
+            return { orderId: existingOrder.id, orderNumber: existingOrder.orderNumber, grandTotal: Number(existingOrder.grandTotal.toFixed(2)), balance: Number(existingOrder.payments[0]?.changeAmount?.toFixed(2) ?? 0) };
+          }
+
           const cartKeys = input.items.map((item) => `${item.menuItemId}:${item.menuItemVariantId ?? "base"}`);
           if (new Set(cartKeys).size !== input.items.length) throw new Error("DUPLICATE_CART_ITEM");
           const uniqueVariantIds = [...new Set(input.items.map((item) => item.menuItemVariantId).filter((id): id is string => Boolean(id)))];
@@ -140,17 +150,17 @@ export async function createCompletedOrder(cashierId: string, input: CheckoutInp
 
           const [menuItems, variants] = await Promise.all([
             tx.menuItem.findMany({
-              where: { id: { in: uniqueMenuItemIds } },
+              where: { id: { in: uniqueMenuItemIds }, deletedAt: null },
               select: {
                 id: true,
                 price: true,
                 available: true,
                 variants: { where: { active: true }, select: { id: true } },
-                category: { select: { active: true } },
+                category: { select: { active: true, deletedAt: true } },
               },
             }),
             tx.menuItemVariant.findMany({
-              where: { id: { in: uniqueVariantIds } },
+              where: { id: { in: uniqueVariantIds }, menuItem: { deletedAt: null } },
               select: {
                 id: true,
                 name: true,
@@ -160,7 +170,7 @@ export async function createCompletedOrder(cashierId: string, input: CheckoutInp
                   select: {
                     id: true,
                     available: true,
-                    category: { select: { active: true } },
+                    category: { select: { active: true, deletedAt: true } },
                   },
                 },
               },
@@ -177,7 +187,7 @@ export async function createCompletedOrder(cashierId: string, input: CheckoutInp
           const pricedItems = input.items.map((cartItem) => {
             const menuItem = menuItemMap.get(cartItem.menuItemId);
             if (!menuItem) throw new Error("MENU_ITEM_NOT_FOUND");
-            if (!menuItem.available || !menuItem.category.active) throw new Error("MENU_ITEM_UNAVAILABLE");
+            if (!menuItem.available || !menuItem.category.active || menuItem.category.deletedAt) throw new Error("MENU_ITEM_UNAVAILABLE");
 
             if (!cartItem.menuItemVariantId) {
               if (menuItem.variants.length > 0) throw new Error("MENU_ITEM_VARIANT_REQUIRED");
@@ -195,7 +205,7 @@ export async function createCompletedOrder(cashierId: string, input: CheckoutInp
             if (!variant || variant.menuItem.id !== cartItem.menuItemId) {
               throw new Error("MENU_ITEM_VARIANT_NOT_FOUND");
             }
-            if (!variant.active || !variant.menuItem.available || !variant.menuItem.category.active) {
+            if (!variant.active || !variant.menuItem.available || !variant.menuItem.category.active || variant.menuItem.category.deletedAt) {
               throw new Error("MENU_ITEM_UNAVAILABLE");
             }
 
@@ -232,6 +242,7 @@ export async function createCompletedOrder(cashierId: string, input: CheckoutInp
           const order = await tx.order.create({
             data: {
               orderNumber,
+              checkoutToken: input.checkoutToken,
               cashierId,
               orderType: input.orderType,
               status: "COMPLETED",

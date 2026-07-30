@@ -47,6 +47,23 @@ if (authSecret && (authSecret.length < 32 || /generate|replace|example|change/i.
 validateUrl("AUTH_URL", ["http:", "https:"]);
 validateUrl("TRUSTED_ORIGIN", ["http:", "https:"]);
 
+const bridgeUrl = process.env.PRINTER_BRIDGE_URL?.trim();
+const bridgeToken = process.env.PRINTER_BRIDGE_TOKEN?.trim();
+if (bridgeUrl || bridgeToken) {
+  if (!bridgeUrl) errors.push("PRINTER_BRIDGE_URL is required when direct printing is configured.");
+  if (!bridgeToken || bridgeToken.length < 32) errors.push("PRINTER_BRIDGE_TOKEN must contain at least 32 characters.");
+  if (bridgeUrl) {
+    try {
+      const parsed = new URL(bridgeUrl);
+      if (parsed.protocol !== "http:" || !["127.0.0.1", "localhost", "::1", "[::1]"].includes(parsed.hostname)) {
+        errors.push("PRINTER_BRIDGE_URL must be a loopback HTTP URL.");
+      }
+    } catch {
+      errors.push("PRINTER_BRIDGE_URL must be a valid URL.");
+    }
+  }
+}
+
 if (process.env.AUTH_URL && process.env.TRUSTED_ORIGIN) {
   try {
     if (new URL(process.env.AUTH_URL).origin !== new URL(process.env.TRUSTED_ORIGIN).origin) {

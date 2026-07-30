@@ -29,7 +29,9 @@ export type PrinterSettings = {
   printerName: string; paperWidth: number; scale: number; margin: "NONE" | "MINIMUM";
   headersFootersReminder: boolean; autoOpenReceiptAfterCheckout: boolean;
   autoPrintAfterCheckout: boolean; printLogo: boolean; receiptCopies: number;
-  notes: string; openCashDrawer: false;
+  notes: string; mode: "BROWSER" | "ESC_POS_BRIDGE"; automaticCut: boolean;
+  cashDrawerEnabled: boolean; drawerOpenMode: "CASH_ONLY" | "ALL_PAYMENTS";
+  drawerPin: 0 | 1; drawerPulseOnMs: number; drawerPulseOffMs: number;
   showTaxLine: boolean; showServiceChargeLine: boolean;
 };
 export type ReceiptPrintSettings = PrinterSettings & ReceiptSettings;

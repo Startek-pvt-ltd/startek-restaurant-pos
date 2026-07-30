@@ -244,11 +244,13 @@ model Category {
   description  String?
   displayOrder Int        @default(0)
   active       Boolean    @default(true)
+  deletedAt    DateTime?
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
   menuItems    MenuItem[]
 
   @@index([active, displayOrder])
+  @@index([deletedAt, active, displayOrder])
 }
 
 model MenuItem {
@@ -260,6 +262,7 @@ model MenuItem {
   image           String?
   preparationTime Int               @default(0)
   available       Boolean           @default(true)
+  deletedAt       DateTime?
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
   category        Category          @relation(fields: [categoryId], references: [id], onDelete: Restrict)
@@ -269,6 +272,8 @@ model MenuItem {
   @@unique([categoryId, name])
   @@index([categoryId])
   @@index([available])
+  @@index([deletedAt, categoryId])
+  @@index([deletedAt, available])
 }
 
 model MenuItemVariant {
@@ -491,8 +496,14 @@ model SystemSetting {
   receiptShowTax                Boolean   @default(true)
   receiptShowServiceCharge      Boolean   @default(true)
   receiptThankYouMessage        String    @default("Thank You!\nPlease Visit Again")
-  receiptDeveloperCredit        String    @default("Design & Deploy by\nStartek (PVT) LTD")
-  openCashDrawer                Boolean   @default(false)
+  receiptDeveloperCredit        String    @default("Powered by Startek (PVT) LTD")
+  openCashDrawer                Boolean   @default(true)
+  printerMode                   String    @default("BROWSER") @db.VarChar(24)
+  printerAutomaticCut           Boolean   @default(true)
+  printerDrawerOpenMode         String    @default("CASH_ONLY") @db.VarChar(16)
+  printerDrawerPin              Int       @default(0)
+  printerDrawerPulseOnMs        Int       @default(120)
+  printerDrawerPulseOffMs       Int       @default(240)
   currencySymbol                String    @default("Rs.") @db.VarChar(8)
   taxEnabled                    Boolean   @default(false)
   serviceChargeEnabled          Boolean   @default(false)
@@ -514,7 +525,7 @@ model SystemSetting {
   receiptShowServiceWhenZero    Boolean   @default(false)
   receiptShowCashReceived       Boolean   @default(true)
   receiptShowBalance            Boolean   @default(true)
-  receiptShowOrderType          Boolean   @default(true)
+  receiptShowOrderType          Boolean   @default(false)
   receiptShowCashier            Boolean   @default(true)
   receiptShowRestaurantPhone    Boolean   @default(true)
   receiptFooterText             String?

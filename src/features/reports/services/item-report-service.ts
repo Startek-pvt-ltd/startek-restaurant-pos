@@ -18,7 +18,7 @@ export async function getItemReport(filters: ReportFilters, range: ReportDateRan
   const [items, availableItems] = await Promise.all([
     prisma.menuItem.findMany({ where: { id: { in: itemIds } }, select: { id: true, name: true, category: { select: { name: true } } } }),
     prisma.menuItem.findMany({
-      where: { ...(filters.categoryId ? { categoryId: filters.categoryId } : {}), ...(filters.menuItemId ? { id: filters.menuItemId } : {}) },
+      where: { deletedAt: null, category: { deletedAt: null }, ...(filters.categoryId ? { categoryId: filters.categoryId } : {}), ...(filters.menuItemId ? { id: filters.menuItemId } : {}) },
       select: { id: true, name: true, category: { select: { name: true } } }, orderBy: { name: "asc" },
     }),
   ]);
