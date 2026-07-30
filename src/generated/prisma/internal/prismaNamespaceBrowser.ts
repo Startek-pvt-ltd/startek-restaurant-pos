@@ -199,6 +199,7 @@ export const CategoryScalarFieldEnum = {
   description: 'description',
   displayOrder: 'displayOrder',
   active: 'active',
+  deletedAt: 'deletedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -215,6 +216,7 @@ export const MenuItemScalarFieldEnum = {
   image: 'image',
   preparationTime: 'preparationTime',
   available: 'available',
+  deletedAt: 'deletedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

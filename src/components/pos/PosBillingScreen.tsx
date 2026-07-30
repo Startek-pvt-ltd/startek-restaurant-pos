@@ -173,15 +173,15 @@ export function PosBillingScreen({ categories, products, settings }: PosBillingS
   };
 
   if (!hydrated) {
-    return <div className="grid animate-pulse gap-3 lg:grid-cols-[370px_minmax(0,1fr)] xl:grid-cols-[390px_minmax(0,1fr)]"><div className="h-[70vh] rounded-2xl bg-card" /><div className="h-[70vh] rounded-2xl bg-card" /></div>;
+    return <div className="grid animate-pulse gap-3 xl:grid-cols-[340px_minmax(0,1fr)] 2xl:grid-cols-[370px_minmax(0,1fr)]"><div className="h-[70vh] rounded-2xl bg-card" /><div className="h-[70vh] rounded-2xl bg-card" /></div>;
   }
 
   return (
     <div className="space-y-3 pb-4">
       {lastOrder && <section className="flex flex-col gap-2 rounded-2xl border border-success/25 bg-success/10 px-4 py-3 sm:flex-row sm:items-center sm:justify-between" role="status"><div className="flex items-center gap-2"><Sparkles aria-hidden="true" className="size-5 text-green-700" /><div><p className="text-sm font-black text-green-800">{lastOrder.orderNumber} completed</p><p className="text-xs text-green-700">Charged {formatMoney(lastOrder.grandTotal, settings.currency)}</p></div></div><button className="self-start text-xs font-black text-green-800 underline-offset-4 hover:underline focus-visible:ring-2 focus-visible:ring-success" onClick={() => setLastOrder(null)} type="button">Dismiss</button></section>}
 
-      <div className="grid min-w-0 grid-cols-1 items-start gap-3 lg:grid-cols-[370px_minmax(0,1fr)] xl:grid-cols-[390px_minmax(0,1fr)]">
-        <aside aria-label="Shopping cart" className="order-2 min-w-0 rounded-2xl border border-border bg-card shadow-[0_12px_36px_rgba(74,35,16,0.09)] lg:order-1 lg:sticky lg:top-24 lg:max-h-[calc(100vh-7.5rem)] lg:overflow-y-auto dashboard-scrollbar">
+      <div className="grid min-w-0 grid-cols-1 items-start gap-3 xl:grid-cols-[340px_minmax(0,1fr)] 2xl:grid-cols-[370px_minmax(0,1fr)]">
+        <aside aria-label="Shopping cart" className="order-2 min-w-0 rounded-2xl border border-border bg-card shadow-[0_12px_36px_rgba(74,35,16,0.09)] xl:order-1 xl:sticky xl:top-24 xl:max-h-[calc(100vh-7.5rem)] xl:overflow-y-auto dashboard-scrollbar">
           <div className="sticky top-0 z-10 flex items-center justify-between rounded-t-2xl border-b border-border bg-card/95 px-4 py-3 backdrop-blur"><div className="flex items-center gap-2"><span className="flex size-10 items-center justify-center rounded-xl bg-secondary text-white"><ShoppingCart aria-hidden="true" className="size-5" /></span><div><h2 className="font-black text-secondary">Shopping Cart</h2><p className="text-xs text-muted-foreground">Saved until checkout</p></div></div><span className="rounded-full bg-primary px-2.5 py-1 text-xs font-black text-secondary" aria-label={`${cartQuantity} cart items`}>{cartQuantity}</span></div>
 
           <div className="space-y-4 p-4">
@@ -195,7 +195,7 @@ export function PosBillingScreen({ categories, products, settings }: PosBillingS
           </div>
         </aside>
 
-        <section className="order-1 min-w-0 space-y-3 lg:order-2" aria-label="Product selection">
+        <section className="order-1 min-w-0 space-y-3 xl:order-2" aria-label="Product selection">
           <div className="flex flex-col gap-3 rounded-2xl border border-border bg-card p-3 shadow-sm sm:flex-row sm:items-center">
             <div className="min-w-0 flex-1"><h1 className="text-xl font-black tracking-tight text-secondary">New Order</h1><p className="text-xs font-medium text-muted-foreground">{filteredProducts.length} items ready to browse</p></div>
             <label className="relative w-full sm:max-w-sm"><span className="sr-only">Search menu products</span><Search aria-hidden="true" className="absolute left-3.5 top-1/2 size-4.5 -translate-y-1/2 text-muted-foreground" /><input className="h-12 w-full rounded-xl border border-input bg-background/45 pl-10 pr-3 text-sm font-medium text-secondary outline-none transition placeholder:text-muted-foreground/65 focus:border-primary focus:bg-white focus:ring-4 focus:ring-primary/10" onChange={(event) => setSearch(event.target.value)} placeholder="Search menu items…" type="search" value={search} /></label>

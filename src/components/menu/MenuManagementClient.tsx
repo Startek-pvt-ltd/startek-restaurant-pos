@@ -18,10 +18,8 @@ import { useRouter } from "next/navigation";
 import { useMemo, useState, useTransition } from "react";
 import { toast } from "sonner";
 
-import {
-  deleteMenuItemAction,
-  toggleMenuItemAction,
-} from "@/features/menu/actions/menu-item-actions";
+import { toggleMenuItemAction } from "@/features/menu/actions/menu-item-actions";
+import { deleteMenuRecord } from "@/features/menu/api/delete-menu-record";
 import type { CategoryRecord, MenuItemRecord } from "@/features/menu/types";
 import { cn } from "@/lib/utils";
 
@@ -103,12 +101,18 @@ export function MenuManagementClient({
   const [formOpen, setFormOpen] = useState(initialCreateOpen);
   const [editingItem, setEditingItem] = useState<MenuItemRecord | null>(null);
   const [deletingItem, setDeletingItem] = useState<MenuItemRecord | null>(null);
+  const [hiddenItemIds, setHiddenItemIds] = useState<string[]>([]);
   const [pendingItemId, setPendingItemId] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
+  const visibleItems = useMemo(
+    () => items.filter((item) => !hiddenItemIds.includes(item.id)),
+    [hiddenItemIds, items],
+  );
+
   const filteredItems = useMemo(() => {
     const normalizedSearch = search.trim().toLocaleLowerCase();
-    const result = items.filter((item) => {
+    const result = visibleItems.filter((item) => {
       const matchesSearch =
         !normalizedSearch ||
         item.name.toLocaleLowerCase().includes(normalizedSearch) ||
@@ -138,10 +142,10 @@ export function MenuManagementClient({
           return a.name.localeCompare(b.name);
       }
     });
-  }, [availabilityFilter, categoryFilter, items, search, sort]);
+  }, [availabilityFilter, categoryFilter, search, sort, visibleItems]);
 
-  const availableCount = items.filter((item) => item.available).length;
-  const unavailableCount = items.length - availableCount;
+  const availableCount = visibleItems.filter((item) => item.available).length;
+  const unavailableCount = visibleItems.length - availableCount;
 
   const toggleAvailability = async (item: MenuItemRecord, available: boolean) => {
     const result = await toggleMenuItemAction(item.id, available);
@@ -151,15 +155,16 @@ export function MenuManagementClient({
   };
 
   const confirmDelete = () => {
-    if (!deletingItem) return;
+    if (!deletingItem || pendingItemId) return;
     setPendingItemId(deletingItem.id);
     startTransition(async () => {
       try {
-        const result = await deleteMenuItemAction(deletingItem.id);
+        const result = await deleteMenuRecord(`/api/menu/items/${encodeURIComponent(deletingItem.id)}`);
         if (!result.success) {
           toast.error(result.message);
           return;
         }
+        setHiddenItemIds((current) => [...current, deletingItem.id]);
         setDeletingItem(null);
         toast.success(result.message);
         router.refresh();
@@ -220,7 +225,7 @@ export function MenuManagementClient({
 
       <section aria-label="Menu summary" className="grid grid-cols-2 gap-2.5 lg:grid-cols-4">
         {[
-          { label: "Total Items", value: items.length, icon: ChefHat, tone: "bg-primary/12 text-amber-700" },
+          { label: "Total Items", value: visibleItems.length, icon: ChefHat, tone: "bg-primary/12 text-amber-700" },
           { label: "Categories", value: categories.length, icon: Layers3, tone: "bg-secondary/8 text-secondary" },
           { label: "Available", value: availableCount, icon: Utensils, tone: "bg-success/10 text-green-700" },
           { label: "Unavailable", value: unavailableCount, icon: Clock3, tone: "bg-destructive/8 text-red-700" },
@@ -296,7 +301,7 @@ export function MenuManagementClient({
           </div>
         </div>
         <p className="mt-3 text-xs font-medium text-muted-foreground" aria-live="polite">
-          Showing {filteredItems.length} of {items.length} menu items
+          Showing {filteredItems.length} of {visibleItems.length} menu items
         </p>
       </section>
 
@@ -305,36 +310,36 @@ export function MenuManagementClient({
           <span className="mx-auto flex size-14 items-center justify-center rounded-2xl bg-muted text-secondary"><Utensils aria-hidden="true" className="size-6" /></span>
           <h2 className="mt-4 text-lg font-bold text-secondary">No menu items found</h2>
           <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-muted-foreground">
-            {items.length === 0 ? "Create the first menu item to start building the restaurant catalogue." : "Try changing the search or filter options."}
+            {visibleItems.length === 0 ? "Create the first menu item to start building the restaurant catalogue." : "Try changing the search or filter options."}
           </p>
-          {canManage && items.length === 0 && <button className="mt-5 rounded-xl bg-primary px-4 py-2.5 text-sm font-bold text-secondary focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2" onClick={openCreate} type="button">Add first item</button>}
+          {canManage && visibleItems.length === 0 && <button className="mt-5 rounded-xl bg-primary px-4 py-2.5 text-sm font-bold text-secondary focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2" onClick={openCreate} type="button">Add first item</button>}
         </section>
       ) : viewMode === "cards" ? (
-        <section aria-label="Menu item cards" className="grid gap-2.5 xl:grid-cols-2">
+        <section aria-label="Menu item cards" className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
           {filteredItems.map((item) => (
-            <article className={cn("dashboard-card flex min-h-28 overflow-hidden rounded-2xl border border-border bg-card", !item.available && "opacity-80")} key={item.id}>
-              <div className="relative w-28 shrink-0 overflow-hidden bg-muted sm:w-32">
+            <article className={cn("dashboard-card flex h-full flex-col overflow-hidden rounded-3xl border border-border bg-card", !item.available && "opacity-80")} key={item.id}>
+              <div className="relative h-40 overflow-hidden bg-muted">
                 <MenuImage image={item.image} name={item.name} />
-                <span className="absolute left-1.5 top-1.5 max-w-[calc(100%-0.75rem)] truncate rounded-full bg-secondary/90 px-2 py-0.5 text-[0.6rem] font-bold text-white backdrop-blur">{item.categoryName}</span>
+                <span className="absolute left-3 top-3 max-w-[calc(100%-1.5rem)] truncate rounded-full bg-secondary/90 px-2.5 py-1 text-[0.68rem] font-bold text-white backdrop-blur">{item.categoryName}</span>
               </div>
-              <div className="flex min-w-0 flex-1 flex-col p-3">
-                <div className="flex items-start justify-between gap-2">
+              <div className="flex flex-1 flex-col p-4">
+                <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
                     <h2 className="truncate text-base font-black text-secondary">{item.name}</h2>
-                    <p className="mt-0.5 truncate text-xs text-muted-foreground">{item.description || "No description added."}</p>
+                    <p className="mt-1 line-clamp-2 min-h-10 text-sm leading-5 text-muted-foreground">{item.description || "No description added."}</p>
                   </div>
                   <StatusBadge active={item.available} activeLabel="Available" inactiveLabel="Unavailable" />
                 </div>
-                <div className="mt-auto flex items-end justify-between gap-2 pt-2">
+                <div className="mt-auto flex items-end justify-between gap-3 border-t border-border pt-3">
                   <div className="min-w-0">
-                    <VariantPrices compact item={item} />
-                    <p className="mt-0.5 flex items-center gap-1 text-[0.68rem] font-medium text-muted-foreground"><Clock3 aria-hidden="true" className="size-3" /> {item.preparationTime} min</p>
+                    <VariantPrices item={item} />
+                    <p className="mt-1 flex items-center gap-1 text-xs font-medium text-muted-foreground"><Clock3 aria-hidden="true" className="size-3.5" /> {item.preparationTime} min</p>
                   </div>
                   {canManage && (
-                    <div className="flex shrink-0 items-center gap-1">
+                    <div className="flex shrink-0 items-center gap-1.5">
                       <StatusSwitch checked={item.available} disabled={isPending && pendingItemId === item.id} label={`Mark ${item.name} ${item.available ? "unavailable" : "available"}`} onCheckedChange={(checked) => toggleAvailability(item, checked)} />
-                      <button aria-label={`Edit ${item.name}`} className="flex size-8 items-center justify-center rounded-lg text-muted-foreground transition hover:bg-muted hover:text-secondary focus-visible:ring-2 focus-visible:ring-primary" onClick={() => openEdit(item)} type="button"><Pencil aria-hidden="true" className="size-3.5" /></button>
-                      <button aria-label={`Delete ${item.name}`} className="flex size-8 items-center justify-center rounded-lg text-muted-foreground transition hover:bg-destructive/10 hover:text-destructive focus-visible:ring-2 focus-visible:ring-destructive" onClick={() => setDeletingItem(item)} type="button"><Trash2 aria-hidden="true" className="size-3.5" /></button>
+                      <button aria-label={`Edit ${item.name}`} className="flex size-9 items-center justify-center rounded-xl text-muted-foreground transition hover:bg-muted hover:text-secondary focus-visible:ring-2 focus-visible:ring-primary" onClick={() => openEdit(item)} type="button"><Pencil aria-hidden="true" className="size-4" /></button>
+                      <button aria-label={`Delete ${item.name}`} className="flex size-9 items-center justify-center rounded-xl text-muted-foreground transition hover:bg-destructive/10 hover:text-destructive focus-visible:ring-2 focus-visible:ring-destructive disabled:cursor-not-allowed disabled:opacity-50" disabled={Boolean(pendingItemId)} onClick={() => setDeletingItem(item)} type="button"><Trash2 aria-hidden="true" className="size-4" /></button>
                     </div>
                   )}
                 </div>
@@ -369,7 +374,7 @@ export function MenuManagementClient({
       {canManage && (
         <>
           <MenuItemFormDialog categories={categories} item={editingItem} onClose={() => setFormOpen(false)} open={formOpen} />
-          <ConfirmDialog description={`Delete ${deletingItem?.name ?? "this menu item"}? This cannot be undone. Items referenced by completed orders should be marked unavailable instead.`} onCancel={() => setDeletingItem(null)} onConfirm={confirmDelete} open={Boolean(deletingItem)} pending={isPending && pendingItemId === deletingItem?.id} title="Delete menu item" />
+          <ConfirmDialog description={`Delete ${deletingItem?.name ?? "this menu item"}? Unused items are permanently deleted. Items referenced by historical orders are safely archived and removed from active menus.`} onCancel={() => setDeletingItem(null)} onConfirm={confirmDelete} open={Boolean(deletingItem)} pending={isPending && pendingItemId === deletingItem?.id} title="Delete menu item" />
         </>
       )}
     </div>

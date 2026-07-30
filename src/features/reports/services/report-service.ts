@@ -14,8 +14,8 @@ export async function getReportFilterOptions(): Promise<ReportFilterOptions> {
       select: { id: true, fullName: true },
       orderBy: { fullName: "asc" },
     }),
-    prisma.category.findMany({ select: { id: true, name: true }, orderBy: [{ displayOrder: "asc" }, { name: "asc" }] }),
-    prisma.menuItem.findMany({ select: { id: true, name: true, categoryId: true }, orderBy: { name: "asc" } }),
+    prisma.category.findMany({ where: { deletedAt: null }, select: { id: true, name: true }, orderBy: [{ displayOrder: "asc" }, { name: "asc" }] }),
+    prisma.menuItem.findMany({ where: { deletedAt: null, category: { deletedAt: null } }, select: { id: true, name: true, categoryId: true }, orderBy: { name: "asc" } }),
   ]);
   return {
     cashiers: cashiers.map((cashier) => ({ id: cashier.id, name: cashier.fullName })),

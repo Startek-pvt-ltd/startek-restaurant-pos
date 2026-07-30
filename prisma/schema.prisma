@@ -244,11 +244,13 @@ model Category {
   description  String?
   displayOrder Int        @default(0)
   active       Boolean    @default(true)
+  deletedAt    DateTime?
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
   menuItems    MenuItem[]
 
   @@index([active, displayOrder])
+  @@index([deletedAt, active, displayOrder])
 }
 
 model MenuItem {
@@ -260,6 +262,7 @@ model MenuItem {
   image           String?
   preparationTime Int               @default(0)
   available       Boolean           @default(true)
+  deletedAt       DateTime?
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
   category        Category          @relation(fields: [categoryId], references: [id], onDelete: Restrict)
@@ -269,6 +272,8 @@ model MenuItem {
   @@unique([categoryId, name])
   @@index([categoryId])
   @@index([available])
+  @@index([deletedAt, categoryId])
+  @@index([deletedAt, available])
 }
 
 model MenuItemVariant {
