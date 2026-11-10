@@ -54,7 +54,7 @@ async function main() {
       receiptShowTax: false,
       receiptShowServiceCharge: false,
       receiptThankYouMessage: "Thank You!\nPlease Visit Again",
-      receiptDeveloperCredit: "Design & Deploy by\nStartek (PVT) LTD",
+      receiptDeveloperCredit: "Powered by Startek (PVT) LTD",
       currencySymbol: "Rs.",
       taxEnabled: false,
       serviceChargeEnabled: false,
@@ -66,7 +66,7 @@ async function main() {
       allowQr: true,
       invoicePrefix: "RKH",
       invoiceNumberPadding: 4,
-      openCashDrawer: false,
+      openCashDrawer: true,
     },
   });
 

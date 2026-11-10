@@ -15,6 +15,8 @@ import { authorizeMenuMutation, getActionError } from "./action-utils";
 function refreshMenu() {
   revalidatePath("/menu");
   revalidatePath("/menu/categories");
+  revalidatePath("/pos");
+  revalidatePath("/dashboard");
 }
 
 export async function createMenuItemAction(input: unknown): Promise<MenuActionResult> {
@@ -91,9 +93,14 @@ export async function deleteMenuItemAction(id: unknown): Promise<MenuActionResul
   if (!parsed.success) return { success: false, message: "Invalid menu item request." };
 
   try {
-    await deleteMenuItem(parsed.data);
+    const result = await deleteMenuItem(parsed.data);
     refreshMenu();
-    return { success: true, message: "Menu item deleted successfully." };
+    return {
+      success: true,
+      message: result.mode === "archive"
+        ? "Menu item archived successfully. Historical orders remain unchanged."
+        : "Menu item permanently deleted successfully.",
+    };
   } catch (error) {
     return getActionError(
       error,

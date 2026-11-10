@@ -33,6 +33,9 @@ export function getActionError(
       message: "An item with this name already exists in the selected category.",
     };
   }
+  if (message === "MENU_ITEM_NOT_FOUND") {
+    return { success: false, message: "The requested menu item no longer exists." };
+  }
   if (message === "CATEGORY_NAME_EXISTS" || code === "P2002") {
     return { success: false, message: "A record with this name already exists." };
   }

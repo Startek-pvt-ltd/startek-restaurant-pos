@@ -29,6 +29,9 @@ export type AggregateSystemSetting = {
 export type SystemSettingAvgAggregateOutputType = {
   printerPaperWidth: number | null
   receiptCopies: number | null
+  printerDrawerPin: number | null
+  printerDrawerPulseOnMs: number | null
+  printerDrawerPulseOffMs: number | null
   maximumPercentageDiscount: runtime.Decimal | null
   maximumFixedDiscount: runtime.Decimal | null
   invoiceNumberPadding: number | null
@@ -39,6 +42,9 @@ export type SystemSettingAvgAggregateOutputType = {
 export type SystemSettingSumAggregateOutputType = {
   printerPaperWidth: number | null
   receiptCopies: number | null
+  printerDrawerPin: number | null
+  printerDrawerPulseOnMs: number | null
+  printerDrawerPulseOffMs: number | null
   maximumPercentageDiscount: runtime.Decimal | null
   maximumFixedDiscount: runtime.Decimal | null
   invoiceNumberPadding: number | null
@@ -66,6 +72,12 @@ export type SystemSettingMinAggregateOutputType = {
   receiptThankYouMessage: string | null
   receiptDeveloperCredit: string | null
   openCashDrawer: boolean | null
+  printerMode: string | null
+  printerAutomaticCut: boolean | null
+  printerDrawerOpenMode: string | null
+  printerDrawerPin: number | null
+  printerDrawerPulseOnMs: number | null
+  printerDrawerPulseOffMs: number | null
   currencySymbol: string | null
   taxEnabled: boolean | null
   serviceChargeEnabled: boolean | null
@@ -126,6 +138,12 @@ export type SystemSettingMaxAggregateOutputType = {
   receiptThankYouMessage: string | null
   receiptDeveloperCredit: string | null
   openCashDrawer: boolean | null
+  printerMode: string | null
+  printerAutomaticCut: boolean | null
+  printerDrawerOpenMode: string | null
+  printerDrawerPin: number | null
+  printerDrawerPulseOnMs: number | null
+  printerDrawerPulseOffMs: number | null
   currencySymbol: string | null
   taxEnabled: boolean | null
   serviceChargeEnabled: boolean | null
@@ -186,6 +204,12 @@ export type SystemSettingCountAggregateOutputType = {
   receiptThankYouMessage: number
   receiptDeveloperCredit: number
   openCashDrawer: number
+  printerMode: number
+  printerAutomaticCut: number
+  printerDrawerOpenMode: number
+  printerDrawerPin: number
+  printerDrawerPulseOnMs: number
+  printerDrawerPulseOffMs: number
   currencySymbol: number
   taxEnabled: number
   serviceChargeEnabled: number
@@ -231,6 +255,9 @@ export type SystemSettingCountAggregateOutputType = {
 export type SystemSettingAvgAggregateInputType = {
   printerPaperWidth?: true
   receiptCopies?: true
+  printerDrawerPin?: true
+  printerDrawerPulseOnMs?: true
+  printerDrawerPulseOffMs?: true
   maximumPercentageDiscount?: true
   maximumFixedDiscount?: true
   invoiceNumberPadding?: true
@@ -241,6 +268,9 @@ export type SystemSettingAvgAggregateInputType = {
 export type SystemSettingSumAggregateInputType = {
   printerPaperWidth?: true
   receiptCopies?: true
+  printerDrawerPin?: true
+  printerDrawerPulseOnMs?: true
+  printerDrawerPulseOffMs?: true
   maximumPercentageDiscount?: true
   maximumFixedDiscount?: true
   invoiceNumberPadding?: true
@@ -268,6 +298,12 @@ export type SystemSettingMinAggregateInputType = {
   receiptThankYouMessage?: true
   receiptDeveloperCredit?: true
   openCashDrawer?: true
+  printerMode?: true
+  printerAutomaticCut?: true
+  printerDrawerOpenMode?: true
+  printerDrawerPin?: true
+  printerDrawerPulseOnMs?: true
+  printerDrawerPulseOffMs?: true
   currencySymbol?: true
   taxEnabled?: true
   serviceChargeEnabled?: true
@@ -328,6 +364,12 @@ export type SystemSettingMaxAggregateInputType = {
   receiptThankYouMessage?: true
   receiptDeveloperCredit?: true
   openCashDrawer?: true
+  printerMode?: true
+  printerAutomaticCut?: true
+  printerDrawerOpenMode?: true
+  printerDrawerPin?: true
+  printerDrawerPulseOnMs?: true
+  printerDrawerPulseOffMs?: true
   currencySymbol?: true
   taxEnabled?: true
   serviceChargeEnabled?: true
@@ -388,6 +430,12 @@ export type SystemSettingCountAggregateInputType = {
   receiptThankYouMessage?: true
   receiptDeveloperCredit?: true
   openCashDrawer?: true
+  printerMode?: true
+  printerAutomaticCut?: true
+  printerDrawerOpenMode?: true
+  printerDrawerPin?: true
+  printerDrawerPulseOnMs?: true
+  printerDrawerPulseOffMs?: true
   currencySymbol?: true
   taxEnabled?: true
   serviceChargeEnabled?: true
@@ -535,6 +583,12 @@ export type SystemSettingGroupByOutputType = {
   receiptThankYouMessage: string
   receiptDeveloperCredit: string
   openCashDrawer: boolean
+  printerMode: string
+  printerAutomaticCut: boolean
+  printerDrawerOpenMode: string
+  printerDrawerPin: number
+  printerDrawerPulseOnMs: number
+  printerDrawerPulseOffMs: number
   currencySymbol: string
   taxEnabled: boolean
   serviceChargeEnabled: boolean
@@ -618,6 +672,12 @@ export type SystemSettingWhereInput = {
   receiptThankYouMessage?: Prisma.StringFilter<"SystemSetting"> | string
   receiptDeveloperCredit?: Prisma.StringFilter<"SystemSetting"> | string
   openCashDrawer?: Prisma.BoolFilter<"SystemSetting"> | boolean
+  printerMode?: Prisma.StringFilter<"SystemSetting"> | string
+  printerAutomaticCut?: Prisma.BoolFilter<"SystemSetting"> | boolean
+  printerDrawerOpenMode?: Prisma.StringFilter<"SystemSetting"> | string
+  printerDrawerPin?: Prisma.IntFilter<"SystemSetting"> | number
+  printerDrawerPulseOnMs?: Prisma.IntFilter<"SystemSetting"> | number
+  printerDrawerPulseOffMs?: Prisma.IntFilter<"SystemSetting"> | number
   currencySymbol?: Prisma.StringFilter<"SystemSetting"> | string
   taxEnabled?: Prisma.BoolFilter<"SystemSetting"> | boolean
   serviceChargeEnabled?: Prisma.BoolFilter<"SystemSetting"> | boolean
@@ -678,6 +738,12 @@ export type SystemSettingOrderByWithRelationInput = {
   receiptThankYouMessage?: Prisma.SortOrder
   receiptDeveloperCredit?: Prisma.SortOrder
   openCashDrawer?: Prisma.SortOrder
+  printerMode?: Prisma.SortOrder
+  printerAutomaticCut?: Prisma.SortOrder
+  printerDrawerOpenMode?: Prisma.SortOrder
+  printerDrawerPin?: Prisma.SortOrder
+  printerDrawerPulseOnMs?: Prisma.SortOrder
+  printerDrawerPulseOffMs?: Prisma.SortOrder
   currencySymbol?: Prisma.SortOrder
   taxEnabled?: Prisma.SortOrder
   serviceChargeEnabled?: Prisma.SortOrder
@@ -741,6 +807,12 @@ export type SystemSettingWhereUniqueInput = Prisma.AtLeast<{
   receiptThankYouMessage?: Prisma.StringFilter<"SystemSetting"> | string
   receiptDeveloperCredit?: Prisma.StringFilter<"SystemSetting"> | string
   openCashDrawer?: Prisma.BoolFilter<"SystemSetting"> | boolean
+  printerMode?: Prisma.StringFilter<"SystemSetting"> | string
+  printerAutomaticCut?: Prisma.BoolFilter<"SystemSetting"> | boolean
+  printerDrawerOpenMode?: Prisma.StringFilter<"SystemSetting"> | string
+  printerDrawerPin?: Prisma.IntFilter<"SystemSetting"> | number
+  printerDrawerPulseOnMs?: Prisma.IntFilter<"SystemSetting"> | number
+  printerDrawerPulseOffMs?: Prisma.IntFilter<"SystemSetting"> | number
   currencySymbol?: Prisma.StringFilter<"SystemSetting"> | string
   taxEnabled?: Prisma.BoolFilter<"SystemSetting"> | boolean
   serviceChargeEnabled?: Prisma.BoolFilter<"SystemSetting"> | boolean
@@ -801,6 +873,12 @@ export type SystemSettingOrderByWithAggregationInput = {
   receiptThankYouMessage?: Prisma.SortOrder
   receiptDeveloperCredit?: Prisma.SortOrder
   openCashDrawer?: Prisma.SortOrder
+  printerMode?: Prisma.SortOrder
+  printerAutomaticCut?: Prisma.SortOrder
+  printerDrawerOpenMode?: Prisma.SortOrder
+  printerDrawerPin?: Prisma.SortOrder
+  printerDrawerPulseOnMs?: Prisma.SortOrder
+  printerDrawerPulseOffMs?: Prisma.SortOrder
   currencySymbol?: Prisma.SortOrder
   taxEnabled?: Prisma.SortOrder
   serviceChargeEnabled?: Prisma.SortOrder
@@ -869,6 +947,12 @@ export type SystemSettingScalarWhereWithAggregatesInput = {
   receiptThankYouMessage?: Prisma.StringWithAggregatesFilter<"SystemSetting"> | string
   receiptDeveloperCredit?: Prisma.StringWithAggregatesFilter<"SystemSetting"> | string
   openCashDrawer?: Prisma.BoolWithAggregatesFilter<"SystemSetting"> | boolean
+  printerMode?: Prisma.StringWithAggregatesFilter<"SystemSetting"> | string
+  printerAutomaticCut?: Prisma.BoolWithAggregatesFilter<"SystemSetting"> | boolean
+  printerDrawerOpenMode?: Prisma.StringWithAggregatesFilter<"SystemSetting"> | string
+  printerDrawerPin?: Prisma.IntWithAggregatesFilter<"SystemSetting"> | number
+  printerDrawerPulseOnMs?: Prisma.IntWithAggregatesFilter<"SystemSetting"> | number
+  printerDrawerPulseOffMs?: Prisma.IntWithAggregatesFilter<"SystemSetting"> | number
   currencySymbol?: Prisma.StringWithAggregatesFilter<"SystemSetting"> | string
   taxEnabled?: Prisma.BoolWithAggregatesFilter<"SystemSetting"> | boolean
   serviceChargeEnabled?: Prisma.BoolWithAggregatesFilter<"SystemSetting"> | boolean
@@ -929,6 +1013,12 @@ export type SystemSettingCreateInput = {
   receiptThankYouMessage?: string
   receiptDeveloperCredit?: string
   openCashDrawer?: boolean
+  printerMode?: string
+  printerAutomaticCut?: boolean
+  printerDrawerOpenMode?: string
+  printerDrawerPin?: number
+  printerDrawerPulseOnMs?: number
+  printerDrawerPulseOffMs?: number
   currencySymbol?: string
   taxEnabled?: boolean
   serviceChargeEnabled?: boolean
@@ -989,6 +1079,12 @@ export type SystemSettingUncheckedCreateInput = {
   receiptThankYouMessage?: string
   receiptDeveloperCredit?: string
   openCashDrawer?: boolean
+  printerMode?: string
+  printerAutomaticCut?: boolean
+  printerDrawerOpenMode?: string
+  printerDrawerPin?: number
+  printerDrawerPulseOnMs?: number
+  printerDrawerPulseOffMs?: number
   currencySymbol?: string
   taxEnabled?: boolean
   serviceChargeEnabled?: boolean
@@ -1049,6 +1145,12 @@ export type SystemSettingUpdateInput = {
   receiptThankYouMessage?: Prisma.StringFieldUpdateOperationsInput | string
   receiptDeveloperCredit?: Prisma.StringFieldUpdateOperationsInput | string
   openCashDrawer?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  printerMode?: Prisma.StringFieldUpdateOperationsInput | string
+  printerAutomaticCut?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  printerDrawerOpenMode?: Prisma.StringFieldUpdateOperationsInput | string
+  printerDrawerPin?: Prisma.IntFieldUpdateOperationsInput | number
+  printerDrawerPulseOnMs?: Prisma.IntFieldUpdateOperationsInput | number
+  printerDrawerPulseOffMs?: Prisma.IntFieldUpdateOperationsInput | number
   currencySymbol?: Prisma.StringFieldUpdateOperationsInput | string
   taxEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   serviceChargeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1109,6 +1211,12 @@ export type SystemSettingUncheckedUpdateInput = {
   receiptThankYouMessage?: Prisma.StringFieldUpdateOperationsInput | string
   receiptDeveloperCredit?: Prisma.StringFieldUpdateOperationsInput | string
   openCashDrawer?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  printerMode?: Prisma.StringFieldUpdateOperationsInput | string
+  printerAutomaticCut?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  printerDrawerOpenMode?: Prisma.StringFieldUpdateOperationsInput | string
+  printerDrawerPin?: Prisma.IntFieldUpdateOperationsInput | number
+  printerDrawerPulseOnMs?: Prisma.IntFieldUpdateOperationsInput | number
+  printerDrawerPulseOffMs?: Prisma.IntFieldUpdateOperationsInput | number
   currencySymbol?: Prisma.StringFieldUpdateOperationsInput | string
   taxEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   serviceChargeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1169,6 +1277,12 @@ export type SystemSettingCreateManyInput = {
   receiptThankYouMessage?: string
   receiptDeveloperCredit?: string
   openCashDrawer?: boolean
+  printerMode?: string
+  printerAutomaticCut?: boolean
+  printerDrawerOpenMode?: string
+  printerDrawerPin?: number
+  printerDrawerPulseOnMs?: number
+  printerDrawerPulseOffMs?: number
   currencySymbol?: string
   taxEnabled?: boolean
   serviceChargeEnabled?: boolean
@@ -1229,6 +1343,12 @@ export type SystemSettingUpdateManyMutationInput = {
   receiptThankYouMessage?: Prisma.StringFieldUpdateOperationsInput | string
   receiptDeveloperCredit?: Prisma.StringFieldUpdateOperationsInput | string
   openCashDrawer?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  printerMode?: Prisma.StringFieldUpdateOperationsInput | string
+  printerAutomaticCut?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  printerDrawerOpenMode?: Prisma.StringFieldUpdateOperationsInput | string
+  printerDrawerPin?: Prisma.IntFieldUpdateOperationsInput | number
+  printerDrawerPulseOnMs?: Prisma.IntFieldUpdateOperationsInput | number
+  printerDrawerPulseOffMs?: Prisma.IntFieldUpdateOperationsInput | number
   currencySymbol?: Prisma.StringFieldUpdateOperationsInput | string
   taxEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   serviceChargeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1289,6 +1409,12 @@ export type SystemSettingUncheckedUpdateManyInput = {
   receiptThankYouMessage?: Prisma.StringFieldUpdateOperationsInput | string
   receiptDeveloperCredit?: Prisma.StringFieldUpdateOperationsInput | string
   openCashDrawer?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  printerMode?: Prisma.StringFieldUpdateOperationsInput | string
+  printerAutomaticCut?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  printerDrawerOpenMode?: Prisma.StringFieldUpdateOperationsInput | string
+  printerDrawerPin?: Prisma.IntFieldUpdateOperationsInput | number
+  printerDrawerPulseOnMs?: Prisma.IntFieldUpdateOperationsInput | number
+  printerDrawerPulseOffMs?: Prisma.IntFieldUpdateOperationsInput | number
   currencySymbol?: Prisma.StringFieldUpdateOperationsInput | string
   taxEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   serviceChargeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1349,6 +1475,12 @@ export type SystemSettingCountOrderByAggregateInput = {
   receiptThankYouMessage?: Prisma.SortOrder
   receiptDeveloperCredit?: Prisma.SortOrder
   openCashDrawer?: Prisma.SortOrder
+  printerMode?: Prisma.SortOrder
+  printerAutomaticCut?: Prisma.SortOrder
+  printerDrawerOpenMode?: Prisma.SortOrder
+  printerDrawerPin?: Prisma.SortOrder
+  printerDrawerPulseOnMs?: Prisma.SortOrder
+  printerDrawerPulseOffMs?: Prisma.SortOrder
   currencySymbol?: Prisma.SortOrder
   taxEnabled?: Prisma.SortOrder
   serviceChargeEnabled?: Prisma.SortOrder
@@ -1392,6 +1524,9 @@ export type SystemSettingCountOrderByAggregateInput = {
 export type SystemSettingAvgOrderByAggregateInput = {
   printerPaperWidth?: Prisma.SortOrder
   receiptCopies?: Prisma.SortOrder
+  printerDrawerPin?: Prisma.SortOrder
+  printerDrawerPulseOnMs?: Prisma.SortOrder
+  printerDrawerPulseOffMs?: Prisma.SortOrder
   maximumPercentageDiscount?: Prisma.SortOrder
   maximumFixedDiscount?: Prisma.SortOrder
   invoiceNumberPadding?: Prisma.SortOrder
@@ -1419,6 +1554,12 @@ export type SystemSettingMaxOrderByAggregateInput = {
   receiptThankYouMessage?: Prisma.SortOrder
   receiptDeveloperCredit?: Prisma.SortOrder
   openCashDrawer?: Prisma.SortOrder
+  printerMode?: Prisma.SortOrder
+  printerAutomaticCut?: Prisma.SortOrder
+  printerDrawerOpenMode?: Prisma.SortOrder
+  printerDrawerPin?: Prisma.SortOrder
+  printerDrawerPulseOnMs?: Prisma.SortOrder
+  printerDrawerPulseOffMs?: Prisma.SortOrder
   currencySymbol?: Prisma.SortOrder
   taxEnabled?: Prisma.SortOrder
   serviceChargeEnabled?: Prisma.SortOrder
@@ -1479,6 +1620,12 @@ export type SystemSettingMinOrderByAggregateInput = {
   receiptThankYouMessage?: Prisma.SortOrder
   receiptDeveloperCredit?: Prisma.SortOrder
   openCashDrawer?: Prisma.SortOrder
+  printerMode?: Prisma.SortOrder
+  printerAutomaticCut?: Prisma.SortOrder
+  printerDrawerOpenMode?: Prisma.SortOrder
+  printerDrawerPin?: Prisma.SortOrder
+  printerDrawerPulseOnMs?: Prisma.SortOrder
+  printerDrawerPulseOffMs?: Prisma.SortOrder
   currencySymbol?: Prisma.SortOrder
   taxEnabled?: Prisma.SortOrder
   serviceChargeEnabled?: Prisma.SortOrder
@@ -1522,6 +1669,9 @@ export type SystemSettingMinOrderByAggregateInput = {
 export type SystemSettingSumOrderByAggregateInput = {
   printerPaperWidth?: Prisma.SortOrder
   receiptCopies?: Prisma.SortOrder
+  printerDrawerPin?: Prisma.SortOrder
+  printerDrawerPulseOnMs?: Prisma.SortOrder
+  printerDrawerPulseOffMs?: Prisma.SortOrder
   maximumPercentageDiscount?: Prisma.SortOrder
   maximumFixedDiscount?: Prisma.SortOrder
   invoiceNumberPadding?: Prisma.SortOrder
@@ -1551,6 +1701,12 @@ export type SystemSettingSelect<ExtArgs extends runtime.Types.Extensions.Interna
   receiptThankYouMessage?: boolean
   receiptDeveloperCredit?: boolean
   openCashDrawer?: boolean
+  printerMode?: boolean
+  printerAutomaticCut?: boolean
+  printerDrawerOpenMode?: boolean
+  printerDrawerPin?: boolean
+  printerDrawerPulseOnMs?: boolean
+  printerDrawerPulseOffMs?: boolean
   currencySymbol?: boolean
   taxEnabled?: boolean
   serviceChargeEnabled?: boolean
@@ -1611,6 +1767,12 @@ export type SystemSettingSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   receiptThankYouMessage?: boolean
   receiptDeveloperCredit?: boolean
   openCashDrawer?: boolean
+  printerMode?: boolean
+  printerAutomaticCut?: boolean
+  printerDrawerOpenMode?: boolean
+  printerDrawerPin?: boolean
+  printerDrawerPulseOnMs?: boolean
+  printerDrawerPulseOffMs?: boolean
   currencySymbol?: boolean
   taxEnabled?: boolean
   serviceChargeEnabled?: boolean
@@ -1671,6 +1833,12 @@ export type SystemSettingSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   receiptThankYouMessage?: boolean
   receiptDeveloperCredit?: boolean
   openCashDrawer?: boolean
+  printerMode?: boolean
+  printerAutomaticCut?: boolean
+  printerDrawerOpenMode?: boolean
+  printerDrawerPin?: boolean
+  printerDrawerPulseOnMs?: boolean
+  printerDrawerPulseOffMs?: boolean
   currencySymbol?: boolean
   taxEnabled?: boolean
   serviceChargeEnabled?: boolean
@@ -1731,6 +1899,12 @@ export type SystemSettingSelectScalar = {
   receiptThankYouMessage?: boolean
   receiptDeveloperCredit?: boolean
   openCashDrawer?: boolean
+  printerMode?: boolean
+  printerAutomaticCut?: boolean
+  printerDrawerOpenMode?: boolean
+  printerDrawerPin?: boolean
+  printerDrawerPulseOnMs?: boolean
+  printerDrawerPulseOffMs?: boolean
   currencySymbol?: boolean
   taxEnabled?: boolean
   serviceChargeEnabled?: boolean
@@ -1771,7 +1945,7 @@ export type SystemSettingSelectScalar = {
   updatedAt?: boolean
 }
 
-export type SystemSettingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "restaurantName" | "logo" | "receiptFooter" | "currency" | "timezone" | "language" | "printerName" | "printerPaperWidth" | "autoOpenReceiptAfterCheckout" | "autoPrintAfterCheckout" | "printLogo" | "receiptCopies" | "receiptShowCustomerInfo" | "receiptShowTax" | "receiptShowServiceCharge" | "receiptThankYouMessage" | "receiptDeveloperCredit" | "openCashDrawer" | "currencySymbol" | "taxEnabled" | "serviceChargeEnabled" | "discountEnabled" | "maximumPercentageDiscount" | "maximumFixedDiscount" | "defaultOrderType" | "allowCash" | "allowCard" | "allowQr" | "requireOrderNotes" | "allowNegativeBalance" | "invoicePrefix" | "invoiceNumberPadding" | "receiptHeaderMessage" | "receiptVisitAgainMessage" | "receiptShowDiscountWhenZero" | "receiptShowTaxWhenZero" | "receiptShowServiceWhenZero" | "receiptShowCashReceived" | "receiptShowBalance" | "receiptShowOrderType" | "receiptShowCashier" | "receiptShowRestaurantPhone" | "receiptFooterText" | "printerScale" | "printerMargin" | "printerHeadersFootersReminder" | "printerNotes" | "applicationName" | "applicationVersion" | "dateFormat" | "timeFormat" | "theme" | "itemsPerPage" | "activityLoggingEnabled" | "maintenanceMode" | "updatedAt", ExtArgs["result"]["systemSetting"]>
+export type SystemSettingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "restaurantName" | "logo" | "receiptFooter" | "currency" | "timezone" | "language" | "printerName" | "printerPaperWidth" | "autoOpenReceiptAfterCheckout" | "autoPrintAfterCheckout" | "printLogo" | "receiptCopies" | "receiptShowCustomerInfo" | "receiptShowTax" | "receiptShowServiceCharge" | "receiptThankYouMessage" | "receiptDeveloperCredit" | "openCashDrawer" | "printerMode" | "printerAutomaticCut" | "printerDrawerOpenMode" | "printerDrawerPin" | "printerDrawerPulseOnMs" | "printerDrawerPulseOffMs" | "currencySymbol" | "taxEnabled" | "serviceChargeEnabled" | "discountEnabled" | "maximumPercentageDiscount" | "maximumFixedDiscount" | "defaultOrderType" | "allowCash" | "allowCard" | "allowQr" | "requireOrderNotes" | "allowNegativeBalance" | "invoicePrefix" | "invoiceNumberPadding" | "receiptHeaderMessage" | "receiptVisitAgainMessage" | "receiptShowDiscountWhenZero" | "receiptShowTaxWhenZero" | "receiptShowServiceWhenZero" | "receiptShowCashReceived" | "receiptShowBalance" | "receiptShowOrderType" | "receiptShowCashier" | "receiptShowRestaurantPhone" | "receiptFooterText" | "printerScale" | "printerMargin" | "printerHeadersFootersReminder" | "printerNotes" | "applicationName" | "applicationVersion" | "dateFormat" | "timeFormat" | "theme" | "itemsPerPage" | "activityLoggingEnabled" | "maintenanceMode" | "updatedAt", ExtArgs["result"]["systemSetting"]>
 
 export type $SystemSettingPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "SystemSetting"
@@ -1796,6 +1970,12 @@ export type $SystemSettingPayload<ExtArgs extends runtime.Types.Extensions.Inter
     receiptThankYouMessage: string
     receiptDeveloperCredit: string
     openCashDrawer: boolean
+    printerMode: string
+    printerAutomaticCut: boolean
+    printerDrawerOpenMode: string
+    printerDrawerPin: number
+    printerDrawerPulseOnMs: number
+    printerDrawerPulseOffMs: number
     currencySymbol: string
     taxEnabled: boolean
     serviceChargeEnabled: boolean
@@ -2276,6 +2456,12 @@ export interface SystemSettingFieldRefs {
   readonly receiptThankYouMessage: Prisma.FieldRef<"SystemSetting", 'String'>
   readonly receiptDeveloperCredit: Prisma.FieldRef<"SystemSetting", 'String'>
   readonly openCashDrawer: Prisma.FieldRef<"SystemSetting", 'Boolean'>
+  readonly printerMode: Prisma.FieldRef<"SystemSetting", 'String'>
+  readonly printerAutomaticCut: Prisma.FieldRef<"SystemSetting", 'Boolean'>
+  readonly printerDrawerOpenMode: Prisma.FieldRef<"SystemSetting", 'String'>
+  readonly printerDrawerPin: Prisma.FieldRef<"SystemSetting", 'Int'>
+  readonly printerDrawerPulseOnMs: Prisma.FieldRef<"SystemSetting", 'Int'>
+  readonly printerDrawerPulseOffMs: Prisma.FieldRef<"SystemSetting", 'Int'>
   readonly currencySymbol: Prisma.FieldRef<"SystemSetting", 'String'>
   readonly taxEnabled: Prisma.FieldRef<"SystemSetting", 'Boolean'>
   readonly serviceChargeEnabled: Prisma.FieldRef<"SystemSetting", 'Boolean'>

@@ -15,6 +15,8 @@ import { authorizeMenuMutation, getActionError } from "./action-utils";
 function refreshMenuRoutes() {
   revalidatePath("/menu");
   revalidatePath("/menu/categories");
+  revalidatePath("/pos");
+  revalidatePath("/dashboard");
 }
 
 export async function createCategoryAction(input: unknown): Promise<MenuActionResult> {
@@ -91,9 +93,14 @@ export async function deleteCategoryAction(id: unknown): Promise<MenuActionResul
   if (!parsed.success) return { success: false, message: "Invalid category request." };
 
   try {
-    await deleteCategory(parsed.data);
+    const result = await deleteCategory(parsed.data);
     refreshMenuRoutes();
-    return { success: true, message: "Category deleted successfully." };
+    return {
+      success: true,
+      message: result.mode === "archive"
+        ? "Category archived successfully. Historical menu data remains unchanged."
+        : "Category permanently deleted successfully.",
+    };
   } catch (error) {
     return getActionError(
       error,

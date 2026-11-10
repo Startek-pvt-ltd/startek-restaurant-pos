@@ -2,13 +2,12 @@
 
 import { ArrowLeft, Layers3, Pencil, Plus, Search, Trash2 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useMemo, useState, useTransition } from "react";
 import { toast } from "sonner";
 
-import {
-  deleteCategoryAction,
-  toggleCategoryAction,
-} from "@/features/menu/actions/category-actions";
+import { toggleCategoryAction } from "@/features/menu/actions/category-actions";
+import { deleteMenuRecord } from "@/features/menu/api/delete-menu-record";
 import type { CategoryRecord } from "@/features/menu/types";
 
 import { CategoryFormDialog } from "./CategoryFormDialog";
@@ -24,17 +23,20 @@ interface CategoryManagementClientProps {
 type CategorySort = "order" | "name-asc" | "name-desc" | "newest";
 
 export function CategoryManagementClient({ canManage, categories }: CategoryManagementClientProps) {
+  const router = useRouter();
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState<CategorySort>("order");
   const [formOpen, setFormOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState<CategoryRecord | null>(null);
   const [deletingCategory, setDeletingCategory] = useState<CategoryRecord | null>(null);
+  const [hiddenCategoryIds, setHiddenCategoryIds] = useState<string[]>([]);
   const [pendingCategoryId, setPendingCategoryId] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
   const filteredCategories = useMemo(() => {
     const query = search.trim().toLocaleLowerCase();
     return categories
+      .filter((category) => !hiddenCategoryIds.includes(category.id))
       .filter((category) => !query || category.name.toLocaleLowerCase().includes(query) || category.description?.toLocaleLowerCase().includes(query))
       .sort((a, b) => {
         if (sort === "name-asc") return a.name.localeCompare(b.name);
@@ -42,7 +44,9 @@ export function CategoryManagementClient({ canManage, categories }: CategoryMana
         if (sort === "newest") return Date.parse(b.createdAt) - Date.parse(a.createdAt);
         return a.displayOrder - b.displayOrder || a.name.localeCompare(b.name);
       });
-  }, [categories, search, sort]);
+  }, [categories, hiddenCategoryIds, search, sort]);
+
+  const visibleCategoryCount = categories.filter((category) => !hiddenCategoryIds.includes(category.id)).length;
 
   const toggleActive = async (category: CategoryRecord, active: boolean) => {
     const result = await toggleCategoryAction(category.id, active);
@@ -52,14 +56,24 @@ export function CategoryManagementClient({ canManage, categories }: CategoryMana
   };
 
   const confirmDelete = () => {
-    if (!deletingCategory) return;
+    if (!deletingCategory || pendingCategoryId) return;
     setPendingCategoryId(deletingCategory.id);
     startTransition(async () => {
-      const result = await deleteCategoryAction(deletingCategory.id);
-      if (result.success) toast.success(result.message);
-      else toast.error(result.message);
-      if (result.success) setDeletingCategory(null);
-      setPendingCategoryId(null);
+      try {
+        const result = await deleteMenuRecord(`/api/menu/categories/${encodeURIComponent(deletingCategory.id)}`);
+        if (!result.success) {
+          toast.error(result.message);
+          return;
+        }
+        setHiddenCategoryIds((current) => [...current, deletingCategory.id]);
+        setDeletingCategory(null);
+        toast.success(result.message);
+        router.refresh();
+      } catch {
+        toast.error("Unable to delete the category. Check the connection and try again.");
+      } finally {
+        setPendingCategoryId(null);
+      }
     });
   };
 
@@ -81,7 +95,7 @@ export function CategoryManagementClient({ canManage, categories }: CategoryMana
           <label className="relative"><span className="sr-only">Search categories</span><Search aria-hidden="true" className="absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" /><input className="h-11 w-full rounded-xl border border-input bg-background/40 pl-10 pr-3 text-sm outline-none transition placeholder:text-muted-foreground/70 focus:border-primary focus:bg-white focus:ring-4 focus:ring-primary/10" onChange={(event) => setSearch(event.target.value)} placeholder="Search categories…" type="search" value={search} /></label>
           <label><span className="sr-only">Sort categories</span><select className="h-11 w-full rounded-xl border border-input bg-white px-3 text-sm outline-none focus:border-primary focus:ring-4 focus:ring-primary/10" onChange={(event) => setSort(event.target.value as CategorySort)} value={sort}><option value="order">Display order</option><option value="name-asc">Name A–Z</option><option value="name-desc">Name Z–A</option><option value="newest">Newest first</option></select></label>
         </div>
-        <p className="mt-3 text-xs font-medium text-muted-foreground" aria-live="polite">Showing {filteredCategories.length} of {categories.length} categories</p>
+        <p className="mt-3 text-xs font-medium text-muted-foreground" aria-live="polite">Showing {filteredCategories.length} of {visibleCategoryCount} categories</p>
       </section>
 
       {filteredCategories.length === 0 ? (
@@ -98,7 +112,7 @@ export function CategoryManagementClient({ canManage, categories }: CategoryMana
                     <td className="px-4 py-4"><span className="inline-flex min-w-8 justify-center rounded-lg bg-muted px-2 py-1 text-xs font-black text-secondary">{category.displayOrder}</span></td>
                     <td className="px-4 py-4 font-semibold">{category.itemCount}</td>
                     <td className="px-4 py-4"><StatusBadge active={category.active} /></td>
-                    {canManage && <td className="px-5 py-4"><div className="flex items-center justify-end gap-2"><StatusSwitch checked={category.active} disabled={isPending && pendingCategoryId === category.id} label={`${category.active ? "Deactivate" : "Activate"} ${category.name}`} onCheckedChange={(active) => toggleActive(category, active)} /><button aria-label={`Edit ${category.name}`} className="flex size-9 items-center justify-center rounded-xl border border-border text-muted-foreground transition hover:bg-muted hover:text-secondary focus-visible:ring-2 focus-visible:ring-primary" onClick={() => { setEditingCategory(category); setFormOpen(true); }} type="button"><Pencil aria-hidden="true" className="size-4" /></button><button aria-label={`Delete ${category.name}`} className="flex size-9 items-center justify-center rounded-xl border border-border text-muted-foreground transition hover:border-destructive/30 hover:bg-destructive/8 hover:text-destructive focus-visible:ring-2 focus-visible:ring-destructive disabled:cursor-not-allowed disabled:opacity-45" disabled={category.itemCount > 0} onClick={() => setDeletingCategory(category)} title={category.itemCount > 0 ? "Remove all menu items before deleting this category" : "Delete category"} type="button"><Trash2 aria-hidden="true" className="size-4" /></button></div></td>}
+                    {canManage && <td className="px-5 py-4"><div className="flex items-center justify-end gap-2"><StatusSwitch checked={category.active} disabled={isPending && pendingCategoryId === category.id} label={`${category.active ? "Deactivate" : "Activate"} ${category.name}`} onCheckedChange={(active) => toggleActive(category, active)} /><button aria-label={`Edit ${category.name}`} className="flex size-9 items-center justify-center rounded-xl border border-border text-muted-foreground transition hover:bg-muted hover:text-secondary focus-visible:ring-2 focus-visible:ring-primary" onClick={() => { setEditingCategory(category); setFormOpen(true); }} type="button"><Pencil aria-hidden="true" className="size-4" /></button><button aria-label={`Delete ${category.name}`} className="flex size-9 items-center justify-center rounded-xl border border-border text-muted-foreground transition hover:border-destructive/30 hover:bg-destructive/8 hover:text-destructive focus-visible:ring-2 focus-visible:ring-destructive disabled:cursor-not-allowed disabled:opacity-50" disabled={Boolean(pendingCategoryId)} onClick={() => setDeletingCategory(category)} title={category.itemCount > 0 ? "Active items must be moved or removed first" : "Delete category"} type="button"><Trash2 aria-hidden="true" className="size-4" /></button></div></td>}
                   </tr>
                 ))}
               </tbody>
@@ -107,7 +121,7 @@ export function CategoryManagementClient({ canManage, categories }: CategoryMana
         </section>
       )}
 
-      {canManage && <><CategoryFormDialog category={editingCategory} onClose={() => setFormOpen(false)} open={formOpen} /><ConfirmDialog description={`Delete ${deletingCategory?.name ?? "this category"}? This action cannot be undone. Categories containing menu items cannot be deleted.`} onCancel={() => setDeletingCategory(null)} onConfirm={confirmDelete} open={Boolean(deletingCategory)} pending={isPending && pendingCategoryId === deletingCategory?.id} title="Delete category" /></>}
+      {canManage && <><CategoryFormDialog category={editingCategory} onClose={() => setFormOpen(false)} open={formOpen} /><ConfirmDialog description={`Delete ${deletingCategory?.name ?? "this category"}? ${deletingCategory?.itemCount ? `It contains ${deletingCategory.itemCount} active menu ${deletingCategory.itemCount === 1 ? "item" : "items"}; move, delete, or archive them first.` : "Empty categories are permanently deleted; categories retained only for historical data are safely archived."}`} onCancel={() => setDeletingCategory(null)} onConfirm={confirmDelete} open={Boolean(deletingCategory)} pending={isPending && pendingCategoryId === deletingCategory?.id} title="Delete category" /></>}
     </div>
   );
 }

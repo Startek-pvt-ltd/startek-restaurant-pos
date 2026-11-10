@@ -6,7 +6,7 @@ The supported local lifecycle commands are `./scripts/start-pos.sh`, `./scripts/
 
 Apply checked-in migrations with `npx prisma migrate deploy` before starting the application. Persist `public/uploads/restaurant` or replace local logo storage with a configured durable object store before horizontally scaling. Never commit real authentication or database secrets.
 
-The application does not communicate directly with USB/network printers. The workstation browser and operating-system print dialog must have access to Xprinter XP-80T. Use `/settings/printer` to confirm paper width, scale, margins, copies, and print behavior.
+Printer access depends on the selected mode. **Browser** mode uses the workstation browser, Windows print dialog, and installed Xprinter XP-80T driver; cutter behavior comes from the driver and this mode cannot pulse the cash drawer. **Direct ESC/POS bridge** mode sends authenticated jobs to the loopback-only bridge, which communicates with a network-accessible ESC/POS printer over raw TCP port 9100 and can issue drawer and cutter commands. USB-only direct printing requires a supported network print interface and is not provided by the bridge. Follow `docs/windows-thermal-printer.md` and confirm the selected mode in `/settings/printer`.
 
 ## Private backups
 

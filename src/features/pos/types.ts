@@ -33,6 +33,7 @@ export type RestaurantBillingSettings = {
   autoPrintAfterCheckout: boolean;
   printLogo: boolean;
   receiptCopies: number;
+  printerMode: "BROWSER" | "ESC_POS_BRIDGE";
   defaultOrderType: PosOrderType;
   allowCash: boolean;
   allowCard: boolean;
@@ -48,6 +49,7 @@ export type CartLine = PosProduct & {
 };
 
 export type CheckoutInput = {
+  checkoutToken: string;
   items: Array<{ menuItemId: string; menuItemVariantId: string | null; quantity: number }>;
   orderType: PosOrderType;
   notes: string;
@@ -63,5 +65,8 @@ export type CheckoutResult =
       orderNumber: string;
       grandTotal: number;
       balance: number;
+      printMode: "BROWSER" | "ESC_POS_BRIDGE";
+      printSuccess: boolean;
+      printMessage: string;
     }
   | { success: false; message: string };

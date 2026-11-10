@@ -22,13 +22,12 @@ export function ReceiptDocument({ copy, order, settings }: { copy: number; order
         <ReceiptRow label="Date" value={date} />
         <ReceiptRow label="Time" value={time} />
         <ReceiptRow label="Cashier" value={order.cashierName} />
-        <ReceiptRow label="Order Type" value={order.orderType.replaceAll("_", "-")} />
       </section>
       <ReceiptItems items={order.items} money={money} />
       {order.notes && <section className="receipt-section receipt-notes"><strong>Order Notes</strong><p>{order.notes}</p></section>}
       <ReceiptTotals money={money} order={order} />
       <ReceiptPayment money={money} payment={order.payment} />
-      <ReceiptFooter copy={copy} settings={settings} />
+      <ReceiptFooter settings={settings} />
     </article>
   );
 }
