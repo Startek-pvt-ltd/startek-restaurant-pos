@@ -1,5 +1,6 @@
 "use server";
 
+import { isCloudDeployment } from "@/lib/cloud-policy";
 import { randomUUID } from "node:crypto";
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
@@ -29,7 +30,7 @@ export async function updateRestaurantSettingsAction(input: unknown, logo: File 
   const session=await requireAuth(); if(!hasRole(session.user.role,OWNER_SETTINGS_ROLES))return {success:false,message:"You do not have permission to change restaurant settings."}; const parsed=restaurantSettingsSchema.safeParse(input); if(!parsed.success)return {success:false,message:parsed.error.issues[0]?.message??"Invalid restaurant settings."};
   try {
     let logoPath: string|undefined;
-    if(logo&&logo.size>0){if(logo.size>2*1024*1024)return {success:false,message:"Logo must be 2 MB or smaller."}; const bytes=new Uint8Array(await logo.arrayBuffer()); const ext=logoType(bytes,logo.type); if(!ext)return {success:false,message:"Use a valid PNG, JPEG, or WebP image."}; const directory=path.resolve(process.cwd(),"public","uploads","restaurant"); await mkdir(directory,{recursive:true}); const name=`${randomUUID()}.${ext}`; await writeFile(path.join(directory,name),bytes,{flag:"wx"}); logoPath=`/uploads/restaurant/${name}`;}
+    if(logo&&logo.size>0){if(isCloudDeployment())return {success:false,message:"Logo uploads require durable cloud storage. The current logo has been preserved."};if(logo.size>2*1024*1024)return {success:false,message:"Logo must be 2 MB or smaller."}; const bytes=new Uint8Array(await logo.arrayBuffer()); const ext=logoType(bytes,logo.type); if(!ext)return {success:false,message:"Use a valid PNG, JPEG, or WebP image."}; const directory=path.resolve(process.cwd(),"public","uploads","restaurant"); await mkdir(directory,{recursive:true}); const name=`${randomUUID()}.${ext}`; await writeFile(path.join(directory,name),bytes,{flag:"wx"}); logoPath=`/uploads/restaurant/${name}`;}
     await saveRestaurantSettings(parsed.data,session.user.id,logoPath); return finish("Restaurant settings saved.");
   } catch(error){return failed(error);}
 }

@@ -1,3 +1,4 @@
+import { isCloudDeployment } from "@/lib/cloud-policy";
 import "server-only";
 
 import { Prisma, type UserRole } from "@/generated/prisma/client";
@@ -68,7 +69,7 @@ export async function getPosData() {
       printerName: printer.printer.printerName,
       printerPaperWidth: printer.printer.paperWidth,
       autoOpenReceiptAfterCheckout: printer.printer.autoOpenReceiptAfterCheckout,
-      autoPrintAfterCheckout: printer.printer.autoPrintAfterCheckout,
+      autoPrintAfterCheckout: !isCloudDeployment() && printer.printer.autoPrintAfterCheckout,
       printLogo: printer.printer.printLogo,
       receiptCopies: printer.printer.receiptCopies,
       defaultOrderType: printer.billing.defaultOrderType,

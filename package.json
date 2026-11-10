@@ -17,7 +17,8 @@
     "prisma:migrate": "prisma migrate dev",
     "prisma:seed": "prisma db seed",
     "prisma:seed-menu-sizes": "tsx prisma/seed-menu-sizes.ts",
-    "prisma:studio": "prisma studio"
+    "prisma:studio": "prisma studio",
+    "build:netlify": "node scripts/validate-env.mjs && prisma generate && node scripts/build-cloud.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",
