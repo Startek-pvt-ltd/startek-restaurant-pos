@@ -1,14 +1,6 @@
 import { ArrowDownRight, ReceiptText } from "lucide-react";
 
-const expenses = [
-  { title: "Gas", category: "Utilities", amount: "Rs. 8,500.00", date: "Today" },
-  { title: "Electricity", category: "Utilities", amount: "Rs. 24,750.00", date: "Today" },
-  { title: "Chicken Purchase", category: "Purchases", amount: "Rs. 36,800.00", date: "Yesterday" },
-  { title: "Packaging", category: "Operations", amount: "Rs. 7,250.00", date: "Yesterday" },
-  { title: "Staff Meals", category: "Staff", amount: "Rs. 5,600.00", date: "24 Jul" },
-];
-
-export function RecentExpenses() {
+export function RecentExpenses({ expenses }: { expenses: Array<{ id: string; title: string; category: string; amount: string; date: string }> }) {
   return (
     <article className="dashboard-card dashboard-fade-in rounded-2xl border border-border/80 bg-card p-5 sm:p-6">
       <div className="flex items-center justify-between">
@@ -20,8 +12,9 @@ export function RecentExpenses() {
       </div>
 
       <div className="mt-5 space-y-3">
+        {expenses.length === 0 && <p className="text-sm text-muted-foreground">No expenses recorded.</p>}
         {expenses.map((expense) => (
-          <div className="flex items-center gap-3 rounded-xl border border-border/70 p-3 transition hover:border-primary/50 hover:bg-muted/25" key={expense.title}>
+          <div className="flex items-center gap-3 rounded-xl border border-border/70 p-3 transition hover:border-primary/50 hover:bg-muted/25" key={expense.id}>
             <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-destructive/8 text-destructive">
               <ArrowDownRight aria-hidden="true" className="size-4" />
             </div>

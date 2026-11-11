@@ -1,76 +1,71 @@
 # Startek Restaurant POS
 
-Restaurant point-of-sale application for **Rice & Kottu Hut**, developed by **Startek (PVT) LTD**.
+A restaurant point-of-sale application developed by **Startek (PVT) LTD** for **Rice & Kottu Hut**. It connects order entry, payments, receipts, menu administration, and operating reports in one workspace.
 
-## Current release
+The portfolio release is a **v1.0.0 candidate**. The Netlify site runs against isolated synthetic data and requires sign-in. Public reviewers can use the screenshots and walkthrough without an account. [Staging](https://startek-pos-original-staging.netlify.app/login) · [Portfolio case study](docs/PORTFOLIO_CASE_STUDY.md) · [Release verification](docs/PORTFOLIO_RELEASE.md)
 
-TASK-009 stabilizes the existing authenticated application. The operational modules are:
+## Features
 
-- Dashboard (presentation-only mock metrics)
-- POS Billing
-- Menu Management, including categories
-- Orders and order receipts
-- Receipt printer Settings
-- Reports, Expenses, and Staff placeholders
-- Logout
+| Area | What the application provides |
+| --- | --- |
+| Authentication | Username or email sign-in, four approved roles, expiring sessions, and server-side revocation on account deactivation |
+| Dashboard | Database-backed sales, order and expense totals, payment mix, recent activity, and best sellers |
+| POS and payments | Dine-in, takeaway and delivery carts with item variants, server-priced checkout, and recorded cash, card or QR tender |
+| Menu and orders | Categories, item prices and availability, archival for referenced items, invoice search, order detail and cancellation |
+| Expenses and staff | Expense recording and filters, staff roles, account status, password management and personal profiles |
+| Reports and exports | Sales, item, payment, cashier and expense views, CSV and Excel report exports, and role-controlled business extracts in CSV, Excel or JSON |
+| Receipts | 80 mm browser receipts with stored order and payment amounts. New lines retain the checkout-time item name |
+| Settings and recovery | Restaurant, billing, receipt and printer preferences. Private PostgreSQL dumps on local installations and an operator-managed recovery workflow for cloud staging |
 
-Customer management, table management, kitchen display, inventory, suppliers, and marketplace-specific workflows are outside the approved product scope. Historical Prisma models remain in the schema so existing migrations and data are not destructively rewritten; see `docs/DATABASE.md`.
+Card and QR record the selected tender. The app does not process card details or verify external transfers. Customer management, tables, kitchen display, inventory, suppliers and marketplace integrations are outside the release scope.
 
-## Technology
+## Demo media
 
-- Next.js App Router, React, TypeScript, Tailwind CSS
-- Auth.js credentials authentication and bcrypt
-- Prisma ORM 7 with PostgreSQL
-- Zod, React Hook Form, Zustand, Lucide React, Recharts, and Sonner
-- npm and `package-lock.json` are the only supported package-manager workflow
+Captured from the running application with synthetic records.
+
+![Desktop dashboard with synthetic sales and expenses](docs/portfolio/dashboard-desktop.jpg)
+
+[Tablet POS](docs/portfolio/pos-tablet.jpg) · [Mobile POS](docs/portfolio/pos-mobile.jpg) · [80 mm receipt](docs/portfolio/receipt-desktop.jpg) · [Recorded walkthrough](docs/portfolio/walkthrough.webm) · [Written walkthrough](docs/PORTFOLIO_WALKTHROUGH.md)
+
+## Architecture
+
+Next.js App Router, React, TypeScript and Tailwind CSS render the interface. Auth.js uses credentials verified with bcrypt. The request proxy checks signed session tokens and protected server operations verify account state, session version and role in PostgreSQL. Zod validates inputs and Prisma runs checkout in a transaction that writes the order, lines, payment and audit record. A unique checkout token makes retries safe. Netlify uses its Next.js adapter with an Edge Function and Node.js handler backed by pooled Neon PostgreSQL.
 
 ## Local setup
 
-1. Install Node.js 20.19 or newer and PostgreSQL.
-2. Copy `.env.example` to `.env`.
-3. Replace `DATABASE_URL`, `AUTH_SECRET`, and `AUTH_URL` with environment-specific values. Never commit real secrets.
-4. Run `npm install`.
-5. Run `npm run prisma:generate`.
-6. Apply migrations with `npm run prisma:migrate` in development or `npx prisma migrate deploy` in production.
-7. Run `npm run prisma:seed` only when baseline seed data is required.
-8. Start with `npm run dev` and open `http://localhost:3000`.
+1. Use Node.js 22, npm, and PostgreSQL. For backups, install `pg_dump` and `pg_restore` at least as new as the server.
+2. Copy `.env.example` to an ignored `.env`. Point it to a development database and use an installation-specific auth secret.
+3. Run `npm ci`, `npm run prisma:generate`, and `npx prisma migrate deploy`.
+4. For a fresh disposable demo database, supply `SEED_SUPER_ADMIN_PASSWORD` privately and run `npm run prisma:seed`.
+5. Run `npm run dev` and open [the local app](http://localhost:3000).
 
-## Quality commands
-
-| Command | Purpose |
+| Environment variable names | Purpose |
 | --- | --- |
-| `npm run lint` | ESLint validation |
-| `npm run typecheck` | Strict TypeScript validation |
-| `npm run build` | Production build |
-| `npx prisma format` | Format the Prisma schema |
-| `npx prisma validate` | Validate schema and configuration |
-| `npm run prisma:generate` | Regenerate Prisma Client |
-| `npx prisma migrate status` | Compare checked-in migrations with the database |
-| `npm run prisma:studio` | Open Prisma Studio |
+| `DATABASE_URL`, `DATABASE_URL_UNPOOLED` | Runtime PostgreSQL connection and optional direct migration connection |
+| `AUTH_SECRET`, `AUTH_URL`, `TRUSTED_ORIGIN` | Signing secret and application origin configuration |
+| `NEXT_PUBLIC_APP_NAME`, `NEXT_PUBLIC_APP_VERSION` | Public application metadata |
+| `SEED_SUPER_ADMIN_PASSWORD` | Initial password for a new database only |
+| `BACKUP_DIR`, `PG_DUMP_PATH`, `PG_RESTORE_PATH` | Private local backup storage and optional client tool locations |
+| `POS_DEPLOYMENT`, `POS_HOST`, `POS_PORT` | Deployment and local bind configuration |
+| `PRINTER_BRIDGE_URL`, `PRINTER_BRIDGE_TOKEN`, `ESC_POS_PRINTER_HOST` | Optional local Windows printer bridge |
 
-## Receipt printing
+## Verification and deployment
 
-Receipts target the **Xprinter XP-80T** using 80 mm paper and the browser/system print dialog. Select the installed printer, 80 mm paper, portrait orientation, zero margins, and disable browser headers and footers. The application does not communicate directly with USB/network printers and does not issue cash-drawer commands.
+```sh
+npm run lint
+npm run typecheck
+npm test
+npx prisma validate
+npx prisma migrate status
+```
 
-## Documentation
+The browser suite uses a fresh disposable PostgreSQL database named `startek_portfolio_<hex>`. Start the app on localhost port 3107 with that database and private seed credentials. Install Chromium with `npx playwright install chromium` and run `npm run test:e2e` with the same database, auth URL, and seed password in the environment. Use a private backup directory. The suite writes synthetic users, expenses, orders and a database dump. Do not point it at an existing installation. Set `PORTFOLIO_MEDIA_DIR` to capture demo screenshots.
 
-- `docs/PROJECT.md` — current scope and module behavior
-- `docs/API.md` — Auth.js and Server Action boundaries
-- `docs/DATABASE.md` — schema, transactions, and deferred cleanup
-- `docs/UI_GUIDE.md` — navigation, responsive, and receipt rules
-- `docs/QA_CHECKLIST.md` — executed and deferred QA checks
-- `docs/BUG_FIX_REPORT.md` — stabilization findings and resolutions
-- `docs/BACKUP_RESTORE_GUIDE.md` — private backup configuration and guarded manual restore procedure
-- `docs/DATA_EXPORT_GUIDE.md` — approved datasets, filters, formats, and sensitive-data exclusions
+Netlify uses `npm run build:netlify` from a clean checkout. Supply secrets through Netlify environment settings. The build rejects local dotenv files. Use the pooled Neon connection for runtime and apply checked-in migrations separately through the direct connection. Review the package for secrets and keep the last known good deploy available. See [deployment](docs/DEPLOYMENT.md), [database design](docs/DATABASE.md), and [backup and recovery](docs/BACKUP_RESTORE_GUIDE.md).
 
-## Branding
+## Security and known limits
 
-The interface uses gold `#F4B400`, dark brown `#4A2310`, cream `#FFF8E6`, white `#FFFFFF`, success green `#22C55E`, warning orange `#F97316`, and danger red `#EF4444`. The restaurant logo is stored at `public/logos/rice-kottu-hut-logo.png`.
-
-## Settings
-
-TASK-013 adds protected restaurant, billing, receipt, printer, system, and profile settings under `/settings`. Typed PostgreSQL fields are validated by Zod and enforced again inside server-side transactions. Uploaded restaurant logos are restricted to verified PNG, JPEG, or WebP files up to 2 MB.
-
-## Backup and data export
-
-TASK-014 adds `/settings/backup` and `/settings/data-export`. Full backups are real PostgreSQL custom-format dumps written to private `BACKUP_DIR`; exports support CSV, Excel, and JSON without passwords, tokens, secrets, credentials, or private paths. In-process destructive restore is intentionally disabled; SUPER_ADMIN receives an integrity preflight and documented maintenance-window procedure.
+- Cloud deployments disable local filesystem backups and restores, local logo uploads, automatic printing, and direct hardware commands. Browser receipt rendering remains available.
+- Older order lines without item-name snapshots fall back to the associated menu name. The migration leaves historic rows and totals intact.
+- Physical Windows printing, cutting, cash drawer and live failover require separate acceptance. This repository does not claim live restaurant commissioning.
+- The PR remains subject to external incident closure and explicit merge approval. No privileged credentials are published with the portfolio.

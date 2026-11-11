@@ -7,3 +7,5 @@ Staff exports include full name, username, email, phone, role, status, last logi
 SUPER_ADMIN, OWNER, and MANAGER may export approved data. CASHIER access is denied by the page and download handler. Every completed export writes `DATA_EXPORTED` to `ActivityLog`.
 
 Exports are point-in-time business extracts, not database backups. JSON output must not be renamed and treated as a restorable PostgreSQL dump.
+
+CSV escapes spreadsheet formula prefixes in text fields. Excel stores the same fields as inline text. Order-item exports use the stored checkout-time name when available and retain the legacy catalog lookup otherwise.

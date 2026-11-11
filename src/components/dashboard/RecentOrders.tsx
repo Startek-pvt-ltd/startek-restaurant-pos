@@ -3,61 +3,16 @@ import Link from "next/link";
 
 import { cn } from "@/lib/utils";
 
-const orders = [
-  {
-    invoice: "#RKH-1086",
-    orderType: "Dine-In",
-    cashier: "Kevin",
-    payment: "Cash",
-    status: "Completed",
-    amount: "Rs. 4,850.00",
-    time: "10:42 AM",
-  },
-  {
-    invoice: "#RKH-1085",
-    orderType: "Takeaway",
-    cashier: "Kevin",
-    payment: "Card",
-    status: "Completed",
-    amount: "Rs. 2,450.00",
-    time: "10:34 AM",
-  },
-  {
-    invoice: "#RKH-1084",
-    orderType: "Delivery",
-    cashier: "Amali",
-    payment: "QR",
-    status: "Pending",
-    amount: "Rs. 6,780.00",
-    time: "10:28 AM",
-  },
-  {
-    invoice: "#RKH-1083",
-    orderType: "Dine-In",
-    cashier: "Amali",
-    payment: "Cash",
-    status: "Completed",
-    amount: "Rs. 3,920.00",
-    time: "10:15 AM",
-  },
-  {
-    invoice: "#RKH-1082",
-    orderType: "Takeaway",
-    cashier: "Kevin",
-    payment: "Card",
-    status: "Cancelled",
-    amount: "Rs. 1,850.00",
-    time: "09:58 AM",
-  },
-];
-
 const statusStyles = {
   Pending: "bg-primary/15 text-[#8a5e00]",
+  Confirmed: "bg-primary/15 text-[#8a5e00]",
+  Preparing: "bg-primary/15 text-[#8a5e00]",
+  Ready: "bg-primary/15 text-[#8a5e00]",
   Completed: "bg-success/10 text-[#147338]",
   Cancelled: "bg-destructive/10 text-destructive",
 };
 
-export function RecentOrders() {
+export function RecentOrders({ orders }: { orders: Array<{ id: string; invoice: string; orderType: string; cashier: string; payment: string; status: keyof typeof statusStyles; amount: string; time: string }> }) {
   return (
     <article className="dashboard-card dashboard-fade-in overflow-hidden rounded-2xl border border-border/80 bg-card">
       <div className="flex items-center justify-between gap-4 border-b border-border px-5 py-4 sm:px-6">
@@ -87,9 +42,10 @@ export function RecentOrders() {
             </tr>
           </thead>
           <tbody className="divide-y divide-border/75">
+            {orders.length === 0 && <tr><td className="px-6 py-5 text-sm text-muted-foreground" colSpan={7}>No orders recorded.</td></tr>}
             {orders.map((order) => (
-              <tr className="text-xs transition hover:bg-muted/30" key={order.invoice}>
-                <td className="whitespace-nowrap px-5 py-4 pl-6 font-bold text-foreground">{order.invoice}</td>
+              <tr className="text-xs transition hover:bg-muted/30" key={order.id}>
+                <td className="whitespace-nowrap px-5 py-4 pl-6 font-bold text-foreground"><Link className="hover:underline focus-visible:underline" href={`/orders/${order.id}`}>{order.invoice}</Link></td>
                 <td className="whitespace-nowrap px-5 py-4 text-muted-foreground">{order.orderType}</td>
                 <td className="whitespace-nowrap px-5 py-4 text-muted-foreground">{order.cashier}</td>
                 <td className="whitespace-nowrap px-5 py-4 text-muted-foreground">{order.payment}</td>
@@ -97,7 +53,7 @@ export function RecentOrders() {
                   <span
                     className={cn(
                       "inline-flex rounded-full px-2.5 py-1 text-[0.65rem] font-bold",
-                      statusStyles[order.status as keyof typeof statusStyles],
+                      statusStyles[order.status],
                     )}
                   >
                     {order.status}

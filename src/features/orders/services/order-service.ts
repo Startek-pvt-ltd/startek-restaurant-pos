@@ -144,6 +144,7 @@ export async function getOrderDetail(id: string): Promise<OrderDetailRecord | nu
             unitPrice: true,
             totalPrice: true,
             notes: true,
+            itemName: true,
             variantName: true,
             menuItem: { select: { name: true } },
           },
@@ -199,7 +200,7 @@ export async function getOrderDetail(id: string): Promise<OrderDetailRecord | nu
     cashierName: order.cashier.fullName,
     items: order.items.map((item) => ({
       id: item.id,
-      name: item.menuItem.name,
+      name: item.itemName ?? item.menuItem.name,
       variantName: item.variantName,
       quantity: item.quantity,
       unitPrice: item.unitPrice.toFixed(2),

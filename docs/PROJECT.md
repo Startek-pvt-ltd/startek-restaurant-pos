@@ -19,7 +19,7 @@ The following are excluded: Customer Management, Table Management, Kitchen Displ
 
 ### Dashboard
 
-- `/dashboard` uses the authenticated shell with real summary/card charts where implemented and clearly isolated mock secondary presentation data.
+- `/dashboard` uses the authenticated shell with PostgreSQL-backed summaries, charts, recent orders, best sellers, expenses and activity.
 - Customer/table/inventory/kitchen/supplier references are absent.
 - Quick actions link only to approved working routes.
 
@@ -70,7 +70,7 @@ The following are excluded: Customer Management, Table Management, Kitchen Displ
 - `/orders/[id]/receipt` is authenticated and renders stored order/payment snapshots for 80 mm paper.
 - Customer information is never printed. Item columns are Item, Qty, and Total.
 - Zero discount, tax, and service-charge lines are hidden. Tendered amount/change appear only for cash payments.
-- The browser/system print dialog remains responsible for selecting Xprinter XP-80T.
+- Cloud receipts use the browser/system print dialog. Local Windows deployments may configure the ESC/POS bridge separately. Physical hardware requires acceptance testing.
 
 ### POS UX and notifications
 

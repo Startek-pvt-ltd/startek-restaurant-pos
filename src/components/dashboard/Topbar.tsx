@@ -1,6 +1,6 @@
 "use client";
 
-import { Menu, Search } from "lucide-react";
+import { Menu } from "lucide-react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
@@ -85,18 +85,7 @@ export function Topbar({ onMenuClick, user }: TopbarProps) {
         </p>
       </div>
 
-      <label className="relative ml-auto hidden w-full max-w-sm md:block">
-        <span className="sr-only">Search current workspace</span>
-        <Search
-          aria-hidden="true"
-          className="pointer-events-none absolute left-3.5 top-1/2 size-4.5 -translate-y-1/2 text-muted-foreground"
-        />
-        <input
-          className="h-11 w-full rounded-xl border border-border bg-background/70 pl-10 pr-4 text-sm text-foreground outline-none transition placeholder:text-muted-foreground/75 focus:border-primary focus:bg-white focus:ring-4 focus:ring-primary/10"
-          placeholder="Search workspace..."
-          type="search"
-        />
-      </label>
+      <div className="ml-auto" />
 
       <NotificationPanel />
 

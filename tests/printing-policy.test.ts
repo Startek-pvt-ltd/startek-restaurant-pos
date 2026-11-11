@@ -50,3 +50,9 @@ test("direct receipt wraps long unbroken item names without truncating them", ()
   assert.equal(receipt.includes(longName.slice(18, 36)), true);
   assert.equal(receipt.includes(longName.slice(36)), true);
 });
+
+
+test("receipt messages do not repeat the legacy visit-again line", async () => {
+  const { receiptMessageLines } = await import("../src/features/printing/lib/receipt-messages");
+  assert.deepEqual(receiptMessageLines("Thank you!\nPlease Visit Again", "Please Visit Again"), ["Thank you!", "Please Visit Again"]);
+});

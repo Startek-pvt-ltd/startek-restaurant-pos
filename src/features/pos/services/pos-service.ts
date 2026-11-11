@@ -154,6 +154,7 @@ export async function createCompletedOrder(cashierId: string, input: CheckoutInp
               where: { id: { in: uniqueMenuItemIds }, deletedAt: null },
               select: {
                 id: true,
+                name: true,
                 price: true,
                 available: true,
                 variants: { where: { active: true }, select: { id: true } },
@@ -194,6 +195,7 @@ export async function createCompletedOrder(cashierId: string, input: CheckoutInp
               if (menuItem.variants.length > 0) throw new Error("MENU_ITEM_VARIANT_REQUIRED");
               return {
                 menuItemId: menuItem.id,
+                itemName: menuItem.name,
                 variantId: null,
                 variantName: null,
                 quantity: cartItem.quantity,
@@ -212,6 +214,7 @@ export async function createCompletedOrder(cashierId: string, input: CheckoutInp
 
             return {
               menuItemId: variant.menuItem.id,
+              itemName: menuItem.name,
               variantId: variant.id,
               variantName: variant.name,
               quantity: cartItem.quantity,
@@ -256,6 +259,7 @@ export async function createCompletedOrder(cashierId: string, input: CheckoutInp
               items: {
                 create: pricedItems.map((item) => ({
                   menuItemId: item.menuItemId,
+                  itemName: item.itemName,
                   menuItemVariantId: item.variantId,
                   variantName: item.variantName,
                   quantity: item.quantity,
