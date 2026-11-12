@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoaderCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState, useTransition } from "react";
+import { useLayoutEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -57,7 +57,8 @@ export function ExpenseFormDialog({
     setError,
   } = useForm<ExpenseInput>({ resolver: zodResolver(expenseSchema), defaultValues: defaults() });
 
-  useEffect(() => {
+  // Reset before the dialog is painted, avoiding a race with quick form input.
+  useLayoutEffect(() => {
     reset(
       expense
         ? {

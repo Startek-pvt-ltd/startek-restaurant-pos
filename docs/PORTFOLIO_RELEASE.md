@@ -52,3 +52,27 @@ PostgreSQL data and disposable secrets.
 Client name/brand publication remains subject to
 [documented customer authorization](PORTFOLIO_PUBLICATION_APPROVAL.md).
 Do not treat the publication checklist as permission already granted.
+
+## Independent CI execution status (November 12, 2026)
+
+The GitHub Actions workflow was installed and recognized by GitHub, but hosted
+runner execution is currently **BLOCKED by GitHub account billing**. GitHub
+reported: `The job was not started because your account is locked due to a
+billing issue.` No Linux-hosted workflow job has passed. See
+[the GitHub Actions diagnostic run](https://github.com/Startek-pvt-ltd/startek-restaurant-pos/actions/runs/43136840997).
+
+In the meantime, a clean local clone passed ESLint, TypeScript, 25 unit tests,
+Prisma schema validation, and the Netlify-compatible build against a synthetic
+nonfunctional database address. An independent PostgreSQL 16 instance on a
+private loopback port was seeded and migrated without touching any existing
+restaurant database; the standalone Next.js server then passed the full
+Playwright portfolio suite. Testing exposed and resolved an expense-dialog
+initialization race; rerun passed expense entry, all four roles, all tender
+methods, concurrent checkout replay, receipt history, exports and a private
+backup. The isolated database and server were stopped after the test.
+
+**Remaining release gates:** GitHub account owner unlocks Actions and obtains
+a green workflow run; documented client branding permission; Windows production
+secret comparison/rotation; Netlify historical artifact-access disposition;
+and separate production hardware and cutover acceptance. No successful local
+test is represented as a successful hosted CI run.

@@ -69,11 +69,24 @@ try {
   await page.getByText(categoryName, { exact: true }).first().waitFor();
   await open(page, "/expenses");
   await page.getByRole("button", { name: "Add Expense", exact: true }).click();
-  await page.locator('input[name="title"]').fill("Demo packaging");
-  await page.locator('input[name="amount"]').fill("125.00");
-  await page.getByRole("dialog").locator('select[name="category"]').selectOption("PACKAGING");
-  await page.getByRole("button", { name: "Create expense", exact: true }).click();
-  await page.getByText("Demo packaging", { exact: true }).filter({ visible: true }).first().waitFor();
+  const expenseDialog = page.getByRole("dialog");
+  await expenseDialog.waitFor({ state: "visible" });
+  await expenseDialog.locator('input[name="title"]').fill("Demo packaging");
+  await expenseDialog.locator('input[name="amount"]').fill("125.00");
+  await expenseDialog.locator('select[name="category"]').selectOption("PACKAGING");
+  assert.equal(await expenseDialog.locator('input[name="title"]').inputValue(), "Demo packaging");
+  assert.equal(await expenseDialog.locator('input[name="amount"]').inputValue(), "125.00");
+  await expenseDialog.getByRole("button", { name: "Create expense", exact: true }).click();
+  try {
+    await page.getByText("Demo packaging", { exact: true }).filter({ visible: true }).first().waitFor({ timeout: 15000 });
+  } catch (error) {
+    const rows = await db.query('SELECT COUNT(*)::int AS n FROM "Expense" WHERE title = $1', ["Demo packaging"]);
+    console.error("Synthetic expense row count:", rows.rows[0]?.n);
+    console.error("Expense modal feedback:", (await page.getByRole("dialog").allTextContents()).map((t) => t.slice(0, 700)));
+    console.error("Expense alerts:", (await page.getByRole("alert").allTextContents()).map((t) => t.slice(0, 500)));
+    console.error("Expenses table state:", (await page.locator('section[aria-label="Expenses"]').allTextContents()).map((t) => t.slice(0, 500)));
+    throw error;
+  }
   console.log("Admin sign-in, empty dashboard, category creation and expense recording passed.");
 
   for (const method of ["Cash", "Card", "QR"]) {
