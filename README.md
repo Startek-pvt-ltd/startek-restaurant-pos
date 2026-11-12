@@ -6,7 +6,7 @@ A full-stack system built for a restaurant engagement, bringing order entry, rec
 
 [View case study](docs/PORTFOLIO_CASE_STUDY.md) · [Browse demo media](docs/portfolio/README.md) · [Architecture](docs/ARCHITECTURE.md) · [Release evidence](docs/PORTFOLIO_RELEASE.md)
 
-> **Deployment status:** v1.0.0 portfolio release candidate. The [Netlify evaluation site](https://startek-restaurant-pos.netlify.app/login) uses synthetic data and requires authentication. This is not a claim of customer production cutover. No public administrator credentials are provided.
+> **Deployment status:** v1.0.0 software release on `main`. The [Netlify evaluation site](https://startek-restaurant-pos.netlify.app/login) uses synthetic data and requires authentication. This is not a claim of customer production cutover. No public administrator credentials are provided.
 
 ## Product preview
 
@@ -128,7 +128,7 @@ A Netlify deployment must be built from a clean checkout with credentials suppli
 - Cloud evaluation disables local filesystem backup/restore, local logo uploads, unattended printing, cash-drawer activation and direct printer bridge commands.
 - Local printer, cutter and drawer support requires on-site acceptance and appropriate Windows/ESC-POS setup.
 - A prior staging artifact exposure was remediated; historical provider access/retention and Windows credential-reuse disposition remain external security gates.
-- The GitHub release branch is pending formal approval. The staging deployment is **not** a customer-production commissioning certificate.
+- [PR #1](https://github.com/Startek-pvt-ltd/startek-restaurant-pos/pull/1) was merged into `main`. The Netlify demonstration uses isolated synthetic records and is **not** the restaurant's production database. The project owner reports that the customer-site installation has passed functional verification; this is not independent on-site certification.
 - Portfolio use of customer-identifiable branding requires appropriate client authorization. No customer sales records or privileged demo credentials are published.
 
 ## Documentation

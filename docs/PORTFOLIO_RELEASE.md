@@ -1,6 +1,6 @@
 # v1.0.0 portfolio release verification
 
-The source of truth is the original Rice & Kottu Hut project and [PR #1](https://github.com/Startek-pvt-ltd/startek-restaurant-pos/pull/1). The candidate remains subject to incident closure and explicit merge approval. Staging uses synthetic data and access-controlled accounts.
+The authoritative source is the original Rice & Kottu Hut project, now synchronized to GitHub `main` after [PR #1](https://github.com/Startek-pvt-ltd/startek-restaurant-pos/pull/1) was squash-merged at `5839447` on November 12, 2026. The Netlify environment uses isolated synthetic records and access-controlled accounts. The project owner has reported successful functional verification at the customer's live restaurant; security follow-ups remain independently tracked.
 
 ## Module audit
 
@@ -35,16 +35,18 @@ The matrix records evidence for the covered journeys. It is not an exhaustive en
 | --- | --- | --- |
 | Windows production credential comparison | BLOCKED | The live installation is outside this work. Comparison or coordinated remediation belongs to the incident owner. |
 | Historical Netlify access and retention | BLOCKED | Removed artifacts are inaccessible. Provider evidence or the incident owner’s explicit disposition is still required. |
-| Merge, release tag and customer cutover | BLOCKED | Explicit approval is required after incident closure. Existing tags remain intact. |
-| Physical printer, cutter, drawer and failover | BLOCKED | Requires separate authorized hardware and operational acceptance. |
+| GitHub merge | PASS | PR #1 was merged into `main` with project-owner authorization. The original Desktop checkout is synchronized to the merge. |
+| Customer installation | OWNER-REPORTED PASS | The project owner reported that live restaurant verification was completed and the system was working correctly. No independent signed checklist was provided to this review. |
+| Software version | PASS | Version 1.0.0 is the merged source baseline on `main`; any published GitHub tag and release notes must preserve the documented external limitations. |
+| Hardware and failover acceptance | OWNER-REPORTED / UNVERIFIED | The project owner reports the customer installation works; itemized printer/cutter/drawer results and an independent failover drill were not supplied here. Do not claim independent physical certification. |
 
 Use the published deploy record to locate the last known good staging version for rollback. The additive item-name column is compatible with the previous application.
 
 ## Automated CI and publication governance
 
 The repository has a least-privilege GitHub Actions workflow in
-`.github/workflows/ci.yml`. A green GitHub run at the **exact candidate
-commit** is required before a release is considered independently verified;
+`.github/workflows/ci.yml`. A green GitHub run at the **exact release
+commit** is required before a release is considered independently CI-verified;
 local test results alone do not satisfy this condition. The workflow avoids
 customer data and external staging credentials by running on synthetic
 PostgreSQL data and disposable secrets.
@@ -76,3 +78,13 @@ a green workflow run; documented client branding permission; Windows production
 secret comparison/rotation; Netlify historical artifact-access disposition;
 and separate production hardware and cutover acceptance. No successful local
 test is represented as a successful hosted CI run.
+
+## Final source merge and corrected Netlify static-asset packaging
+
+- GitHub PR #1 was squash-merged on November 12, 2026, producing merge commit `5839447`.
+- Netlify's manual deploy previously published the internal `.next` directory instead of the Next.js adapter's `.netlify/static` directory. The former returned login HTML without the application's stylesheet and restaurant logo.
+- The corrected deployment script `scripts/deploy-netlify.sh` publishes `.netlify/static` alongside the adapter's serverless and Edge functions. `scripts/smoke-netlify.mjs` verifies the live stylesheet, logo, database health, anonymous route protection, and private-file exclusion.
+- Corrected production-context Netlify deploy `6af57324ff407a2252289a1e`, available at https://startek-restaurant-pos.netlify.app, passed the deployment smoke test. A headless browser confirmed the restaurant logo loaded, the Geist font was applied, and no Next.js static assets returned errors.
+- The Netlify deployment is a separate **portfolio/evaluation** application using synthetic PostgreSQL data. The customer's live Windows deployment was not modified by this cloud repair.
+
+Provider retention/historical exposure, the effective customer Windows signing-secret comparison, and customer branding permission are still not independently documented here. Hosted GitHub Actions remains subject to the account billing restriction.
