@@ -186,6 +186,13 @@ try {
     ]) {
       await page.setViewportSize({ width, height });
       await open(page, route);
+      if (route === "/orders") {
+        await page.getByRole("heading", { name: "Orders", exact: true }).waitFor();
+        await page.getByText(first.orderNumber, { exact: true }).filter({ visible: true }).first().waitFor();
+      }
+      if (route === "/reports") {
+        await page.getByRole("region", { name: "Report summary" }).waitFor();
+      }
       await page.evaluate(() => document.fonts.ready);
       assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false, name);
       await page.screenshot({ path: path.join(media, name + ".jpg"), type: "jpeg", quality: 83, animations: "disabled" });
