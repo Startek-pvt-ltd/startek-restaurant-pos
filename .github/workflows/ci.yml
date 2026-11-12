@@ -118,7 +118,7 @@ jobs:
       TRUSTED_ORIGIN: http://localhost:3107
       NEXT_PUBLIC_APP_NAME: Startek POS CI
       NEXT_PUBLIC_APP_VERSION: ci
-      BACKUP_DIR: ${{ runner.temp }}/startek-pos-backups
+      BACKUP_DIR: /tmp/startek-pos-ci-backups
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
