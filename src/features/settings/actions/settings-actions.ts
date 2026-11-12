@@ -1,5 +1,6 @@
 "use server";
 
+import { isCloudDeployment } from "@/lib/cloud-policy";
 import { randomUUID } from "node:crypto";
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
@@ -22,7 +23,7 @@ export async function updateSystemSettingsAction(input: unknown){return run(inpu
 export async function testPrinterHardwareAction(kind: "PRINT" | "DRAWER"): Promise<ActionResult> {
   const session=await requireAuth(); if(!hasRole(session.user.role,OWNER_SETTINGS_ROLES))return {success:false,message:"Owner access is required to test printer hardware."};
   try { const result=await testPrinterHardware(kind); return {success:true,message:result.message}; }
-  catch(error){const code=error instanceof Error?error.message:""; const messages:Record<string,string>={DIRECT_PRINTING_DISABLED:"Enable the ESC/POS bridge mode and save settings first.",PRINTER_BRIDGE_NOT_CONFIGURED:"The local printer bridge URL or token is not configured.",PRINTER_BRIDGE_URL_UNSAFE:"The printer bridge must use a loopback HTTP address.",PRINTER_BRIDGE_OFFLINE:"The local printer bridge or thermal printer is offline."}; return {success:false,message:code.startsWith("PRINTER_JOB_FAILED:")?`Printer test failed: ${code.slice("PRINTER_JOB_FAILED:".length)}`:messages[code]??"The printer hardware test failed."};}
+  catch(error){const code=error instanceof Error?error.message:""; const messages:Record<string,string>={CLOUD_HARDWARE_DISABLED:"Cloud hardware commands are disabled until the secure Windows print agent passes physical acceptance.",DIRECT_PRINTING_DISABLED:"Enable the ESC/POS bridge mode and save settings first.",PRINTER_BRIDGE_NOT_CONFIGURED:"The local printer bridge URL or token is not configured.",PRINTER_BRIDGE_URL_UNSAFE:"The printer bridge must use a loopback HTTP address.",PRINTER_BRIDGE_OFFLINE:"The local printer bridge or thermal printer is offline."}; return {success:false,message:code.startsWith("PRINTER_JOB_FAILED:")?`Printer test failed: ${code.slice("PRINTER_JOB_FAILED:".length)}`:messages[code]??"The printer hardware test failed."};}
 }
 
 function logoType(bytes: Uint8Array, mime: string) {
@@ -35,7 +36,7 @@ export async function updateRestaurantSettingsAction(input: unknown, logo: File 
   const session=await requireAuth(); if(!hasRole(session.user.role,OWNER_SETTINGS_ROLES))return {success:false,message:"You do not have permission to change restaurant settings."}; const parsed=restaurantSettingsSchema.safeParse(input); if(!parsed.success)return {success:false,message:parsed.error.issues[0]?.message??"Invalid restaurant settings."};
   try {
     let logoPath: string|undefined;
-    if(logo&&logo.size>0){if(logo.size>2*1024*1024)return {success:false,message:"Logo must be 2 MB or smaller."}; const bytes=new Uint8Array(await logo.arrayBuffer()); const ext=logoType(bytes,logo.type); if(!ext)return {success:false,message:"Use a valid PNG, JPEG, or WebP image."}; const directory=path.resolve(process.cwd(),"public","uploads","restaurant"); await mkdir(directory,{recursive:true}); const name=`${randomUUID()}.${ext}`; await writeFile(path.join(directory,name),bytes,{flag:"wx"}); logoPath=`/uploads/restaurant/${name}`;}
+    if(logo&&logo.size>0){if(isCloudDeployment())return {success:false,message:"Logo uploads require durable cloud storage. The current logo has been preserved."};if(logo.size>2*1024*1024)return {success:false,message:"Logo must be 2 MB or smaller."}; const bytes=new Uint8Array(await logo.arrayBuffer()); const ext=logoType(bytes,logo.type); if(!ext)return {success:false,message:"Use a valid PNG, JPEG, or WebP image."}; const directory=path.resolve(process.cwd(),"public","uploads","restaurant"); await mkdir(directory,{recursive:true}); const name=`${randomUUID()}.${ext}`; await writeFile(path.join(directory,name),bytes,{flag:"wx"}); logoPath=`/uploads/restaurant/${name}`;}
     await saveRestaurantSettings(parsed.data,session.user.id,logoPath); return finish("Restaurant settings saved.");
   } catch(error){return failed(error);}
 }

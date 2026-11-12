@@ -1,0 +1,8 @@
+# Isolated deployment of the original Desktop POS project.
+# This is NOT the customer's production installation.
+[build]
+  command = "npm run build:netlify"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "22"

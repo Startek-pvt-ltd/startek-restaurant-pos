@@ -1,3 +1,4 @@
+import { isCloudDeployment } from "@/lib/cloud-policy";
 import "server-only";
 
 import type { Prisma, UserRole } from "@/generated/prisma/client";
@@ -31,15 +32,15 @@ export async function getSettingsBundle() {
       visitAgainMessage: system.receiptVisitAgainMessage, showDiscountWhenZero: system.receiptShowDiscountWhenZero, showTaxWhenZero: system.receiptShowTaxWhenZero,
       showServiceChargeWhenZero: system.receiptShowServiceWhenZero, showCashReceived: system.receiptShowCashReceived, showBalance: system.receiptShowBalance,
       showOrderType: system.receiptShowOrderType, showCashier: system.receiptShowCashier, showRestaurantPhone: system.receiptShowRestaurantPhone,
-      developerCredit: system.receiptDeveloperCredit, autoOpenReceiptAfterCheckout: system.autoOpenReceiptAfterCheckout, autoPrintAfterCheckout: system.autoPrintAfterCheckout,
+      developerCredit: system.receiptDeveloperCredit, autoOpenReceiptAfterCheckout: system.autoOpenReceiptAfterCheckout, autoPrintAfterCheckout: !isCloudDeployment() && system.autoPrintAfterCheckout,
       receiptCopies: 1, footerText: system.receiptFooterText ?? "",
     },
     printer: {
       printerName: system.printerName, paperWidth: system.printerPaperWidth, scale: system.printerScale, margin: system.printerMargin === "MINIMUM" ? "MINIMUM" as const : "NONE" as const,
       headersFootersReminder: system.printerHeadersFootersReminder, autoOpenReceiptAfterCheckout: system.autoOpenReceiptAfterCheckout,
-      autoPrintAfterCheckout: system.autoPrintAfterCheckout, printLogo: system.printLogo, receiptCopies: 1, notes: system.printerNotes ?? "",
-      mode: system.printerMode === "ESC_POS_BRIDGE" ? "ESC_POS_BRIDGE" as const : "BROWSER" as const,
-      automaticCut: system.printerAutomaticCut, cashDrawerEnabled: system.openCashDrawer,
+      autoPrintAfterCheckout: !isCloudDeployment() && system.autoPrintAfterCheckout, printLogo: system.printLogo, receiptCopies: 1, notes: system.printerNotes ?? "",
+      mode: !isCloudDeployment() && system.printerMode === "ESC_POS_BRIDGE" ? "ESC_POS_BRIDGE" as const : "BROWSER" as const,
+      automaticCut: !isCloudDeployment() && system.printerAutomaticCut, cashDrawerEnabled: !isCloudDeployment() && system.openCashDrawer,
       drawerOpenMode: system.printerDrawerOpenMode === "ALL_PAYMENTS" ? "ALL_PAYMENTS" as const : "CASH_ONLY" as const,
       drawerPin: system.printerDrawerPin === 1 ? 1 as const : 0 as const, drawerPulseOnMs: system.printerDrawerPulseOnMs,
       drawerPulseOffMs: system.printerDrawerPulseOffMs, showTaxLine: system.receiptShowTax, showServiceChargeLine: system.receiptShowServiceCharge,

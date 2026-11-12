@@ -21,6 +21,7 @@ import { SalesChart } from "@/components/dashboard/SalesChart";
 import { StatCard } from "@/components/dashboard/StatCard";
 import { WelcomeSection } from "@/components/dashboard/WelcomeSection";
 import { requireAuth } from "@/lib/auth-utils";
+import { getDashboardActivity } from "@/features/reports/services/dashboard-activity-service";
 import { getDashboardAnalytics } from "@/features/reports/services/dashboard-analytics-service";
 import { formatReportMoney } from "@/features/reports/utils/report-formatters";
 
@@ -33,7 +34,8 @@ const quickActions = [
 ];
 
 export default async function DashboardPage() {
-  const [session, analytics] = await Promise.all([requireAuth(), getDashboardAnalytics()]);
+  const session = await requireAuth();
+  const [analytics, recent] = await Promise.all([getDashboardAnalytics(), getDashboardActivity()]);
   const fullName = session.user.name ?? session.user.username;
   const currentHour = Number(
     new Intl.DateTimeFormat("en-GB", {
@@ -74,12 +76,12 @@ export default async function DashboardPage() {
           <PaymentChart data={analytics.payments} />
         </section>
 
-        <RecentOrders />
+        <RecentOrders orders={recent.orders} />
 
         <section className="grid items-start gap-5 xl:grid-cols-2 2xl:grid-cols-3">
-          <BestSellingItems />
-          <RecentExpenses />
-          <RecentActivity />
+          <BestSellingItems items={recent.items} />
+          <RecentExpenses expenses={recent.expenses} />
+          <RecentActivity activities={recent.activities} />
         </section>
       </div>
     </DashboardShell>

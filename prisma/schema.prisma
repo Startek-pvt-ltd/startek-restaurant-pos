@@ -363,6 +363,7 @@ model OrderItem {
   orderId           String           @db.Uuid
   menuItemId        String           @db.Uuid
   menuItemVariantId String?          @db.Uuid
+  itemName          String?
   variantName       String?          @db.VarChar(32)
   quantity          Int
   unitPrice         Decimal          @db.Decimal(12, 2)

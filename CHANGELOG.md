@@ -1,0 +1,27 @@
+# Changelog
+
+Meaningful changes to Startek Restaurant POS are documented here. The current software milestone is a **portfolio release candidate**, not a certification of live customer commissioning.
+
+## [1.0.0-rc] — 2026-11-12
+
+### Application
+- Implemented and verified core restaurant billing, menu, orders, staff, expenses, reporting and 80 mm receipts.
+- Added server-priced and transaction-protected checkout, including duplicate-submission handling.
+- Preserved new order-line names in receipt and export history.
+- Replaced presentation-only dashboard content with bounded PostgreSQL queries.
+- Hardened report exports against spreadsheet formula interpretation.
+- Fixed an expense dialog initialization race found during isolated browser testing.
+
+### Release engineering
+- Added Netlify-compatible authentication/Node runtime separation and bounded Neon database connections for staging.
+- Added isolated PostgreSQL browser verification and GitHub Actions workflow definition.
+- Executed a synthetic database backup/restore rehearsal and artifact screening.
+- Recorded portfolio case study, demonstration media, architecture and quality evidence.
+
+### Outstanding
+- GitHub-hosted CI cannot start until the account-level billing restriction is resolved.
+- Windows credential-reuse and historical Netlify artifact-access review require incident-owner disposition.
+- Physical Windows printer, cutter, drawer and live failover have not been accepted.
+- Production cutover and release-branch merge remain separate approval decisions.
+
+See [release verification](docs/PORTFOLIO_RELEASE.md) for evidence and the current security gate.

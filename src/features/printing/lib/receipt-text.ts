@@ -1,3 +1,4 @@
+import { receiptMessageLines } from "./receipt-messages";
 import type { OrderDetailRecord } from "@/features/orders/types";
 import type { ReceiptPrintSettings } from "@/features/settings/types";
 
@@ -48,6 +49,6 @@ export function renderReceiptText(order: OrderDetailRecord, settings: ReceiptPri
   if (Number(order.serviceCharge) > 0) lines.push(pair("Service Charge", money(order.serviceCharge, order.restaurant.currency)));
   lines.push("=".repeat(WIDTH), pair("GRAND TOTAL", money(order.grandTotal, order.restaurant.currency)), "=".repeat(WIDTH));
   if (order.payment) lines.push(pair("Payment", order.payment.paymentMethod));
-  lines.push("-".repeat(WIDTH), center(settings.thankYouMessage), center(settings.visitAgainMessage), "", center("Powered by Startek (PVT) LTD"));
+  lines.push("-".repeat(WIDTH), ...receiptMessageLines(settings.thankYouMessage, settings.visitAgainMessage).map(center), "", center("Powered by Startek (PVT) LTD"));
   return `${lines.join("\n")}\n`;
 }

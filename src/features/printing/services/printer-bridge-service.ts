@@ -1,3 +1,4 @@
+import { isCloudDeployment } from "@/lib/cloud-policy";
 import "server-only";
 
 import { randomUUID } from "node:crypto";
@@ -20,6 +21,7 @@ function getReceiptLogoRaster() {
 }
 
 function bridgeConfig() {
+  if (isCloudDeployment()) throw new Error("CLOUD_HARDWARE_DISABLED");
   const rawUrl = process.env.PRINTER_BRIDGE_URL?.trim(); const token = process.env.PRINTER_BRIDGE_TOKEN?.trim();
   if (!rawUrl || !token) throw new Error("PRINTER_BRIDGE_NOT_CONFIGURED");
   const url = new URL(rawUrl);
@@ -41,6 +43,7 @@ async function sendJob(payload: Record<string, unknown>): Promise<BridgeResult> 
 }
 
 export async function printCompletedOrder(orderId: string) {
+  if (isCloudDeployment()) return { mode: "BROWSER" as const, success: true, message: "Use the browser print dialog. Cloud hardware printing awaits acceptance." };
   const [order, bundle] = await Promise.all([getOrderDetail(orderId), getSettingsBundle()]);
   if (!order || order.status !== "COMPLETED" || order.payment?.paymentStatus !== "PAID") throw new Error("ORDER_NOT_READY_TO_PRINT");
   if (bundle.printer.mode !== "ESC_POS_BRIDGE") return { mode: "BROWSER" as const, success: true, message: "Use the browser print dialog." };
@@ -51,6 +54,7 @@ export async function printCompletedOrder(orderId: string) {
 }
 
 export async function testPrinterHardware(kind: "PRINT" | "DRAWER") {
+  if (isCloudDeployment()) throw new Error("CLOUD_HARDWARE_DISABLED");
   const bundle = await getSettingsBundle();
   if (bundle.printer.mode !== "ESC_POS_BRIDGE") throw new Error("DIRECT_PRINTING_DISABLED");
   const logoRasterBase64 = kind === "PRINT" && bundle.printer.printLogo ? await getReceiptLogoRaster() : undefined;

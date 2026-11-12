@@ -3,7 +3,10 @@ import { strToU8, zipSync } from "fflate";
 import type { ExportDataset } from "../types";
 
 function csvCell(value: string | number) {
-  const text = String(value);
+  const raw = String(value);
+  const text = typeof value === "string" && /^(?:\s*[=+\-@＝＋－＠]|[\t\r\n])/.test(raw)
+    ? "'" + raw
+    : raw;
   return /[",\r\n]/.test(text) ? `"${text.replaceAll('"', '""')}"` : text;
 }
 

@@ -1,14 +1,6 @@
 import { CircleCheck, Clock3 } from "lucide-react";
 
-const activities = [
-  { user: "Kevin Menuja", initials: "KM", action: "Completed order #RKH-1085", time: "4 min ago" },
-  { user: "Amali Perera", initials: "AP", action: "Created order #RKH-1084", time: "10 min ago" },
-  { user: "Nadeesha Silva", initials: "NS", action: "Recorded the electricity expense", time: "14 min ago" },
-  { user: "Kevin Menuja", initials: "KM", action: "Updated receipt printer settings", time: "22 min ago" },
-  { user: "Amali Perera", initials: "AP", action: "Updated the Chicken Kottu price", time: "31 min ago" },
-];
-
-export function RecentActivity() {
+export function RecentActivity({ activities }: { activities: Array<{ id: string; user: string; initials: string; action: string; time: string }> }) {
   return (
     <article className="dashboard-card dashboard-fade-in rounded-2xl border border-border/80 bg-card p-5 sm:p-6">
       <div className="flex items-center justify-between">
@@ -19,8 +11,9 @@ export function RecentActivity() {
         <CircleCheck aria-hidden="true" className="size-5 text-success" />
       </div>
       <div className="mt-5 space-y-4">
+        {activities.length === 0 && <p className="text-sm text-muted-foreground">No recent activity.</p>}
         {activities.map((activity) => (
-          <div className="flex gap-3" key={`${activity.user}-${activity.time}`}>
+          <div className="flex gap-3" key={activity.id}>
             <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-secondary text-[0.62rem] font-bold text-white">
               {activity.initials}
             </div>

@@ -1,11 +1,12 @@
 import { access } from "node:fs/promises";
 import path from "node:path";
 
+const cloud = process.env.NETLIFY === "true" || Boolean(process.env.VERCEL) || process.env.POS_DEPLOYMENT === "cloud";
 const required = [
   "DATABASE_URL",
   "AUTH_SECRET",
   "AUTH_URL",
-  "BACKUP_DIR",
+  ...(cloud ? [] : ["BACKUP_DIR"]),
   "TRUSTED_ORIGIN",
   "NEXT_PUBLIC_APP_NAME",
   "NEXT_PUBLIC_APP_VERSION",
@@ -74,6 +75,15 @@ if (process.env.AUTH_URL && process.env.TRUSTED_ORIGIN) {
   }
 }
 
+if (cloud) {
+  for (const name of ["AUTH_URL", "TRUSTED_ORIGIN"]) validateUrl(name, ["https:"]);
+  try {
+    const url = new URL(databaseUrl);
+    if (!url.hostname.endsWith(".neon.tech") || !url.hostname.includes("-pooler.")) errors.push("Cloud DATABASE_URL must use a Neon pooled endpoint.");
+    if (!["require", "verify-full"].includes(url.searchParams.get("sslmode"))) errors.push("Cloud DATABASE_URL requires TLS.");
+  } catch { /* validated above */ }
+  if (process.env.BACKUP_DIR || process.env.PRINTER_BRIDGE_URL || process.env.PRINTER_BRIDGE_TOKEN) errors.push("Cloud must not configure local backups or bridge URLs.");
+}
 const backupDir = process.env.BACKUP_DIR?.trim();
 if (backupDir) {
   const resolved = path.resolve(backupDir);
