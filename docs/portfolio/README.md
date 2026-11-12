@@ -5,8 +5,11 @@ The assets in this directory were captured from the working application using **
 | Asset | Description |
 | --- | --- |
 | [Dashboard](dashboard-desktop.jpg) | Desktop metrics, activity and expense summary |
+| [Desktop POS](pos-desktop.jpg) | Cashier workspace and checkout cart at a desktop viewport |
 | [Tablet POS](pos-tablet.jpg) | Menu browsing and cart layout at a tablet viewport |
 | [Mobile POS](pos-mobile.jpg) | Responsive billing interface on a narrow screen |
+| [Orders](orders-desktop.jpg) | Recorded order history and filters |
+| [Reports](reports-desktop.jpg) | Management reporting with synthetic financial records |
 | [80 mm receipt](receipt-desktop.jpg) | Browser-rendered thermal receipt |
 | [Walkthrough video](walkthrough.webm) | Recorded application navigation and workflow |
 | [Written walkthrough](../PORTFOLIO_WALKTHROUGH.md) | Short review script and limitations |

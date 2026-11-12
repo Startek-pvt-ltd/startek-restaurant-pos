@@ -12,11 +12,15 @@ A full-stack system built for a restaurant engagement, bringing order entry, rec
 
 ![Restaurant POS dashboard with synthetic sales and expense data](docs/portfolio/dashboard-desktop.jpg)
 
+### Cashier workspace
+
+![Desktop point-of-sale checkout](docs/portfolio/pos-desktop.jpg)
+
 | Tablet POS | Mobile POS |
 | :---: | :---: |
 | ![Tablet point of sale](docs/portfolio/pos-tablet.jpg) | ![Mobile point of sale](docs/portfolio/pos-mobile.jpg) |
 
-[80 mm receipt preview](docs/portfolio/receipt-desktop.jpg) · [Recorded walkthrough](docs/portfolio/walkthrough.webm) · [Step-by-step walkthrough](docs/PORTFOLIO_WALKTHROUGH.md)
+[Order history](docs/portfolio/orders-desktop.jpg) · [Financial reports](docs/portfolio/reports-desktop.jpg) · [80 mm receipt preview](docs/portfolio/receipt-desktop.jpg) · [Recorded walkthrough](docs/portfolio/walkthrough.webm) · [Step-by-step walkthrough](docs/PORTFOLIO_WALKTHROUGH.md)
 
 All screenshots and transactions shown in these assets use demonstration data.
 
