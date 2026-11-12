@@ -177,8 +177,11 @@ try {
     await mkdir(media, { recursive: true });
     for (const [name, width, height, route] of [
       ["dashboard-desktop", 1440, 1000, "/dashboard"],
+      ["pos-desktop", 1440, 1000, "/pos"],
       ["pos-tablet", 820, 1180, "/pos"],
       ["pos-mobile", 390, 844, "/pos"],
+      ["orders-desktop", 1440, 1000, "/orders"],
+      ["reports-desktop", 1440, 1000, "/reports"],
       ["receipt-desktop", 1440, 950, "/orders/" + first.id + "/receipt"],
     ]) {
       await page.setViewportSize({ width, height });
