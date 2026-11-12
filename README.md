@@ -6,7 +6,7 @@ A full-stack system built for a restaurant engagement, bringing order entry, rec
 
 [View case study](docs/PORTFOLIO_CASE_STUDY.md) · [Browse demo media](docs/portfolio/README.md) · [Architecture](docs/ARCHITECTURE.md) · [Release evidence](docs/PORTFOLIO_RELEASE.md)
 
-> **Deployment status:** v1.0.0 software release on `main`. The [Netlify evaluation site](https://startek-restaurant-pos.netlify.app/login) uses synthetic data and requires authentication. This is not a claim of customer production cutover. No public administrator credentials are provided.
+> **Deployment status:** v1.1.0 software release on `main`. The [Netlify evaluation site](https://startek-restaurant-pos.netlify.app/login) uses synthetic data and requires authentication. This is not a claim of customer production cutover. No public administrator credentials are provided.
 
 ## Product preview
 

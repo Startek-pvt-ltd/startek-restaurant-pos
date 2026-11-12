@@ -1,4 +1,4 @@
-# v1.0.0 portfolio release verification
+# v1.1.0 software release verification
 
 The authoritative source is the original Rice & Kottu Hut project, now synchronized to GitHub `main` after [PR #1](https://github.com/Startek-pvt-ltd/startek-restaurant-pos/pull/1) was squash-merged at `5839447` on November 12, 2026. The Netlify environment uses isolated synthetic records and access-controlled accounts. The project owner has reported successful functional verification at the customer's live restaurant; security follow-ups remain independently tracked.
 
@@ -37,7 +37,7 @@ The matrix records evidence for the covered journeys. It is not an exhaustive en
 | Historical Netlify access and retention | BLOCKED | Removed artifacts are inaccessible. Provider evidence or the incident owner’s explicit disposition is still required. |
 | GitHub merge | PASS | PR #1 was merged into `main` with project-owner authorization. The original Desktop checkout is synchronized to the merge. |
 | Customer installation | OWNER-REPORTED PASS | The project owner reported that live restaurant verification was completed and the system was working correctly. No independent signed checklist was provided to this review. |
-| Software version | PASS | Version 1.0.0 is the merged source baseline on `main`; any published GitHub tag and release notes must preserve the documented external limitations. |
+| Software version | PASS | Version 1.1.0 is the merged source baseline on `main`; the original `v1.0.0` tag remains unchanged; any published GitHub tag and release notes must preserve the documented external limitations. |
 | Hardware and failover acceptance | OWNER-REPORTED / UNVERIFIED | The project owner reports the customer installation works; itemized printer/cutter/drawer results and an independent failover drill were not supplied here. Do not claim independent physical certification. |
 
 Use the published deploy record to locate the last known good staging version for rollback. The additive item-name column is compatible with the previous application.
