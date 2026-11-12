@@ -10,7 +10,7 @@ const database = new URL(process.env.DATABASE_URL ?? "");
 const base = new URL(process.env.AUTH_URL ?? "");
 assert.ok(["localhost", "127.0.0.1", "[::1]"].includes(database.hostname));
 assert.match(database.pathname, /^\/startek_portfolio_[a-f0-9]+$/);
-assert.equal(base.origin, "http://localhost:3107");
+assert.equal(base.origin, process.env.PORTFOLIO_TEST_ORIGIN ?? "http://localhost:3107");
 const db = new pg.Client({ connectionString: database.toString() });
 const browser = await chromium.launch(process.env.PORTFOLIO_CHROME_CHANNEL ? { channel: process.env.PORTFOLIO_CHROME_CHANNEL } : {});
 const media = process.env.PORTFOLIO_MEDIA_DIR;
