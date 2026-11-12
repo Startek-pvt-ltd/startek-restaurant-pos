@@ -39,3 +39,16 @@ The matrix records evidence for the covered journeys. It is not an exhaustive en
 | Physical printer, cutter, drawer and failover | BLOCKED | Requires separate authorized hardware and operational acceptance. |
 
 Use the published deploy record to locate the last known good staging version for rollback. The additive item-name column is compatible with the previous application.
+
+## Automated CI and publication governance
+
+The repository has a least-privilege GitHub Actions workflow in
+`.github/workflows/ci.yml`. A green GitHub run at the **exact candidate
+commit** is required before a release is considered independently verified;
+local test results alone do not satisfy this condition. The workflow avoids
+customer data and external staging credentials by running on synthetic
+PostgreSQL data and disposable secrets.
+
+Client name/brand publication remains subject to
+[documented customer authorization](PORTFOLIO_PUBLICATION_APPROVAL.md).
+Do not treat the publication checklist as permission already granted.

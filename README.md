@@ -69,3 +69,33 @@ Netlify uses `npm run build:netlify` from a clean checkout. Supply secrets throu
 - Older order lines without item-name snapshots fall back to the associated menu name. The migration leaves historic rows and totals intact.
 - Physical Windows printing, cutting, cash drawer and live failover require separate acceptance. This repository does not claim live restaurant commissioning.
 - The PR remains subject to external incident closure and explicit merge approval. No privileged credentials are published with the portfolio.
+
+## GitHub Actions continuous integration
+
+Every pull request to `main` and every release-branch push runs
+[POS Quality and Portfolio Release](.github/workflows/ci.yml), comprising:
+
+- **Quality:** npm clean install, Prisma code generation and schema validation,
+  ESLint, TypeScript, unit tests, and tracked secret/dump filename safeguards.
+- **Cloud build:** Next.js Netlify-compatible build using an intentionally
+  nonfunctional database URL and a disposable signing secret. The build fails
+  if local dotenv files are present in its standalone output.
+- **Browser integration:** isolated PostgreSQL service, fresh migrations and
+  synthetic seed, standalone Node server, Playwright Chromium tests for role
+  permissions, checkout methods, duplicate-payment protection, receipts,
+  exports and local backup creation.
+
+The CI pipeline needs **no Netlify token, Neon connection, customer data, or
+production secrets**. A passed local test is not represented as a GitHub
+Actions result: inspect the workflow run for the specific release commit.
+See [release verification](docs/PORTFOLIO_RELEASE.md).
+
+## Portfolio publication and customer approval
+
+Screenshots and the walkthrough contain synthetic records. Presenting the
+named client and its branding in a public **personal** portfolio requires
+recorded client authorization; see
+[portfolio publication authorization](docs/PORTFOLIO_PUBLICATION_APPROVAL.md).
+Until approved, use an anonymized public description and do not imply the
+client endorses this release. No production Windows hardware acceptance or
+customer cutover is claimed.
