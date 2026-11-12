@@ -1,57 +1,111 @@
 # Startek Restaurant POS
 
-A restaurant point-of-sale application developed by **Startek (PVT) LTD** for **Rice & Kottu Hut**. It connects order entry, payments, receipts, menu administration, and operating reports in one workspace.
+**Restaurant point-of-sale and back-office management, developed by Startek (PVT) LTD.**
 
-The portfolio release is a **v1.0.0 candidate**. The Netlify site runs against isolated synthetic data and requires sign-in. Public reviewers can use the screenshots and walkthrough without an account. [Staging](https://startek-pos-original-staging.netlify.app/login) · [Portfolio case study](docs/PORTFOLIO_CASE_STUDY.md) · [Release verification](docs/PORTFOLIO_RELEASE.md)
+A full-stack system built for a restaurant engagement, bringing order entry, recorded payments, menu administration, staff access, expenses, reporting and thermal receipts into one application. The codebase supports a local workstation deployment and a separately configured cloud evaluation environment.
 
-## Features
+[View case study](docs/PORTFOLIO_CASE_STUDY.md) · [Browse demo media](docs/portfolio/README.md) · [Architecture](docs/ARCHITECTURE.md) · [Release evidence](docs/PORTFOLIO_RELEASE.md)
 
-| Area | What the application provides |
+> **Deployment status:** v1.0.0 portfolio release candidate. The [Netlify evaluation site](https://startek-pos-original-staging.netlify.app/login) uses synthetic data and requires authentication. This is not a claim of customer production cutover. No public administrator credentials are provided.
+
+## Product preview
+
+![Restaurant POS dashboard with synthetic sales and expense data](docs/portfolio/dashboard-desktop.jpg)
+
+| Tablet POS | Mobile POS |
+| :---: | :---: |
+| ![Tablet point of sale](docs/portfolio/pos-tablet.jpg) | ![Mobile point of sale](docs/portfolio/pos-mobile.jpg) |
+
+[80 mm receipt preview](docs/portfolio/receipt-desktop.jpg) · [Recorded walkthrough](docs/portfolio/walkthrough.webm) · [Step-by-step walkthrough](docs/PORTFOLIO_WALKTHROUGH.md)
+
+All screenshots and transactions shown in these assets use demonstration data.
+
+## Capabilities
+
+| Module | Implementation |
 | --- | --- |
-| Authentication | Username or email sign-in, four approved roles, expiring sessions, and server-side revocation on account deactivation |
-| Dashboard | Database-backed sales, order and expense totals, payment mix, recent activity, and best sellers |
-| POS and payments | Dine-in, takeaway and delivery carts with item variants, server-priced checkout, and recorded cash, card or QR tender |
-| Menu and orders | Categories, item prices and availability, archival for referenced items, invoice search, order detail and cancellation |
-| Expenses and staff | Expense recording and filters, staff roles, account status, password management and personal profiles |
-| Reports and exports | Sales, item, payment, cashier and expense views, CSV and Excel report exports, and role-controlled business extracts in CSV, Excel or JSON |
-| Receipts | 80 mm browser receipts with stored order and payment amounts. New lines retain the checkout-time item name |
-| Settings and recovery | Restaurant, billing, receipt and printer preferences. Private PostgreSQL dumps on local installations and an operator-managed recovery workflow for cloud staging |
+| **POS and orders** | Dine-in, takeaway and delivery; size/variant selection; server-priced checkout; order history, cancellation and invoice search |
+| **Payment records** | Cash, card and QR tender selection, totals reconciliation and duplicate-submission protection |
+| **Menu** | Category and product management, prices, availability and history-safe archival |
+| **Dashboard** | Database-backed sales, payment mix, activity, expenses and best-seller summaries |
+| **Reporting** | Sales, menu items, payments, cashiers and expenses; filtered CSV/Excel exports |
+| **Staff and access** | Super Admin, Owner, Manager and Cashier roles; account management, activity records and session revocation |
+| **Expenses** | Expense categories, access-controlled edits, filters, totals and audit history |
+| **Receipts** | 80 mm browser-print layouts with stored invoice amounts and historical item-name snapshots |
+| **Settings and recovery** | Restaurant, billing, receipt and printer preferences; private local PostgreSQL backups and documented recovery procedures |
 
-Card and QR record the selected tender. The app does not process card details or verify external transfers. Customer management, tables, kitchen display, inventory, suppliers and marketplace integrations are outside the release scope.
+**Payment boundary:** Card and QR are *recorded tender methods*, not card processing or bank-transfer verification. This application does not store card details or initiate transfers.
 
-## Demo media
+Customer profiles, table assignment, kitchen displays, inventory, supplier management and delivery marketplace integrations are outside the approved scope of this release.
 
-Captured from the running application with synthetic records.
+## Technical architecture
 
-![Desktop dashboard with synthetic sales and expenses](docs/portfolio/dashboard-desktop.jpg)
-
-[Tablet POS](docs/portfolio/pos-tablet.jpg) · [Mobile POS](docs/portfolio/pos-mobile.jpg) · [80 mm receipt](docs/portfolio/receipt-desktop.jpg) · [Recorded walkthrough](docs/portfolio/walkthrough.webm) · [Written walkthrough](docs/PORTFOLIO_WALKTHROUGH.md)
-
-## Architecture
-
-Next.js App Router, React, TypeScript and Tailwind CSS render the interface. Auth.js uses credentials verified with bcrypt. The request proxy checks signed session tokens and protected server operations verify account state, session version and role in PostgreSQL. Zod validates inputs and Prisma runs checkout in a transaction that writes the order, lines, payment and audit record. A unique checkout token makes retries safe. Netlify uses its Next.js adapter with an Edge Function and Node.js handler backed by pooled Neon PostgreSQL.
-
-## Local setup
-
-1. Use Node.js 22, npm, and PostgreSQL. For backups, install `pg_dump` and `pg_restore` at least as new as the server.
-2. Copy `.env.example` to an ignored `.env`. Point it to a development database and use an installation-specific auth secret.
-3. Run `npm ci`, `npm run prisma:generate`, and `npx prisma migrate deploy`.
-4. For a fresh disposable demo database, supply `SEED_SUPER_ADMIN_PASSWORD` privately and run `npm run prisma:seed`.
-5. Run `npm run dev` and open [the local app](http://localhost:3000).
-
-| Environment variable names | Purpose |
+| Layer | Technology |
 | --- | --- |
-| `DATABASE_URL`, `DATABASE_URL_UNPOOLED` | Runtime PostgreSQL connection and optional direct migration connection |
-| `AUTH_SECRET`, `AUTH_URL`, `TRUSTED_ORIGIN` | Signing secret and application origin configuration |
+| Interface | Next.js App Router, React 19, TypeScript, Tailwind CSS |
+| Identity and authorization | Auth.js credentials, bcrypt, signed sessions and database-backed role/status checks |
+| Backend | Next.js server components, server actions, Zod validation |
+| Persistence | PostgreSQL, Prisma 7, transactional writes and unique checkout tokens |
+| Cloud evaluation | Netlify Next.js runtime, Edge proxy, serverless handler and pooled Neon PostgreSQL |
+| Workstation peripherals | 80 mm browser printing; optional authenticated local ESC/POS bridge |
+
+```mermaid
+flowchart LR
+    A[Cashier or manager] --> B[Next.js UI]
+    B --> C[Authenticated server actions]
+    C --> D[Validation and access control]
+    D --> E[Prisma transactions]
+    E --> F[(PostgreSQL)]
+    C --> G[Receipt rendering]
+    G --> H[Browser printer or approved local bridge]
+```
+
+See [Architecture and decisions](docs/ARCHITECTURE.md) for the trust boundaries, transaction guarantees and differences between cloud and local operation.
+
+## Run locally
+
+**Prerequisites:** Node.js 22, npm and PostgreSQL. PostgreSQL client utilities (`pg_dump`, `pg_restore`) are required for local database backups.
+
+1. Clone the repository and install dependencies:
+   ```bash
+   git clone https://github.com/Startek-pvt-ltd/startek-restaurant-pos.git
+   cd startek-restaurant-pos
+   npm ci
+   ```
+2. Create a private local environment file from `.env.example`. Set a development `DATABASE_URL`, strong unique `AUTH_SECRET`, localhost `AUTH_URL` and `TRUSTED_ORIGIN`. Never use a customer database or production secret for development.
+3. Generate Prisma and apply migrations to the **intended development database**:
+   ```bash
+   npx prisma generate
+   npx prisma migrate deploy
+   ```
+4. Optionally seed **only a newly created disposable database** with a private `SEED_SUPER_ADMIN_PASSWORD`:
+   ```bash
+   npm run prisma:seed
+   ```
+5. Start the development server:
+   ```bash
+   npm run dev
+   ```
+
+Open `http://localhost:3000`. See [Setup](docs/SETUP.md) and [Database](docs/DATABASE.md) for installation and migration details. Seeding must never run against an existing restaurant database.
+
+### Main environment variables
+
+| Variable | Purpose |
+| --- | --- |
+| `DATABASE_URL`, `DATABASE_URL_UNPOOLED` | Pooled runtime database connection; optional direct migration connection |
+| `AUTH_SECRET`, `AUTH_URL`, `TRUSTED_ORIGIN` | Session signing and trusted application origin |
 | `NEXT_PUBLIC_APP_NAME`, `NEXT_PUBLIC_APP_VERSION` | Public application metadata |
-| `SEED_SUPER_ADMIN_PASSWORD` | Initial password for a new database only |
-| `BACKUP_DIR`, `PG_DUMP_PATH`, `PG_RESTORE_PATH` | Private local backup storage and optional client tool locations |
-| `POS_DEPLOYMENT`, `POS_HOST`, `POS_PORT` | Deployment and local bind configuration |
-| `PRINTER_BRIDGE_URL`, `PRINTER_BRIDGE_TOKEN`, `ESC_POS_PRINTER_HOST` | Optional local Windows printer bridge |
+| `SEED_SUPER_ADMIN_PASSWORD` | Initial credentials for a **new disposable** installation |
+| `BACKUP_DIR` | Private workstation backup directory, outside the public web root |
+| `POS_DEPLOYMENT` | Cloud/local behavior policy |
+| `PRINTER_BRIDGE_URL`, `PRINTER_BRIDGE_TOKEN` | Optional local printer bridge; never expose across the public internet |
 
-## Verification and deployment
+For the complete configuration and printer setup, use the [operations documentation](docs/README.md).
 
-```sh
+## Test and release process
+
+```bash
 npm run lint
 npm run typecheck
 npm test
@@ -59,43 +113,24 @@ npx prisma validate
 npx prisma migrate status
 ```
 
-The browser suite uses a fresh disposable PostgreSQL database named `startek_portfolio_<hex>`. Start the app on localhost port 3107 with that database and private seed credentials. Install Chromium with `npx playwright install chromium` and run `npm run test:e2e` with the same database, auth URL, and seed password in the environment. Use a private backup directory. The suite writes synthetic users, expenses, orders and a database dump. Do not point it at an existing installation. Set `PORTFOLIO_MEDIA_DIR` to capture demo screenshots.
+The browser suite (`npm run test:e2e`) requires a **fresh isolated** PostgreSQL database named `startek_portfolio_<hex>`, synthetic seed credentials, a private backup directory and a local application server. It performs actual writes and must never target a customer database. See [Release verification](docs/PORTFOLIO_RELEASE.md) for the tested scenarios and recorded results.
 
-Netlify uses `npm run build:netlify` from a clean checkout. Supply secrets through Netlify environment settings. The build rejects local dotenv files. Use the pooled Neon connection for runtime and apply checked-in migrations separately through the direct connection. Review the package for secrets and keep the last known good deploy available. See [deployment](docs/DEPLOYMENT.md), [database design](docs/DATABASE.md), and [backup and recovery](docs/BACKUP_RESTORE_GUIDE.md).
+[GitHub Actions workflow](.github/workflows/ci.yml) defines quality, cloud-build and disposable-database browser checks. Its latest hosted execution is **blocked by a GitHub account billing restriction**; local verification does not count as a successful hosted CI run.
 
-## Security and known limits
+A Netlify deployment must be built from a clean checkout with credentials supplied as platform environment variables. The cloud build rejects local dotenv files. Apply migrations deliberately and inspect the generated functions before uploading. See [Deployment](docs/DEPLOYMENT.md).
 
-- Cloud deployments disable local filesystem backups and restores, local logo uploads, automatic printing, and direct hardware commands. Browser receipt rendering remains available.
-- Older order lines without item-name snapshots fall back to the associated menu name. The migration leaves historic rows and totals intact.
-- Physical Windows printing, cutting, cash drawer and live failover require separate acceptance. This repository does not claim live restaurant commissioning.
-- The PR remains subject to external incident closure and explicit merge approval. No privileged credentials are published with the portfolio.
+## Operating boundaries
 
-## GitHub Actions continuous integration
+- Cloud evaluation disables local filesystem backup/restore, local logo uploads, unattended printing, cash-drawer activation and direct printer bridge commands.
+- Local printer, cutter and drawer support requires on-site acceptance and appropriate Windows/ESC-POS setup.
+- A prior staging artifact exposure was remediated; historical provider access/retention and Windows credential-reuse disposition remain external security gates.
+- The GitHub release branch is pending formal approval. The staging deployment is **not** a customer-production commissioning certificate.
+- Portfolio use of customer-identifiable branding requires appropriate client authorization. No customer sales records or privileged demo credentials are published.
 
-Every pull request to `main` and every release-branch push runs
-[POS Quality and Portfolio Release](.github/workflows/ci.yml), comprising:
+## Documentation
 
-- **Quality:** npm clean install, Prisma code generation and schema validation,
-  ESLint, TypeScript, unit tests, and tracked secret/dump filename safeguards.
-- **Cloud build:** Next.js Netlify-compatible build using an intentionally
-  nonfunctional database URL and a disposable signing secret. The build fails
-  if local dotenv files are present in its standalone output.
-- **Browser integration:** isolated PostgreSQL service, fresh migrations and
-  synthetic seed, standalone Node server, Playwright Chromium tests for role
-  permissions, checkout methods, duplicate-payment protection, receipts,
-  exports and local backup creation.
+Start with the [documentation index](docs/README.md). Key references include the [architecture](docs/ARCHITECTURE.md), [portfolio case study](docs/PORTFOLIO_CASE_STUDY.md), [verification matrix](docs/PORTFOLIO_RELEASE.md), [printer acceptance checklist](docs/PRINTER_ACCEPTANCE_CHECKLIST.md), [backup procedure](docs/BACKUP_RESTORE_GUIDE.md) and [security policy](SECURITY.md).
 
-The CI pipeline needs **no Netlify token, Neon connection, customer data, or
-production secrets**. A passed local test is not represented as a GitHub
-Actions result: inspect the workflow run for the specific release commit.
-See [release verification](docs/PORTFOLIO_RELEASE.md).
+---
 
-## Portfolio publication and customer approval
-
-Screenshots and the walkthrough contain synthetic records. Presenting the
-named client and its branding in a public **personal** portfolio requires
-recorded client authorization; see
-[portfolio publication authorization](docs/PORTFOLIO_PUBLICATION_APPROVAL.md).
-Until approved, use an anonymized public description and do not imply the
-client endorses this release. No production Windows hardware acceptance or
-customer cutover is claimed.
+Maintained by **Startek (PVT) LTD**. The repository documents a real software implementation and its demonstrated behavior; no claims are made about unverified customer outcomes or physical production acceptance.
