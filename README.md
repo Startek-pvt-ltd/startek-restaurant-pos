@@ -121,7 +121,7 @@ The browser suite (`npm run test:e2e`) requires a **fresh isolated** PostgreSQL 
 
 [GitHub Actions workflow](.github/workflows/ci.yml) defines quality, cloud-build and disposable-database browser checks. Its latest hosted execution is **blocked by a GitHub account billing restriction**; local verification does not count as a successful hosted CI run.
 
-A Netlify deployment must be built from a clean checkout with credentials supplied as platform environment variables. The cloud build rejects local dotenv files. Apply migrations deliberately and inspect the generated functions before uploading. See [Deployment](docs/DEPLOYMENT.md).
+A Netlify deployment must be built from a clean checkout with credentials supplied as platform environment variables. The cloud build rejects local dotenv files. **For manual deployments, publish `.netlify/static` with the adapter functions, never `.next` alone.** Use [the verified deployment procedure](docs/DEPLOYMENT.md) and run `node scripts/smoke-netlify.mjs https://startek-restaurant-pos.netlify.app` to check the live stylesheet, restaurant logo, database health, and route protection. Apply migrations deliberately and inspect generated functions before uploading.
 
 ## Operating boundaries
 
