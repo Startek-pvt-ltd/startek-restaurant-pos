@@ -606,18 +606,6 @@ export type EnumUserStatusFieldUpdateOperationsInput = {
   set?: $Enums.UserStatus
 }
 
-export type NullableDateTimeFieldUpdateOperationsInput = {
-  set?: Date | string | null
-}
-
-export type IntFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type UserCreateNestedOneWithoutOpenedCashSessionsInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutOpenedCashSessionsInput, Prisma.UserUncheckedCreateWithoutOpenedCashSessionsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutOpenedCashSessionsInput

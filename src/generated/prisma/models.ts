@@ -9,6 +9,7 @@
  * 🟢 You can import this file directly.
  */
 export type * from './models/Restaurant'
+export type * from './models/AuthLoginThrottle'
 export type * from './models/User'
 export type * from './models/CashSession'
 export type * from './models/Notification'

@@ -3,6 +3,7 @@ import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { NextResponse } from "next/server";
 
+import { clearLoginAttempt, consumeLoginAttempt } from "@/features/auth/login-rate-limit";
 import { prisma } from "@/lib/prisma";
 import { loginSchema } from "@/validations/auth";
 
@@ -53,6 +54,15 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         if (!parsed.success) return null;
 
         const { identifier, password, rememberMe } = parsed.data;
+        // Backed by PostgreSQL across serverless instances; fail closed if unavailable.
+        // Keep the user-facing error generic for unknown, inactive and blocked IDs.
+        try {
+          if (!(await consumeLoginAttempt(identifier))) return null;
+        } catch {
+          console.error("Login throttle storage unavailable; authentication rejected.");
+          return null;
+        }
+
         const user = await prisma.user.findFirst({
           where: {
             OR: [
@@ -83,6 +93,14 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           user.status !== "ACTIVE" ||
           !APPLICATION_ROLES.includes(user.role as (typeof APPLICATION_ROLES)[number])
         ) return null;
+
+        // Successful credentials clear the throttle counter.
+        // Do not deny a valid user if this cleanup alone fails.
+        try {
+          await clearLoginAttempt(identifier);
+        } catch {
+          console.error("Unable to clear successful login throttle counter.");
+        }
 
         return {
           id: user.id,

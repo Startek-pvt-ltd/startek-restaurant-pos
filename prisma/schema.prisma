@@ -140,6 +140,17 @@ model Restaurant {
   @@index([phone])
 }
 
+// Server-side identifier-scoped throttle. Do not store plaintext usernames.
+model AuthLoginThrottle {
+  keyHash         String    @id @db.VarChar(64)
+  windowStartedAt DateTime  @default(now())
+  attemptCount    Int       @default(0)
+  blockedUntil    DateTime?
+  updatedAt       DateTime  @updatedAt
+
+  @@index([updatedAt])
+}
+
 model User {
   id                 String             @id @default(uuid()) @db.Uuid
   fullName           String

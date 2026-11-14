@@ -398,6 +398,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 export const ModelName = {
   Restaurant: 'Restaurant',
+  AuthLoginThrottle: 'AuthLoginThrottle',
   User: 'User',
   CashSession: 'CashSession',
   Notification: 'Notification',
@@ -431,7 +432,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "restaurant" | "user" | "cashSession" | "notification" | "backupRecord" | "category" | "menuItem" | "menuItemVariant" | "restaurantTable" | "customer" | "order" | "orderItem" | "payment" | "supplier" | "inventoryItem" | "stockTransaction" | "expense" | "activityLog" | "systemSetting"
+    modelProps: "restaurant" | "authLoginThrottle" | "user" | "cashSession" | "notification" | "backupRecord" | "category" | "menuItem" | "menuItemVariant" | "restaurantTable" | "customer" | "order" | "orderItem" | "payment" | "supplier" | "inventoryItem" | "stockTransaction" | "expense" | "activityLog" | "systemSetting"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -506,6 +507,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.RestaurantCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.RestaurantCountAggregateOutputType> | number
+        }
+      }
+    }
+    AuthLoginThrottle: {
+      payload: Prisma.$AuthLoginThrottlePayload<ExtArgs>
+      fields: Prisma.AuthLoginThrottleFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AuthLoginThrottleFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthLoginThrottlePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AuthLoginThrottleFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthLoginThrottlePayload>
+        }
+        findFirst: {
+          args: Prisma.AuthLoginThrottleFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthLoginThrottlePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AuthLoginThrottleFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthLoginThrottlePayload>
+        }
+        findMany: {
+          args: Prisma.AuthLoginThrottleFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthLoginThrottlePayload>[]
+        }
+        create: {
+          args: Prisma.AuthLoginThrottleCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthLoginThrottlePayload>
+        }
+        createMany: {
+          args: Prisma.AuthLoginThrottleCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AuthLoginThrottleCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthLoginThrottlePayload>[]
+        }
+        delete: {
+          args: Prisma.AuthLoginThrottleDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthLoginThrottlePayload>
+        }
+        update: {
+          args: Prisma.AuthLoginThrottleUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthLoginThrottlePayload>
+        }
+        deleteMany: {
+          args: Prisma.AuthLoginThrottleDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AuthLoginThrottleUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AuthLoginThrottleUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthLoginThrottlePayload>[]
+        }
+        upsert: {
+          args: Prisma.AuthLoginThrottleUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthLoginThrottlePayload>
+        }
+        aggregate: {
+          args: Prisma.AuthLoginThrottleAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAuthLoginThrottle>
+        }
+        groupBy: {
+          args: Prisma.AuthLoginThrottleGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AuthLoginThrottleGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AuthLoginThrottleCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AuthLoginThrottleCountAggregateOutputType> | number
         }
       }
     }
@@ -1906,6 +1981,17 @@ export const RestaurantScalarFieldEnum = {
 export type RestaurantScalarFieldEnum = (typeof RestaurantScalarFieldEnum)[keyof typeof RestaurantScalarFieldEnum]
 
 
+export const AuthLoginThrottleScalarFieldEnum = {
+  keyHash: 'keyHash',
+  windowStartedAt: 'windowStartedAt',
+  attemptCount: 'attemptCount',
+  blockedUntil: 'blockedUntil',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AuthLoginThrottleScalarFieldEnum = (typeof AuthLoginThrottleScalarFieldEnum)[keyof typeof AuthLoginThrottleScalarFieldEnum]
+
+
 export const UserScalarFieldEnum = {
   id: 'id',
   fullName: 'fullName',
@@ -2324,6 +2410,20 @@ export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaM
 
 
 /**
+ * Reference to a field of type 'Int'
+ */
+export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+    
+
+
+/**
+ * Reference to a field of type 'Int[]'
+ */
+export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+/**
  * Reference to a field of type 'UserRole'
  */
 export type EnumUserRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserRole'>
@@ -2348,20 +2448,6 @@ export type EnumUserStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$Prism
  * Reference to a field of type 'UserStatus[]'
  */
 export type ListEnumUserStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserStatus[]'>
-    
-
-
-/**
- * Reference to a field of type 'Int'
- */
-export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
-    
-
-
-/**
- * Reference to a field of type 'Int[]'
- */
-export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
     
 
 
@@ -2719,6 +2805,7 @@ export interface PrismaClientOptionsWithAdapter extends PrismaClientBaseOptions 
 export type PrismaClientOptions = PrismaClientOptionsWithAccelerateUrl | PrismaClientOptionsWithAdapter
 export type GlobalOmitConfig = {
   restaurant?: Prisma.RestaurantOmit
+  authLoginThrottle?: Prisma.AuthLoginThrottleOmit
   user?: Prisma.UserOmit
   cashSession?: Prisma.CashSessionOmit
   notification?: Prisma.NotificationOmit

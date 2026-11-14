@@ -52,6 +52,7 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   Restaurant: 'Restaurant',
+  AuthLoginThrottle: 'AuthLoginThrottle',
   User: 'User',
   CashSession: 'CashSession',
   Notification: 'Notification',
@@ -112,6 +113,17 @@ export const RestaurantScalarFieldEnum = {
 } as const
 
 export type RestaurantScalarFieldEnum = (typeof RestaurantScalarFieldEnum)[keyof typeof RestaurantScalarFieldEnum]
+
+
+export const AuthLoginThrottleScalarFieldEnum = {
+  keyHash: 'keyHash',
+  windowStartedAt: 'windowStartedAt',
+  attemptCount: 'attemptCount',
+  blockedUntil: 'blockedUntil',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AuthLoginThrottleScalarFieldEnum = (typeof AuthLoginThrottleScalarFieldEnum)[keyof typeof AuthLoginThrottleScalarFieldEnum]
 
 
 export const UserScalarFieldEnum = {
