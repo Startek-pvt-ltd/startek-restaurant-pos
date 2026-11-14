@@ -189,3 +189,20 @@ No Netlify preview or production deployment was triggered by the work.
 
 The local source-code and browser checks establish engineering readiness,
 not production-release authorization. All release gates still apply.
+
+## Production database identity follow-up (Netlify Secrets Controller)
+
+Read-only Netlify CLI checks confirm that Production DATABASE_URL is configured
+but masked. Netlify's Secrets Controller is write-only, including its UI,
+CLI and API, after a secret value is configured. No reveal is available.
+
+All five connected Neon endpoints have been mapped and documented in
+docs/operations/PRODUCTION_DATABASE_RECOVERY.md. None has been established
+as the Netlify Production target. The live database may belong to a
+different provider project or account. No production records, credentials,
+migrations or deployments were changed.
+
+Identify the original URI privately from the authorized provider source
+and record only the host prefix, project/branch and database name.
+
+Official policy: https://docs.netlify.com/build/environment-variables/secrets-controller/

@@ -9,10 +9,14 @@ identifying its PostgreSQL host, branch, database, or backup status.
 
 ## Nonnegotiable safety checks
 
-1. Inspect the Production DATABASE_URL only in the authorized Netlify settings
-   and/or trusted secret manager. Never paste it into chat, PRs, build logs, tickets,
-   repositories or a terminal history. Record only Neon project ID, branch ID,
-   hostname and database name after independent confirmation.
+1. Recover the original Production DATABASE_URL from the source that supplied
+   it (Neon Console for the correct project/branch or an authorized vault).
+   Netlify's Secrets Controller marks protected values WRITE-ONLY once set:
+   no dashboard, CLI, or API reveal is available. Do NOT disable secret
+   protection or put credentials into build logs to recover them.
+   Never paste the URI into chat, PRs, logs, tickets or repository history.
+   Record only verified project ID, branch ID, nonsecret hostname and database
+   name after independent confirmation.
 2. Match the exact endpoint hostname to the Neon project's endpoint under
    Branches -> Compute. Do not infer production identity from project names,
    source data counts, or a healthy /api/health response.
@@ -30,6 +34,42 @@ identifying its PostgreSQL host, branch, database, or backup status.
    order totals. Never overwrite source data or run a test checkout in production.
 7. Have an explicit rollback plan. Code rollback through Netlify does not
    necessarily reverse a database migration. Keep schema changes additive.
+
+## Production database identity — read-only investigation, 14 November 2026
+
+The connected Netlify site is startek-restaurant-pos
+(site ID 323bf7b1-a1f8-4fba-902a-d6d31c1a63b8).
+
+The supported Netlify CLI env:get DATABASE_URL --context production command
+confirms the Production variable exists but returns a masked value.
+The Deploy Preview DATABASE_URL is also masked. Netlify explicitly documents
+that its Secrets Controller values are write-only. The production host,
+branch and database name remain UNVERIFIED.
+
+Neon account endpoints currently accessible:
+
+| Endpoint prefix | Project ID | Branch ID and name |
+| --- | --- | --- |
+| ep-small-bird-b3nxixkb | ancient-hall-55236885 | br-frosty-wildflower-b31fbzs3, staging root |
+| ep-old-term-b3nbycaa | ancient-hall-55236885 | br-super-bonus-b3kvbj5v, desktop-original-staging |
+| ep-noisy-mode-b35dhalf | ancient-hall-55236885 | br-green-leaf-b352qrh7, populated recovery test copy |
+| ep-calm-hat-b3uvmnsv | ancient-hall-55236885 | br-crimson-hat-b3n2drfv, snapshot restore copy |
+| ep-noisy-morning-a134ewaf | plain-lake-94861652 | br-sparkling-art-a1xypgct, PR preview |
+
+NO endpoint can be identified as Production on available evidence.
+The actual live database may belong to another Neon organization/project
+or another database provider.
+
+NEXT ACTION: Recover the ORIGINAL URI from the private source used when the
+Netlify Production secret was last configured, such as the corresponding Neon
+Console Connect dialog or authorized credential vault. Share only the
+nonsecret hostname prefix and provider project/branch/database names.
+Do not rotate, overwrite, or rebind production credentials merely to learn
+their identity. A credential change requires explicit separate authorization,
+tested backups, a planned maintenance window and rollback procedures.
+
+Netlify source:
+https://docs.netlify.com/build/environment-variables/secrets-controller/
 
 ## Observations (staging only, not verified production)
 
