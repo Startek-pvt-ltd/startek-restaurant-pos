@@ -3,7 +3,12 @@ import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { NextResponse } from "next/server";
 
-import { clearLoginAttempt, consumeLoginAttempt } from "@/features/auth/login-rate-limit";
+import {
+  clearAccountLoginAttempt,
+  consumeAccountLoginAttempt,
+  consumeClientLoginAttempt,
+} from "@/features/auth/login-rate-limit";
+import { normalizeLoginIdentifier, trustedNetlifyClientIp } from "@/features/auth/login-throttle-policy";
 import { prisma } from "@/lib/prisma";
 import { loginSchema } from "@/validations/auth";
 
@@ -45,7 +50,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         password: { label: "Password", type: "password" },
         rememberMe: { label: "Remember me", type: "checkbox" },
       },
-      async authorize(credentials) {
+      async authorize(credentials, request) {
         const parsed = loginSchema.safeParse({
           ...credentials,
           rememberMe: credentials.rememberMe === "true",
@@ -54,12 +59,17 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         if (!parsed.success) return null;
 
         const { identifier, password, rememberMe } = parsed.data;
-        // Backed by PostgreSQL across serverless instances; fail closed if unavailable.
-        // Keep the user-facing error generic for unknown, inactive and blocked IDs.
+        // Enforce IP limits only when the client IP comes from Netlify, not a
+        // caller-controlled X-Forwarded-For header. If this header is absent,
+        // the canonical account throttle remains mandatory.
+        const clientIp = trustedNetlifyClientIp(
+          request,
+          process.env.NETLIFY === "true" || process.env.POS_DEPLOYMENT === "cloud",
+        );
         try {
-          if (!(await consumeLoginAttempt(identifier))) return null;
+          if (!(await consumeClientLoginAttempt(clientIp))) return null;
         } catch {
-          console.error("Login throttle storage unavailable; authentication rejected.");
+          console.error("Login IP throttle unavailable; authentication rejected.");
           return null;
         }
 
@@ -82,6 +92,18 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           },
         });
 
+        // Use the canonical user UUID for known accounts. Email and username
+        // aliases must share one limit instead of creating independent buckets.
+        const throttleIdentity = user
+          ? "user:" + user.id
+          : "unknown:" + normalizeLoginIdentifier(identifier);
+        try {
+          if (!(await consumeAccountLoginAttempt(throttleIdentity))) return null;
+        } catch {
+          console.error("Login account throttle unavailable; authentication rejected.");
+          return null;
+        }
+
         const passwordMatches = await bcrypt.compare(
           password,
           user?.password ?? DUMMY_PASSWORD_HASH,
@@ -97,7 +119,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         // Successful credentials clear the throttle counter.
         // Do not deny a valid user if this cleanup alone fails.
         try {
-          await clearLoginAttempt(identifier);
+          await clearAccountLoginAttempt(throttleIdentity);
         } catch {
           console.error("Unable to clear successful login throttle counter.");
         }
