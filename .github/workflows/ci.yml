@@ -150,6 +150,11 @@ jobs:
           npx prisma migrate deploy
           npx prisma migrate status
           npx prisma db seed
+      - name: Verify atomic login throttle on disposable PostgreSQL (when present)
+        if: hashFiles('tests/integration/login-throttle.mjs') != ''
+        env:
+          POS_TEST_DATABASE: 'true'
+        run: node tests/integration/login-throttle.mjs
       - name: Build standalone application
         run: npm run build
       - name: Install headless Chromium
