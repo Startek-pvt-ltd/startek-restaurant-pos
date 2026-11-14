@@ -6,7 +6,3 @@
 
 [build.environment]
   NODE_VERSION = "22"
-
-# TEMPORARY: PR #3 only. Removed after isolated preview migrations succeed.
-[context.deploy-preview]
-  command = "node scripts/preview-migrate-pr3.mjs && npm run build:netlify"
