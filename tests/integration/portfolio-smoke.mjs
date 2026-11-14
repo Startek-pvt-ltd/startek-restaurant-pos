@@ -54,6 +54,15 @@ try {
   }
 
   const desktop = await browser.newContext({ baseURL: base.origin, viewport: { width: 1440, height: 1000 } });
+  const health = await desktop.request.get("/api/health");
+  assert.equal(health.status(), 200);
+  assert.equal(health.headers()["cache-control"], "no-store");
+  assert.match(health.headers()["x-request-id"] ?? "", /^[0-9a-f-]{36}$/);
+  const loginPage = await desktop.request.get("/login");
+  assert.equal(loginPage.status(), 200);
+  assert.equal(loginPage.headers()["x-frame-options"], "DENY");
+  assert.match(loginPage.headers()["content-security-policy"] ?? "", /frame-ancestors 'none'/);
+  assert.equal(loginPage.headers()["x-content-type-options"], "nosniff");
   assert.equal((await desktop.request.get("/pos", { maxRedirects: 0 })).status(), 307);
   const user = await signIn(desktop, "admin", process.env.SEED_SUPER_ADMIN_PASSWORD);
   assert.equal(user.role, "SUPER_ADMIN");
